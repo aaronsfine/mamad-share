@@ -81,7 +81,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
             </Badge>
           ) : (listing as any).price_per_night ? (
             <Badge variant="secondary" className="w-fit text-xs gap-1">
-              <DollarSign className="h-3 w-3" /> ₪{(listing as any).price_per_night}/night
+              ₪{(listing as any).price_per_night}/night
             </Badge>
           ) : null}
 

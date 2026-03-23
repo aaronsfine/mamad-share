@@ -1,6 +1,6 @@
 import { SearchableSelect } from '@/components/SearchableSelect';
-import { Badge } from '@/components/ui/badge';
-import { PawPrint, Cigarette, Heart, DollarSign } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
+import { PawPrint, Cigarette, Heart } from 'lucide-react';
 
 interface ShelterFiltersProps {
   cities: string[];
@@ -11,10 +11,12 @@ interface ShelterFiltersProps {
   onNeighborhoodChange: (neighborhood: string) => void;
   petsFilter: 'all' | 'yes' | 'no';
   smokingFilter: 'all' | 'yes' | 'no';
-  priceFilter: 'all' | 'free' | 'paid';
+  priceFilter: 'all' | 'free';
+  maxPrice: number;
   onPetsFilterChange: (v: 'all' | 'yes' | 'no') => void;
   onSmokingFilterChange: (v: 'all' | 'yes' | 'no') => void;
-  onPriceFilterChange: (v: 'all' | 'free' | 'paid') => void;
+  onPriceFilterChange: (v: 'all' | 'free') => void;
+  onMaxPriceChange: (v: number) => void;
 }
 
 function TogglePill({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
@@ -43,9 +45,11 @@ export function ShelterFilters({
   petsFilter,
   smokingFilter,
   priceFilter,
+  maxPrice,
   onPetsFilterChange,
   onSmokingFilterChange,
   onPriceFilterChange,
+  onMaxPriceChange,
 }: ShelterFiltersProps) {
   return (
     <div className="space-y-3">
@@ -78,20 +82,36 @@ export function ShelterFilters({
         </div>
       </div>
 
-      {/* Quick filters */}
-      <div className="flex flex-wrap gap-2">
-        <TogglePill active={priceFilter === 'free'} onClick={() => onPriceFilterChange(priceFilter === 'free' ? 'all' : 'free')}>
-          <Heart className="h-3 w-3" /> Free only
-        </TogglePill>
-        <TogglePill active={priceFilter === 'paid'} onClick={() => onPriceFilterChange(priceFilter === 'paid' ? 'all' : 'paid')}>
-          <DollarSign className="h-3 w-3" /> Paid
-        </TogglePill>
-        <TogglePill active={petsFilter === 'yes'} onClick={() => onPetsFilterChange(petsFilter === 'yes' ? 'all' : 'yes')}>
-          <PawPrint className="h-3 w-3" /> Pets OK
-        </TogglePill>
-        <TogglePill active={smokingFilter === 'yes'} onClick={() => onSmokingFilterChange(smokingFilter === 'yes' ? 'all' : 'yes')}>
-          <Cigarette className="h-3 w-3" /> Smoking OK
-        </TogglePill>
+      {/* Quick filters + price slider */}
+      <div className="flex flex-col md:flex-row md:items-center gap-3">
+        <div className="flex flex-wrap gap-2">
+          <TogglePill active={priceFilter === 'free'} onClick={() => onPriceFilterChange(priceFilter === 'free' ? 'all' : 'free')}>
+            <Heart className="h-3 w-3" /> Free only
+          </TogglePill>
+          <TogglePill active={petsFilter === 'yes'} onClick={() => onPetsFilterChange(petsFilter === 'yes' ? 'all' : 'yes')}>
+            <PawPrint className="h-3 w-3" /> Pets OK
+          </TogglePill>
+          <TogglePill active={smokingFilter === 'yes'} onClick={() => onSmokingFilterChange(smokingFilter === 'yes' ? 'all' : 'yes')}>
+            <Cigarette className="h-3 w-3" /> Smoking OK
+          </TogglePill>
+        </div>
+
+        {/* Price slider — only visible when not filtering to free-only */}
+        {priceFilter !== 'free' && (
+          <div className="flex items-center gap-3 md:ml-auto min-w-[200px]">
+            <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+              Max ₪{maxPrice === 200 ? '200+' : maxPrice}/night
+            </label>
+            <Slider
+              value={[maxPrice]}
+              onValueChange={(v) => onMaxPriceChange(v[0])}
+              min={0}
+              max={200}
+              step={10}
+              className="w-32"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

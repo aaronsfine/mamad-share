@@ -166,9 +166,11 @@ export default function Index() {
             petsFilter={petsFilter}
             smokingFilter={smokingFilter}
             priceFilter={priceFilter}
+            maxPrice={maxPrice}
             onPetsFilterChange={setPetsFilter}
             onSmokingFilterChange={setSmokingFilter}
             onPriceFilterChange={setPriceFilter}
+            onMaxPriceChange={setMaxPrice}
           />
         </div>
       </section>
