@@ -16,11 +16,11 @@ export function ListingCard({ listing, distanceKm }: ListingCardProps) {
   const whatsappUrl = buildWhatsAppLink(listing.phone, listing.host_name, listing.city);
 
   return (
-    <Card className="overflow-hidden border-border/60 shadow-sm hover:shadow-md transition-shadow">
-      <CardContent className="p-5 space-y-4">
+    <Card className="overflow-hidden bg-card border-border shadow-sm hover:shadow-md transition-shadow">
+      <CardContent className="p-6 space-y-5">
         {/* Host name & location */}
-        <div className="space-y-1">
-          <h3 className="font-semibold text-lg text-foreground">{listing.host_name}</h3>
+        <div className="space-y-1.5">
+          <h3 className="font-bold text-xl text-foreground">{listing.host_name}</h3>
           <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
             <MapPin className="h-3.5 w-3.5" />
             <span>{listing.city}, {listing.neighborhood}</span>
@@ -33,29 +33,29 @@ export function ListingCard({ listing, distanceKm }: ListingCardProps) {
         </div>
 
         {/* Capacity callout */}
-        <div className="rounded-lg bg-primary/10 border border-primary/20 px-4 py-3 text-center">
+        <div className="rounded-lg bg-primary/5 border border-primary/10 px-4 py-3 text-center">
           <p className="text-sm font-semibold text-primary">
             Best for families up to ~{capacity} people
           </p>
         </div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="flex items-center gap-2 text-sm">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center gap-2.5 text-sm">
             <Home className="h-4 w-4 text-muted-foreground" />
             <div>
               <p className="text-muted-foreground text-xs">Bedrooms</p>
               <p className="font-medium text-foreground">{listing.bedrooms}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2.5 text-sm">
             <BedDouble className="h-4 w-4 text-muted-foreground" />
             <div>
               <p className="text-muted-foreground text-xs">Total Beds</p>
               <p className="font-medium text-foreground">{listing.total_beds}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm col-span-2">
+          <div className="flex items-center gap-2.5 text-sm col-span-2">
             <Shield className="h-4 w-4 text-muted-foreground" />
             <div>
               <p className="text-muted-foreground text-xs">Mamad Size</p>
@@ -66,7 +66,7 @@ export function ListingCard({ listing, distanceKm }: ListingCardProps) {
 
         {/* Notes */}
         {(listing.sleeping_notes || listing.mamad_notes) && (
-          <div className="space-y-1 text-xs text-muted-foreground">
+          <div className="space-y-1.5 text-xs text-muted-foreground">
             {listing.sleeping_notes && <p>💤 {listing.sleeping_notes}</p>}
             {listing.mamad_notes && <p>🛡️ {listing.mamad_notes}</p>}
           </div>

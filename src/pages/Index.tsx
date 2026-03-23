@@ -28,14 +28,12 @@ export default function Index() {
     },
   });
 
-  // Derive filter options
   const cities = useMemo(() => [...new Set(listings.map((l) => l.city))].sort(), [listings]);
   const neighborhoods = useMemo(() => {
     const filtered = selectedCity !== 'all' ? listings.filter((l) => l.city === selectedCity) : listings;
     return [...new Set(filtered.map((l) => l.neighborhood))].sort();
   }, [listings, selectedCity]);
 
-  // Filter listings
   const filtered = useMemo(() => {
     return listings.filter((l) => {
       if (selectedCity !== 'all' && l.city !== selectedCity) return false;
@@ -44,10 +42,8 @@ export default function Index() {
     });
   }, [listings, selectedCity, selectedNeighborhood]);
 
-  // Compute distances & sort
   const sortedListings = useMemo(() => {
     const hasUserLocation = geo.latitude != null && geo.longitude != null;
-
     const withDistance = filtered.map((listing) => {
       let distanceKm: number | null = null;
       if (hasUserLocation && listing.latitude != null && listing.longitude != null) {
@@ -55,7 +51,6 @@ export default function Index() {
       }
       return { listing, distanceKm };
     });
-
     if (hasUserLocation) {
       withDistance.sort((a, b) => {
         if (a.distanceKm == null && b.distanceKm == null) return 0;
@@ -64,7 +59,6 @@ export default function Index() {
         return a.distanceKm - b.distanceKm;
       });
     }
-
     return withDistance;
   }, [filtered, geo.latitude, geo.longitude]);
 
@@ -75,21 +69,37 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow-md">
-        <div className="max-w-3xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Shield className="h-6 w-6" />
-              <h1 className="text-xl font-bold tracking-tight">Mamad Directory</h1>
-            </div>
-            <Button variant="ghost" size="sm" asChild className="text-primary-foreground hover:bg-primary-foreground/10">
-              <Link to="/auth">
-                <LogIn className="h-4 w-4 mr-1" />
-                Host Login
-              </Link>
-            </Button>
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <Shield className="h-6 w-6 text-primary" />
+            <h1 className="text-xl font-bold tracking-tight text-foreground">Mamad Directory</h1>
           </div>
+          <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
+            <Link to="/auth">
+              <LogIn className="h-4 w-4 mr-1.5" />
+              Host Login
+            </Link>
+          </Button>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="bg-card border-b border-border">
+        <div className="max-w-4xl mx-auto px-4 py-12 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-3">
+            Find a Safe Space Tonight.
+          </h2>
+          <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto">
+            Verified hosts offering their shelters (mamads) to families in need.
+          </p>
+        </div>
+      </section>
+
+      {/* Filters */}
+      <div className="bg-card border-b border-border">
+        <div className="max-w-4xl mx-auto px-4 py-4">
           <ShelterFilters
             cities={cities}
             neighborhoods={neighborhoods}
@@ -99,14 +109,14 @@ export default function Index() {
             onNeighborhoodChange={setSelectedNeighborhood}
           />
         </div>
-      </header>
+      </div>
 
       {/* Content */}
-      <main className="max-w-3xl mx-auto px-4 py-6">
+      <main className="max-w-4xl mx-auto px-4 py-8">
         {isLoading ? (
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-64 rounded-xl bg-muted animate-pulse" />
+              <div key={i} className="h-72 rounded-xl bg-card animate-pulse" />
             ))}
           </div>
         ) : sortedListings.length === 0 ? (
@@ -118,7 +128,7 @@ export default function Index() {
             </p>
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2">
             {sortedListings.map(({ listing, distanceKm }) => (
               <ListingCard key={listing.id} listing={listing} distanceKm={distanceKm} />
             ))}
