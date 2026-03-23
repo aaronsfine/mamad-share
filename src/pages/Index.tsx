@@ -18,7 +18,8 @@ export default function Index() {
   const [selectedNeighborhood, setSelectedNeighborhood] = useState('all');
   const [petsFilter, setPetsFilter] = useState<'all' | 'yes' | 'no'>('all');
   const [smokingFilter, setSmokingFilter] = useState<'all' | 'yes' | 'no'>('all');
-  const [priceFilter, setPriceFilter] = useState<'all' | 'free' | 'paid'>('all');
+  const [priceFilter, setPriceFilter] = useState<'all' | 'free'>('all');
+  const [maxPrice, setMaxPrice] = useState(200);
   const geo = useGeolocation();
 
   const { data: listings = [], isLoading } = useQuery({
