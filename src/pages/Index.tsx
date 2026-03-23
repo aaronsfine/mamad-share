@@ -83,7 +83,7 @@ export default function Index() {
       
       return true;
     });
-  }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter, maxPrice, minBeds, minBedrooms, minMamad]);
+  }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter, maxPrice, minBeds, minBedrooms]);
 
   const sortedListings = useMemo(() => {
     const hasUserLocation = geo.latitude != null && geo.longitude != null;
