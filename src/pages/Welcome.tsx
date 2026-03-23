@@ -54,12 +54,12 @@ export default function Welcome() {
 
     const { error } = await supabase
       .from('profiles')
-      .update({
+      .upsert({
+        id: session.user.id,
         full_name: fullName.trim(),
         whatsapp_phone: whatsappPhone.trim(),
         onboarding_completed: true,
-      })
-      .eq('id', session.user.id);
+      });
 
     setLoading(false);
 
