@@ -1,77 +1,41 @@
 
 
-## Mamad Directory — Final Implementation Plan
+## Airbnb-Style UI Refactor + Hero Text Update
 
-### Design System
-- **Primary**: Blue & white (Israeli flag palette) — blue headers, white cards, clean backgrounds
-- **CTA**: Bright green WhatsApp buttons
-- **Typography**: Clean sans-serif, generous spacing, Airbnb-level minimalism
-- **Layout**: Mobile-first, RTL-ready (English V1, Hebrew V2)
+Pure visual/layout refactor — no new features, no backend changes. Four files modified.
 
-### Backend (Supabase)
+### 1. `src/pages/Index.tsx` — Layout & structure
 
-**Auth**: Magic link (email-based)
+- All `max-w-4xl` → `max-w-6xl`
+- **Header**: `py-4` → `py-3`, rename "Host Login" to "List Your Apartment" with `variant="outline"`
+- **Hero + Filters merged** into one section:
+  - Title: "Find a Safe Place to Sleep Tonight" (`text-2xl sm:text-3xl`)
+  - Subtitle: "Families across Israel are opening their homes to help others stay safe during sirens. Find a nearby apartment with a secure room (mamad) and contact the host directly."
+  - Tertiary line: "Simple. Fast. Community-driven." in muted smaller text
+  - Filters embedded directly below in a rounded bar (via updated `ShelterFilters`)
+  - Reduce vertical padding (`py-8`)
+- **Grid**: `md:grid-cols-2` → `sm:grid-cols-2 lg:grid-cols-3`, gap `gap-5` → `gap-4`
+- Skeleton count: 4 → 6
+- Empty state: `py-24` → `py-16`
 
-**`listings` table**:
-- host_id (FK to auth.users), host_name, phone, city, neighborhood
-- bedrooms, total_beds, mamad_size_sqm, sleeping_notes, mamad_notes
-- address (text, nullable — private, never exposed publicly)
-- latitude (float8, nullable), longitude (float8, nullable)
-- is_active (boolean), created_at, updated_at
+### 2. `src/components/ListingCard.tsx` — Card redesign
 
-**RLS**: Public reads active listings (lat/lng included for client-side distance calc, address excluded from public queries). Hosts CRUD own listing only.
+Restructure hierarchy top-to-bottom:
+- **Top**: Host name small/muted with `User` icon. Location (city, neighborhood) large and bold with `MapPin` icon. Distance badge inline.
+- **Middle**: "Best for ~X people" as pill badge (`rounded-full bg-primary/10 text-primary`). Stats as single horizontal line: "3 bedrooms · 5 beds · 15 sqm mamad". Optional notes muted.
+- **Bottom**: Full-width green WhatsApp button.
+- Reduce padding `p-6` → `p-5`, spacing `space-y-5` → `space-y-3`
 
-### Pages & Features
+### 3. `src/components/ShelterFilters.tsx` — Embedded bar
 
-#### 1. Public Feed (`/`)
-- Sticky header with app name + City / Neighborhood dropdown filters
-- On load, request browser geolocation (optional, graceful denial)
-- Responsive card grid (1 col mobile, 2-3 col desktop)
-- **Sorting**: user location available → nearest first; otherwise → newest first
-- Empty state when no matches
+- Wrap selects in `bg-muted/50 rounded-xl p-2 shadow-sm border`
+- Selects get `bg-white` for contrast
 
-#### 2. Listing Cards (no expand/click)
-- Host name, City & Neighborhood
-- **Distance badge**: "~X.X km away" — only rendered if user granted geolocation AND listing has lat/lng. Otherwise completely hidden (no placeholder, no "unknown").
-- Callout: "Best for families up to ~X people" (X = total_beds + floor(mamad_size_sqm / 2))
-- 2-column stats: Bedrooms, Total Beds, Mamad Size (sqm)
-- Optional small-text notes
-- Full-width green WhatsApp button → `wa.me/{sanitized_phone}` with pre-filled message
+### 4. `src/components/ListingCardSkeleton.tsx` — Match new layout
 
-#### 3. Host Dashboard (`/dashboard`) — Protected
-- Magic link auth
-- Form fields: name, phone, city, neighborhood, **address** (labeled "Approximate address — private, not shown publicly"), bedrooms, total_beds, mamad_size_sqm, sleeping_notes, mamad_notes
-- **No manual lat/lng input** — hosts enter address only; lat/lng remain nullable until geocoding is wired up post-launch
-- Active/Hidden toggle
+- Adjust skeleton shapes: small bar (host name), wider bar (location), single horizontal stats line, button
 
-### Distance Logic (client-side)
-- Haversine utility function for km calculation
-- Only compute and display distance when both user coords AND listing coords exist
-- If either is missing, distance badge is hidden entirely — no fallback text
-- Sort by distance only when user location is available; otherwise sort by created_at desc
+### Technical details
 
-### Geocoding (V1 → V2 bridge)
-- V1: Address field collected and stored; lat/lng nullable; no geocoding API call
-- V2: Add geocoding (e.g. edge function calling a geocoding API) triggered on listing save to populate lat/lng from address
-- Architecture is ready: address stored, lat/lng columns exist, distance logic works when coords are present
-
-### File Structure
-- `src/pages/Index.tsx` — public feed with filters, geolocation hook, sorted listings
-- `src/pages/Dashboard.tsx` — protected host form + active toggle
-- `src/pages/Auth.tsx` — magic link login
-- `src/components/ListingCard.tsx` — card component with conditional distance badge
-- `src/components/ShelterFilters.tsx` — city/neighborhood dropdowns
-- `src/hooks/useGeolocation.ts` — browser geolocation hook (optional permission)
-- `src/lib/distance.ts` — haversine utility
-- `src/lib/whatsapp.ts` — phone sanitization + message builder
-- `src/integrations/supabase/` — client, types, queries
-
-### Implementation Order
-1. Connect Supabase & create listings table with migration
-2. Build shared utilities (distance, WhatsApp, geolocation hook)
-3. Build ListingCard and ShelterFilters components
-4. Build public feed page with filters, geolocation, sorting
-5. Build auth page (magic link)
-6. Build host dashboard (form + toggle)
-7. Wire up routing and RLS policies
+All changes are CSS classes and JSX restructuring. No new dependencies. No backend or routing changes.
 
