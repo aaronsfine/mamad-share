@@ -31,6 +31,8 @@ export type Database = {
           neighborhood: string
           pets_allowed: boolean
           phone: string
+          price_per_night: number | null
+          price_type: string
           sleeping_notes: string | null
           smoking_allowed: boolean
           total_beds: number
@@ -52,6 +54,8 @@ export type Database = {
           neighborhood: string
           pets_allowed?: boolean
           phone: string
+          price_per_night?: number | null
+          price_type?: string
           sleeping_notes?: string | null
           smoking_allowed?: boolean
           total_beds?: number
@@ -73,6 +77,8 @@ export type Database = {
           neighborhood?: string
           pets_allowed?: boolean
           phone?: string
+          price_per_night?: number | null
+          price_type?: string
           sleeping_notes?: string | null
           smoking_allowed?: boolean
           total_beds?: number
