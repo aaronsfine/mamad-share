@@ -126,9 +126,7 @@ export default function Index() {
           return ((b.listing as any).price_per_night ?? 0) - ((a.listing as any).price_per_night ?? 0);
         });
         break;
-      case 'newest':
       default:
-        // Already ordered by created_at desc from the query
         break;
     }
 
