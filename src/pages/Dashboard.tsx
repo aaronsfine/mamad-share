@@ -358,7 +358,7 @@ export default function Dashboard() {
 
         {/* Pricing */}
         <div className="flex items-center gap-2 text-sm">
-          <DollarSign className="h-4 w-4 text-primary shrink-0" />
+          <span className="text-primary font-medium">₪</span>
           {(listing as any).price_type === 'free' ? (
             <span className="font-medium text-green-700">Free — חסד (act of kindness)</span>
           ) : (
