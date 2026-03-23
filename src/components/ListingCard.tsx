@@ -16,7 +16,7 @@ export function ListingCard({ listing, distanceKm }: ListingCardProps) {
   const whatsappUrl = buildWhatsAppLink(listing.phone, listing.host_name, listing.city);
 
   return (
-    <Card className="overflow-hidden bg-card border-border shadow-sm hover:shadow-md transition-shadow rounded-xl">
+    <Card className="overflow-hidden bg-card border-border shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-150 rounded-2xl">
       <CardContent className="p-5 md:p-6 flex flex-col gap-3">
         {/* Header: Location + Host */}
         <div className="space-y-1">
@@ -72,7 +72,7 @@ export function ListingCard({ listing, distanceKm }: ListingCardProps) {
         <div className="mt-1">
           <Button
             asChild
-            className="w-full bg-whatsapp hover:bg-whatsapp/90 text-whatsapp-foreground font-semibold rounded-lg"
+            className="w-full bg-whatsapp hover:bg-whatsapp/85 active:scale-[0.98] text-whatsapp-foreground font-semibold rounded-lg transition-all duration-150"
             size="lg"
           >
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
