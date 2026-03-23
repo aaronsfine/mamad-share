@@ -69,10 +69,15 @@ export default function Index() {
       if (smokingFilter === 'yes' && !(l as any).smoking_allowed) return false;
       if (smokingFilter === 'no' && (l as any).smoking_allowed) return false;
       if (priceFilter === 'free' && (l as any).price_type !== 'free') return false;
-      if (priceFilter === 'paid' && (l as any).price_type !== 'paid') return false;
+      // Max price slider: free listings always pass, paid listings must be under max
+      if (priceFilter !== 'free' && maxPrice < 200) {
+        const pt = (l as any).price_type;
+        const ppn = (l as any).price_per_night;
+        if (pt === 'paid' && ppn != null && ppn > maxPrice) return false;
+      }
       return true;
     });
-  }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter]);
+  }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter, maxPrice]);
 
   const sortedListings = useMemo(() => {
     const hasUserLocation = geo.latitude != null && geo.longitude != null;
