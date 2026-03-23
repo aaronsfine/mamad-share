@@ -2,25 +2,21 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function ListingCardSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+    <div className="rounded-xl border border-border bg-card p-5 space-y-3">
       {/* Host name + location */}
-      <div className="space-y-2">
-        <Skeleton className="h-6 w-40" />
-        <Skeleton className="h-4 w-28" />
+      <div className="space-y-1.5">
+        <Skeleton className="h-3 w-24" />
+        <Skeleton className="h-5 w-44" />
       </div>
 
-      {/* Capacity badge */}
-      <Skeleton className="h-10 w-full rounded-lg" />
+      {/* Capacity pill */}
+      <Skeleton className="h-6 w-36 rounded-full" />
 
-      {/* Stats grid */}
-      <div className="grid grid-cols-3 gap-3">
-        <Skeleton className="h-16 rounded-lg" />
-        <Skeleton className="h-16 rounded-lg" />
-        <Skeleton className="h-16 rounded-lg" />
-      </div>
+      {/* Stats line */}
+      <Skeleton className="h-4 w-full" />
 
       {/* Notes */}
-      <Skeleton className="h-4 w-3/4" />
+      <Skeleton className="h-3 w-3/4" />
 
       {/* WhatsApp button */}
       <Skeleton className="h-11 w-full rounded-lg" />

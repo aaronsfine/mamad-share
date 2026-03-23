@@ -24,9 +24,9 @@ export function ShelterFilters({
   onNeighborhoodChange,
 }: ShelterFiltersProps) {
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 bg-muted/50 rounded-xl p-2 shadow-sm border border-border">
       <Select value={selectedCity} onValueChange={onCityChange}>
-        <SelectTrigger className="flex-1 bg-card">
+        <SelectTrigger className="flex-1 bg-card border-border">
           <SelectValue placeholder="All Cities" />
         </SelectTrigger>
         <SelectContent>
@@ -40,7 +40,7 @@ export function ShelterFilters({
       </Select>
 
       <Select value={selectedNeighborhood} onValueChange={onNeighborhoodChange}>
-        <SelectTrigger className="flex-1 bg-card">
+        <SelectTrigger className="flex-1 bg-card border-border">
           <SelectValue placeholder="All Neighborhoods" />
         </SelectTrigger>
         <SelectContent>

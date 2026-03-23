@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, BedDouble, Home, Shield, MessageCircle } from 'lucide-react';
+import { MapPin, User, MessageCircle } from 'lucide-react';
 import { buildWhatsAppLink } from '@/lib/whatsapp';
 import { formatDistance } from '@/lib/distance';
 import type { Tables } from '@/integrations/supabase/types';
@@ -17,56 +17,39 @@ export function ListingCard({ listing, distanceKm }: ListingCardProps) {
 
   return (
     <Card className="overflow-hidden bg-card border-border shadow-sm hover:shadow-md transition-shadow">
-      <CardContent className="p-6 space-y-5">
-        {/* Host name & location */}
-        <div className="space-y-1.5">
-          <h3 className="font-bold text-xl text-foreground">{listing.host_name}</h3>
-          <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
-            <MapPin className="h-3.5 w-3.5" />
-            <span>{listing.city}, {listing.neighborhood}</span>
+      <CardContent className="p-5 space-y-3">
+        {/* Host + Location */}
+        <div className="space-y-1">
+          <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
+            <User className="h-3 w-3" />
+            <span>{listing.host_name}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
+            <h3 className="font-bold text-lg text-foreground leading-tight">
+              {listing.city}, {listing.neighborhood}
+            </h3>
           </div>
           {distanceKm != null && (
-            <Badge variant="secondary" className="text-xs font-medium mt-1">
+            <Badge variant="secondary" className="text-xs font-medium mt-0.5">
               {formatDistance(distanceKm)}
             </Badge>
           )}
         </div>
 
-        {/* Capacity callout */}
-        <div className="rounded-lg bg-primary/5 border border-primary/10 px-4 py-3 text-center">
-          <p className="text-sm font-semibold text-primary">
-            Best for families up to ~{capacity} people
-          </p>
-        </div>
+        {/* Capacity pill */}
+        <Badge className="rounded-full bg-primary/10 text-primary border-0 hover:bg-primary/10 text-xs font-semibold px-3 py-1">
+          Best for ~{capacity} people
+        </Badge>
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex items-center gap-2.5 text-sm">
-            <Home className="h-4 w-4 text-muted-foreground" />
-            <div>
-              <p className="text-muted-foreground text-xs">Bedrooms</p>
-              <p className="font-medium text-foreground">{listing.bedrooms}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2.5 text-sm">
-            <BedDouble className="h-4 w-4 text-muted-foreground" />
-            <div>
-              <p className="text-muted-foreground text-xs">Total Beds</p>
-              <p className="font-medium text-foreground">{listing.total_beds}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2.5 text-sm col-span-2">
-            <Shield className="h-4 w-4 text-muted-foreground" />
-            <div>
-              <p className="text-muted-foreground text-xs">Mamad Size</p>
-              <p className="font-medium text-foreground">{listing.mamad_size_sqm} sqm</p>
-            </div>
-          </div>
-        </div>
+        {/* Stats line */}
+        <p className="text-sm text-muted-foreground">
+          {listing.bedrooms} bedrooms · {listing.total_beds} beds · {listing.mamad_size_sqm} sqm mamad
+        </p>
 
         {/* Notes */}
         {(listing.sleeping_notes || listing.mamad_notes) && (
-          <div className="space-y-1.5 text-xs text-muted-foreground">
+          <div className="space-y-1 text-xs text-muted-foreground/80">
             {listing.sleeping_notes && <p>💤 {listing.sleeping_notes}</p>}
             {listing.mamad_notes && <p>🛡️ {listing.mamad_notes}</p>}
           </div>

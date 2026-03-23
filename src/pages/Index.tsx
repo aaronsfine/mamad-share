@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { Shield, LogIn, MapPinOff } from 'lucide-react';
+import { Shield, Home as HomeIcon, MapPinOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { ListingCard } from '@/components/ListingCard';
 import { ShelterFilters } from '@/components/ShelterFilters';
@@ -72,35 +72,35 @@ export default function Index() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <Shield className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold tracking-tight text-foreground">Mamad Directory</h1>
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Shield className="h-5 w-5 text-primary" />
+            <h1 className="text-lg font-bold tracking-tight text-foreground">Mamad Directory</h1>
           </div>
-          <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
+          <Button variant="outline" size="sm" asChild>
             <Link to="/login">
-              <LogIn className="h-4 w-4 mr-1.5" />
-              Host Login
+              <HomeIcon className="h-4 w-4 mr-1.5" />
+              List Your Apartment
             </Link>
           </Button>
         </div>
       </header>
 
-      {/* Hero */}
+      {/* Hero + Filters */}
       <section className="bg-card border-b border-border">
-        <div className="max-w-4xl mx-auto px-4 py-12 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-3">
-            Find a Safe Space Tonight.
-          </h2>
-          <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto">
-            Verified hosts offering their shelters (mamads) to families in need.
-          </p>
-        </div>
-      </section>
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-3">
+              Find a Safe Place to Sleep Tonight
+            </h2>
+            <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto mb-2">
+              Families across Israel are opening their homes to help others stay safe during sirens. Find a nearby apartment with a secure room (mamad) and contact the host directly.
+            </p>
+            <p className="text-muted-foreground/70 text-xs font-medium tracking-wide">
+              Simple. Fast. Community-driven.
+            </p>
+          </div>
 
-      {/* Filters */}
-      <div className="bg-card border-b border-border">
-        <div className="max-w-4xl mx-auto px-4 py-4">
           <ShelterFilters
             cities={cities}
             neighborhoods={neighborhoods}
@@ -110,18 +110,18 @@ export default function Index() {
             onNeighborhoodChange={setSelectedNeighborhood}
           />
         </div>
-      </div>
+      </section>
 
       {/* Content */}
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main className="max-w-6xl mx-auto px-4 py-8">
         {isLoading ? (
-          <div className="grid gap-5 md:grid-cols-2">
-            {[1, 2, 3, 4].map((i) => (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
               <ListingCardSkeleton key={i} />
             ))}
           </div>
         ) : sortedListings.length === 0 ? (
-          <div className="text-center py-24">
+          <div className="text-center py-16">
             <MapPinOff className="h-16 w-16 mx-auto text-muted-foreground/30 mb-5" strokeWidth={1.5} />
             <h2 className="text-lg font-semibold text-foreground mb-2">No shelters currently available here</h2>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto">
@@ -129,7 +129,7 @@ export default function Index() {
             </p>
           </div>
         ) : (
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {sortedListings.map(({ listing, distanceKm }) => (
               <ListingCard key={listing.id} listing={listing} distanceKm={distanceKm} />
             ))}
