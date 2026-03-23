@@ -72,6 +72,17 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
             )}
           </div>
 
+          {/* Pricing badge */}
+          {(listing as any).price_type === 'free' ? (
+            <Badge className="w-fit bg-green-50 text-green-700 border-green-200 border text-xs gap-1 hover:bg-green-50">
+              <Heart className="h-3 w-3" /> Free
+            </Badge>
+          ) : (listing as any).price_per_night ? (
+            <Badge variant="secondary" className="w-fit text-xs gap-1">
+              <DollarSign className="h-3 w-3" /> ₪{(listing as any).price_per_night}/night
+            </Badge>
+          ) : null}
+
           {/* Divider */}
           <div className="border-t border-border" />
 
