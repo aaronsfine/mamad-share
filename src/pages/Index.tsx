@@ -8,6 +8,7 @@ import { ShelterFilters } from '@/components/ShelterFilters';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { haversineDistance } from '@/lib/distance';
 import { Button } from '@/components/ui/button';
+import { ListingCardSkeleton } from '@/components/ListingCardSkeleton';
 import type { Tables } from '@/integrations/supabase/types';
 
 export default function Index() {
