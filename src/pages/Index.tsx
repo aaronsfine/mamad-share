@@ -31,11 +31,10 @@ export default function Index() {
     },
   });
 
-  const cities = useMemo(() => [...new Set(listings.map((l) => l.city))].sort(), [listings]);
+  const cities = ALL_CITIES;
   const neighborhoods = useMemo(() => {
-    const filtered = selectedCity !== 'all' ? listings.filter((l) => l.city === selectedCity) : listings;
-    return [...new Set(filtered.map((l) => l.neighborhood))].sort();
-  }, [listings, selectedCity]);
+    return selectedCity !== 'all' ? getNeighborhoods(selectedCity) : [];
+  }, [selectedCity]);
 
   const filtered = useMemo(() => {
     return listings.filter((l) => {
