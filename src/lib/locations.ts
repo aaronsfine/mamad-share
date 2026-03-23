@@ -159,3 +159,32 @@ export function getNeighborhoods(city: string): string[] {
   const found = ISRAEL_LOCATIONS.find((l) => l.city === city);
   return found ? found.neighborhoods : [];
 }
+
+/** Approximate city center coordinates for auto-geocoding */
+const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
+  'Jerusalem': { lat: 31.7683, lng: 35.2137 },
+  'Tel Aviv': { lat: 32.0853, lng: 34.7818 },
+  'Haifa': { lat: 32.7940, lng: 34.9896 },
+  'Beer Sheva': { lat: 31.2530, lng: 34.7915 },
+  'Rishon LeZion': { lat: 31.9730, lng: 34.7925 },
+  'Petah Tikva': { lat: 32.0868, lng: 34.8874 },
+  'Ashdod': { lat: 31.8014, lng: 34.6435 },
+  'Netanya': { lat: 32.3215, lng: 34.8532 },
+  'Holon': { lat: 32.0158, lng: 34.7796 },
+  'Bnei Brak': { lat: 32.0834, lng: 34.8331 },
+  'Ramat Gan': { lat: 32.0680, lng: 34.8248 },
+  'Ashkelon': { lat: 31.6688, lng: 34.5743 },
+  'Rehovot': { lat: 31.8928, lng: 34.8113 },
+  'Bat Yam': { lat: 32.0236, lng: 34.7501 },
+  'Herzliya': { lat: 32.1629, lng: 34.8441 },
+  'Kfar Saba': { lat: 32.1780, lng: 34.9066 },
+  'Modiin': { lat: 31.8969, lng: 35.0104 },
+  'Nazareth': { lat: 32.6996, lng: 35.3035 },
+  'Tiberias': { lat: 32.7922, lng: 35.5312 },
+  'Sderot': { lat: 31.5268, lng: 34.5955 },
+};
+
+/** Get approximate coordinates for a city (for auto-geocoding listings) */
+export function getCityCoords(city: string): { lat: number; lng: number } | null {
+  return CITY_COORDS[city] ?? null;
+}

@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import { SearchableSelect } from '@/components/SearchableSelect';
-import { ALL_CITIES, getNeighborhoods } from '@/lib/locations';
+import { ALL_CITIES, getNeighborhoods, getCityCoords } from '@/lib/locations';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Listing = Tables<'listings'>;
@@ -151,6 +151,7 @@ export default function Dashboard() {
     if (!user) return;
     setSaving(true);
 
+    const coords = getCityCoords(city);
     const payload = {
       host_id: user.id,
       host_name: hostName,
@@ -160,7 +161,6 @@ export default function Dashboard() {
       address: address || null,
       bedrooms,
       total_beds: totalBeds,
-      
       sleeping_notes: sleepingNotes || null,
       mamad_notes: mamadNotes || null,
       is_active: isActive,
@@ -168,6 +168,8 @@ export default function Dashboard() {
       smoking_allowed: smokingAllowed,
       price_type: priceType,
       price_per_night: priceType === 'paid' ? (pricePerNight || null) : null,
+      latitude: coords?.lat ?? null,
+      longitude: coords?.lng ?? null,
     };
 
     let error;
