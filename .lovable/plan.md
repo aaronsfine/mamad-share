@@ -1,41 +1,39 @@
 
 
-## Airbnb-Style UI Refactor + Hero Text Update
+## Problem
 
-Pure visual/layout refactor — no new features, no backend changes. Four files modified.
+When a host types an address that doesn't match their selected city/neighborhood (e.g., selects "Jerusalem, Nachlaot" but types a Tel Aviv street), the ArcGIS geocoder will either:
+1. Return coordinates for the actual typed address (wrong city) -- the map will show a location far from the selected neighborhood
+2. Fall through to city-level fallback -- inaccurate but at least in the right area
 
-### 1. `src/pages/Index.tsx` — Layout & structure
+There is no validation or warning to catch this mismatch.
 
-- All `max-w-4xl` → `max-w-6xl`
-- **Header**: `py-4` → `py-3`, rename "Host Login" to "List Your Apartment" with `variant="outline"`
-- **Hero + Filters merged** into one section:
-  - Title: "Find a Safe Place to Sleep Tonight" (`text-2xl sm:text-3xl`)
-  - Subtitle: "Families across Israel are opening their homes to help others stay safe during sirens. Find a nearby apartment with a secure room (mamad) and contact the host directly."
-  - Tertiary line: "Simple. Fast. Community-driven." in muted smaller text
-  - Filters embedded directly below in a rounded bar (via updated `ShelterFilters`)
-  - Reduce vertical padding (`py-8`)
-- **Grid**: `md:grid-cols-2` → `sm:grid-cols-2 lg:grid-cols-3`, gap `gap-5` → `gap-4`
-- Skeleton count: 4 → 6
-- Empty state: `py-24` → `py-16`
+## Plan
 
-### 2. `src/components/ListingCard.tsx` — Card redesign
+### 1. Add post-geocode sanity check in Dashboard.tsx
 
-Restructure hierarchy top-to-bottom:
-- **Top**: Host name small/muted with `User` icon. Location (city, neighborhood) large and bold with `MapPin` icon. Distance badge inline.
-- **Middle**: "Best for ~X people" as pill badge (`rounded-full bg-primary/10 text-primary`). Stats as single horizontal line: "3 bedrooms · 5 beds · 15 sqm mamad". Optional notes muted.
-- **Bottom**: Full-width green WhatsApp button.
-- Reduce padding `p-6` → `p-5`, spacing `space-y-5` → `space-y-3`
+After ArcGIS returns coordinates, compare them against the expected city center (from `getCityCoords`). If the returned coordinates are more than ~15km from the city center, treat it as a mismatch.
 
-### 3. `src/components/ShelterFilters.tsx` — Embedded bar
+**On mismatch:**
+- Show a warning toast: "The address you entered doesn't appear to be in {city}. Please double-check your address."
+- Fall back to neighborhood+city geocoding (skip the street-level result) so the map stays in the correct general area
+- Still allow the save to proceed -- don't block it
 
-- Wrap selects in `bg-muted/50 rounded-xl p-2 shadow-sm border`
-- Selects get `bg-white` for contrast
+### 2. Add address field hint text
 
-### 4. `src/components/ListingCardSkeleton.tsx` — Match new layout
+Below the address input in the listing form, add helper text:
+"Enter your street address in {city}, {neighborhood}. This is used for the approximate map only and is never shown publicly."
 
-- Adjust skeleton shapes: small bar (host name), wider bar (location), single horizontal stats line, button
+This nudges the host to enter a local address and reassures them about privacy.
 
 ### Technical details
 
-All changes are CSS classes and JSX restructuring. No new dependencies. No backend or routing changes.
+- Use `haversineDistance()` (already exists in `src/lib/distance.ts`) to compute distance between geocoded result and city center
+- Threshold: ~15km (covers large cities like Jerusalem end-to-end)
+- If geocoded point fails the check, skip it and try the next query in the fallback chain (neighborhood+city, then city-only)
+- No database or schema changes needed
+
+### Files to modify
+- `src/pages/Dashboard.tsx` -- add distance check after geocode, add address hint text
+- `src/lib/distance.ts` -- may need to export the haversine function if not already exported
 
