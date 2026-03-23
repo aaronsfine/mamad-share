@@ -1,10 +1,4 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { SearchableSelect } from '@/components/SearchableSelect';
 
 interface ShelterFiltersProps {
   cities: string[];
@@ -29,38 +23,26 @@ export function ShelterFilters({
         <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
           City
         </label>
-        <Select value={selectedCity} onValueChange={onCityChange}>
-          <SelectTrigger className="bg-card border-border">
-            <SelectValue placeholder="All Cities" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Cities</SelectItem>
-            {cities.map((city) => (
-              <SelectItem key={city} value={city}>
-                {city}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <SearchableSelect
+          options={cities}
+          value={selectedCity}
+          onValueChange={onCityChange}
+          placeholder="Search city..."
+          allLabel="All Cities"
+        />
       </div>
 
       <div className="flex-1 space-y-1.5">
         <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
           Neighborhood
         </label>
-        <Select value={selectedNeighborhood} onValueChange={onNeighborhoodChange}>
-          <SelectTrigger className="bg-card border-border">
-            <SelectValue placeholder="All Neighborhoods" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Neighborhoods</SelectItem>
-            {neighborhoods.map((n) => (
-              <SelectItem key={n} value={n}>
-                {n}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <SearchableSelect
+          options={neighborhoods}
+          value={selectedNeighborhood}
+          onValueChange={onNeighborhoodChange}
+          placeholder="Search neighborhood..."
+          allLabel="All Neighborhoods"
+        />
       </div>
     </div>
   );
