@@ -116,16 +116,16 @@ export default function Index() {
       <main className="max-w-4xl mx-auto px-4 py-8">
         {isLoading ? (
           <div className="grid gap-5 md:grid-cols-2">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-72 rounded-xl bg-card animate-pulse" />
+            {[1, 2, 3, 4].map((i) => (
+              <ListingCardSkeleton key={i} />
             ))}
           </div>
         ) : sortedListings.length === 0 ? (
-          <div className="text-center py-20">
-            <Shield className="h-12 w-12 mx-auto text-muted-foreground/40 mb-4" />
-            <h2 className="text-lg font-semibold text-foreground mb-1">No shelters found</h2>
-            <p className="text-sm text-muted-foreground">
-              Try adjusting your filters or check back later.
+          <div className="text-center py-24">
+            <MapPinOff className="h-16 w-16 mx-auto text-muted-foreground/30 mb-5" strokeWidth={1.5} />
+            <h2 className="text-lg font-semibold text-foreground mb-2">No shelters currently available here</h2>
+            <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+              Try expanding your search area or check back later for new listings.
             </p>
           </div>
         ) : (
