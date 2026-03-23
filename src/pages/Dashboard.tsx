@@ -151,21 +151,48 @@ export default function Dashboard() {
     if (!user) return;
     setSaving(true);
 
-    // Geocode using address + neighborhood + city for accuracy
+    // Geocode with ArcGIS first (more reliable for Israeli street addresses), then fallback.
     let lat: number | null = null;
     let lng: number | null = null;
-    const geocodeQuery = [address, neighborhood, city, 'Israel'].filter(Boolean).join(', ');
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(geocodeQuery)}&limit=1`);
-      const results = await res.json();
-      if (results.length > 0) {
-        lat = parseFloat(results[0].lat);
-        lng = parseFloat(results[0].lon);
+
+    const queries = Array.from(new Set([
+      [address, neighborhood, city, 'Israel'].filter(Boolean).join(', '),
+      [address, city, 'Israel'].filter(Boolean).join(', '),
+      [address?.replace(/\b(st|street|st\.)\b/gi, '').trim(), city, 'Israel'].filter(Boolean).join(', '),
+      [neighborhood, city, 'Israel'].filter(Boolean).join(', '),
+      [city, 'Israel'].filter(Boolean).join(', '),
+    ].filter((q) => q.length > 0)));
+
+    for (const q of queries) {
+      try {
+        const arcgisUrl = new URL('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates');
+        arcgisUrl.searchParams.set('f', 'json');
+        arcgisUrl.searchParams.set('singleLine', q);
+        arcgisUrl.searchParams.set('countryCode', 'ISR');
+        arcgisUrl.searchParams.set('maxLocations', '1');
+
+        const arcgisRes = await fetch(arcgisUrl.toString());
+        if (arcgisRes.ok) {
+          const arcgisData = await arcgisRes.json();
+          const candidate = arcgisData?.candidates?.[0];
+          if (candidate?.location?.y != null && candidate?.location?.x != null) {
+            lat = Number(candidate.location.y);
+            lng = Number(candidate.location.x);
+            break;
+          }
+        }
+      } catch {
+        // keep trying next query
       }
-    } catch {
-      // Fall back to city-level coords
+    }
+
+    // Final fallback so map never disappears
+    if (lat == null || lng == null) {
       const fallback = getCityCoords(city);
-      if (fallback) { lat = fallback.lat; lng = fallback.lng; }
+      if (fallback) {
+        lat = fallback.lat;
+        lng = fallback.lng;
+      }
     }
 
     const payload = {
