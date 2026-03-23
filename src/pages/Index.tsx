@@ -77,7 +77,7 @@ export default function Index() {
             <h1 className="text-xl font-bold tracking-tight text-foreground">Mamad Directory</h1>
           </div>
           <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
-            <Link to="/auth">
+            <Link to="/login">
               <LogIn className="h-4 w-4 mr-1.5" />
               Host Login
             </Link>

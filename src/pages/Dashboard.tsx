@@ -36,21 +36,39 @@ export default function Dashboard() {
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate('/login');
+        return;
+      }
+
+      // Check onboarding
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('onboarding_completed, full_name, whatsapp_phone')
+        .eq('id', session.user.id)
+        .maybeSingle();
+
+      if (!profile?.onboarding_completed) {
+        navigate('/welcome');
+        return;
+      }
+
+      setUser({ id: session.user.id });
+
+      // Pre-fill host name and phone from profile if creating new listing
+      if (profile.full_name) setHostName(profile.full_name);
+      if (profile.whatsapp_phone) setPhone(profile.whatsapp_phone);
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT' || !session) {
-        navigate('/auth');
-      } else {
-        setUser({ id: session.user.id });
+        navigate('/login');
       }
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate('/auth');
-      } else {
-        setUser({ id: session.user.id });
-      }
-    });
+    checkSession();
 
     return () => subscription.unsubscribe();
   }, [navigate]);
@@ -129,7 +147,7 @@ export default function Dashboard() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    navigate('/auth');
+    navigate('/login');
   };
 
   if (loading) {
