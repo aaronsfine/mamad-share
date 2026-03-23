@@ -68,16 +68,26 @@ export default function Index() {
     setSelectedNeighborhood('all');
   };
 
+  const resultsLabel = useMemo(() => {
+    const count = sortedListings.length;
+    const cityLabel = selectedCity !== 'all' ? selectedCity : '';
+    const neighborhoodLabel = selectedNeighborhood !== 'all' ? `, ${selectedNeighborhood}` : '';
+    const location = cityLabel ? ` in ${cityLabel}${neighborhoodLabel}` : '';
+    if (count === 0) return `No places found${location}. Try another city or neighborhood.`;
+    if (count <= 2) return `${count} place${count > 1 ? 's' : ''} found${location} — only a few rooms available right now.`;
+    return `${count} places found${location}`;
+  }, [sortedListings.length, selectedCity, selectedNeighborhood]);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-card border-b border-border">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-primary" />
-            <h1 className="text-lg font-bold tracking-tight text-foreground">Mamad Directory</h1>
+            <h1 className="text-base font-semibold text-primary">Mamad Directory</h1>
           </div>
-          <Button variant="outline" size="sm" asChild>
+          <Button variant="outline" size="sm" asChild className="rounded-full border-primary text-primary hover:bg-accent">
             <Link to="/login">
               <HomeIcon className="h-4 w-4 mr-1.5" />
               List Your Apartment
@@ -86,21 +96,30 @@ export default function Index() {
         </div>
       </header>
 
-      {/* Hero + Filters */}
+      {/* Hero */}
       <section className="bg-card border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-3">
+        <div className="max-w-5xl mx-auto px-4 pt-10 pb-8">
+          <div className="text-center">
+            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-primary mb-3">
               Find a Safe Place to Sleep Tonight
             </h2>
-            <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto mb-2">
-              Families across Israel are opening their homes to help others stay safe during sirens. Find a nearby apartment with a secure room (mamad) and contact the host directly.
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mt-3">
+              Families across Israel are opening their homes to help others stay safe during sirens.
+              Find a nearby apartment with a secure room (mamad) and contact the host directly.
             </p>
-            <p className="text-muted-foreground/70 text-xs font-medium tracking-wide">
-              Simple. Fast. Community-driven.
+            <p className="text-sm text-muted-foreground/70 mt-1">
+              Simple. Fast. Community-driven and free to use.
             </p>
           </div>
+        </div>
+      </section>
 
+      {/* Filters */}
+      <section className="bg-card border-b border-border">
+        <div className="max-w-5xl mx-auto px-4 py-5">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3 md:text-left text-center">
+            Browse available safe rooms
+          </p>
           <ShelterFilters
             cities={cities}
             neighborhoods={neighborhoods}
@@ -113,26 +132,37 @@ export default function Index() {
       </section>
 
       {/* Content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      <main className="max-w-5xl mx-auto px-4 py-8">
         {isLoading ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <ListingCardSkeleton key={i} />
-            ))}
+          <div className="bg-card rounded-2xl border border-border shadow-sm px-4 py-6 md:px-6 md:py-8">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <ListingCardSkeleton key={i} />
+              ))}
+            </div>
           </div>
         ) : sortedListings.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="bg-card rounded-2xl border border-border shadow-sm px-4 py-10 text-center">
             <MapPinOff className="h-16 w-16 mx-auto text-muted-foreground/30 mb-5" strokeWidth={1.5} />
-            <h2 className="text-lg font-semibold text-foreground mb-2">No shelters currently available here</h2>
-            <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-              Try expanding your search area or check back later for new listings.
+            <h3 className="text-lg font-semibold text-foreground mb-2">No safe rooms here yet</h3>
+            <p className="text-sm text-muted-foreground max-w-xs mx-auto mb-6">
+              Try another city or neighborhood, or check back soon as more families open their homes.
             </p>
+            <Button variant="outline" asChild className="rounded-full border-primary text-primary hover:bg-accent">
+              <Link to="/login">
+                <HomeIcon className="h-4 w-4 mr-1.5" />
+                List your apartment
+              </Link>
+            </Button>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {sortedListings.map(({ listing, distanceKm }) => (
-              <ListingCard key={listing.id} listing={listing} distanceKm={distanceKm} />
-            ))}
+          <div className="bg-card rounded-2xl border border-border shadow-sm px-4 py-6 md:px-6 md:py-8">
+            <p className="text-sm text-muted-foreground mb-4">{resultsLabel}</p>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {sortedListings.map(({ listing, distanceKm }) => (
+                <ListingCard key={listing.id} listing={listing} distanceKm={distanceKm} />
+              ))}
+            </div>
           </div>
         )}
       </main>
