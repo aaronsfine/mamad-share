@@ -90,7 +90,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
 
           {/* Stats — single line */}
           <p className="text-sm text-muted-foreground">
-            {listing.bedrooms} bedroom{listing.bedrooms !== 1 ? 's' : ''} · {listing.total_beds} bed{listing.total_beds !== 1 ? 's' : ''} · {listing.mamad_size_sqm} sqm mamad
+            {listing.bedrooms} bedroom{listing.bedrooms !== 1 ? 's' : ''} · {listing.total_beds} bed{listing.total_beds !== 1 ? 's' : ''}
           </p>
 
           {/* Pets & Smoking tags */}
