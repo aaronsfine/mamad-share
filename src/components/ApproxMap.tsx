@@ -20,7 +20,7 @@ export function ApproxMap({ lat, lng, label }: ApproxMapProps) {
       zoom: 16,
       scrollWheelZoom: false,
       dragging: true,
-      zoomControl: false,
+      zoomControl: true,
       attributionControl: false,
     });
 
