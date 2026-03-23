@@ -23,12 +23,32 @@ export default function Index() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('listings')
-        .select('id, host_name, phone, city, neighborhood, bedrooms, total_beds, mamad_size_sqm, sleeping_notes, mamad_notes, latitude, longitude, created_at')
+        .select('*')
         .eq('is_active', true)
         .order('created_at', { ascending: false });
       if (error) throw error;
       return data as Tables<'listings'>[];
     },
+  });
+
+  // Fetch photos for all listings
+  const { data: listingPhotos = {} } = useQuery({
+    queryKey: ['listing-photos', listings.map(l => l.id)],
+    queryFn: async () => {
+      const photoMap: Record<string, string[]> = {};
+      for (const listing of listings) {
+        const { data: files } = await supabase.storage
+          .from('listing-photos')
+          .list(listing.id, { limit: 10 });
+        if (files && files.length > 0) {
+          photoMap[listing.id] = files.map(f =>
+            supabase.storage.from('listing-photos').getPublicUrl(`${listing.id}/${f.name}`).data.publicUrl
+          );
+        }
+      }
+      return photoMap;
+    },
+    enabled: listings.length > 0,
   });
 
   const cities = ALL_CITIES;
