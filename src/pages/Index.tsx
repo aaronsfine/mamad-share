@@ -16,6 +16,9 @@ import type { Tables } from '@/integrations/supabase/types';
 export default function Index() {
   const [selectedCity, setSelectedCity] = useState('all');
   const [selectedNeighborhood, setSelectedNeighborhood] = useState('all');
+  const [petsFilter, setPetsFilter] = useState<'all' | 'yes' | 'no'>('all');
+  const [smokingFilter, setSmokingFilter] = useState<'all' | 'yes' | 'no'>('all');
+  const [priceFilter, setPriceFilter] = useState<'all' | 'free' | 'paid'>('all');
   const geo = useGeolocation();
 
   const { data: listings = [], isLoading } = useQuery({
