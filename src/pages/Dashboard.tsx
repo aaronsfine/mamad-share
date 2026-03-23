@@ -151,7 +151,23 @@ export default function Dashboard() {
     if (!user) return;
     setSaving(true);
 
-    const coords = getCityCoords(city);
+    // Geocode using address + neighborhood + city for accuracy
+    let lat: number | null = null;
+    let lng: number | null = null;
+    const geocodeQuery = [address, neighborhood, city, 'Israel'].filter(Boolean).join(', ');
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(geocodeQuery)}&limit=1`);
+      const results = await res.json();
+      if (results.length > 0) {
+        lat = parseFloat(results[0].lat);
+        lng = parseFloat(results[0].lon);
+      }
+    } catch {
+      // Fall back to city-level coords
+      const fallback = getCityCoords(city);
+      if (fallback) { lat = fallback.lat; lng = fallback.lng; }
+    }
+
     const payload = {
       host_id: user.id,
       host_name: hostName,
@@ -168,8 +184,8 @@ export default function Dashboard() {
       smoking_allowed: smokingAllowed,
       price_type: priceType,
       price_per_night: priceType === 'paid' ? (pricePerNight || null) : null,
-      latitude: coords?.lat ?? null,
-      longitude: coords?.lng ?? null,
+      latitude: lat,
+      longitude: lng,
     };
 
     let error;
