@@ -27,7 +27,6 @@ export type Database = {
           latitude: number | null
           longitude: number | null
           mamad_notes: string | null
-          mamad_size_sqm: number
           neighborhood: string
           pets_allowed: boolean
           phone: string
@@ -50,7 +49,6 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           mamad_notes?: string | null
-          mamad_size_sqm?: number
           neighborhood: string
           pets_allowed?: boolean
           phone: string
@@ -73,7 +71,6 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           mamad_notes?: string | null
-          mamad_size_sqm?: number
           neighborhood?: string
           pets_allowed?: boolean
           phone?: string
