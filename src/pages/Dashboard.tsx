@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
