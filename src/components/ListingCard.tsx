@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { MapPin, User, MessageCircle, BedDouble, Shield, PawPrint, Cigarette, ChevronLeft, ChevronRight, Image, Heart, Info } from 'lucide-react';
 import { buildWhatsAppLink } from '@/lib/whatsapp';
 import { formatDistance } from '@/lib/distance';
+import { ApproxMap } from '@/components/ApproxMap';
 import type { Tables } from '@/integrations/supabase/types';
 
 interface ListingCardProps {
@@ -187,22 +188,11 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
             )}
             {/* Approximate location map */}
             {listing.latitude != null && listing.longitude != null && (
-              <div className="space-y-1.5">
-                <p className="text-xs font-medium text-muted-foreground">Where you'll be</p>
-                <p className="text-xs text-muted-foreground">{listing.city}, {listing.neighborhood}</p>
-                <div className="rounded-lg overflow-hidden border border-border">
-                  <iframe
-                    title="Approximate location"
-                    width="100%"
-                    height="200"
-                    style={{ border: 0 }}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${listing.latitude},${listing.longitude}&zoom=14`}
-                  />
-                </div>
-                <p className="text-[10px] text-muted-foreground/60">Approximate area shown — exact address shared after contact.</p>
-              </div>
+              <ApproxMap
+                lat={listing.latitude}
+                lng={listing.longitude}
+                label={`${listing.city}, ${listing.neighborhood}`}
+              />
             )}
             <div className="border-t border-border pt-2">
               <Button
