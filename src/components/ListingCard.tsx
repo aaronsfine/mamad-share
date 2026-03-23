@@ -72,20 +72,26 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
           </p>
 
           {/* Pets & Smoking tags */}
-          {((listing as any).pets_allowed || (listing as any).smoking_allowed) && (
-            <div className="flex flex-wrap gap-2">
-              {(listing as any).pets_allowed && (
-                <Badge variant="outline" className="text-xs gap-1">
-                  <PawPrint className="h-3 w-3" /> Pets OK
-                </Badge>
-              )}
-              {(listing as any).smoking_allowed && (
-                <Badge variant="outline" className="text-xs gap-1">
-                  <Cigarette className="h-3 w-3" /> Smoking OK
-                </Badge>
-              )}
-            </div>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {(listing as any).pets_allowed ? (
+              <Badge variant="outline" className="text-xs gap-1 border-green-200 text-green-700 bg-green-50">
+                <PawPrint className="h-3 w-3" /> Pets Welcome
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="text-xs gap-1 border-red-200 text-red-600 bg-red-50">
+                <PawPrint className="h-3 w-3" /> No Pets
+              </Badge>
+            )}
+            {(listing as any).smoking_allowed ? (
+              <Badge variant="outline" className="text-xs gap-1 border-green-200 text-green-700 bg-green-50">
+                <Cigarette className="h-3 w-3" /> Smoking OK
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="text-xs gap-1 border-red-200 text-red-600 bg-red-50">
+                <Cigarette className="h-3 w-3" /> No Smoking
+              </Badge>
+            )}
+          </div>
 
           {/* Notes */}
           {(listing.sleeping_notes || listing.mamad_notes) && (
