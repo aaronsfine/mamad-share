@@ -63,9 +63,15 @@ export default function Index() {
     return listings.filter((l) => {
       if (selectedCity !== 'all' && l.city !== selectedCity) return false;
       if (selectedNeighborhood !== 'all' && l.neighborhood !== selectedNeighborhood) return false;
+      if (petsFilter === 'yes' && !(l as any).pets_allowed) return false;
+      if (petsFilter === 'no' && (l as any).pets_allowed) return false;
+      if (smokingFilter === 'yes' && !(l as any).smoking_allowed) return false;
+      if (smokingFilter === 'no' && (l as any).smoking_allowed) return false;
+      if (priceFilter === 'free' && (l as any).price_type !== 'free') return false;
+      if (priceFilter === 'paid' && (l as any).price_type !== 'paid') return false;
       return true;
     });
-  }, [listings, selectedCity, selectedNeighborhood]);
+  }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter]);
 
   const sortedListings = useMemo(() => {
     const hasUserLocation = geo.latitude != null && geo.longitude != null;
