@@ -24,34 +24,44 @@ export function ShelterFilters({
   onNeighborhoodChange,
 }: ShelterFiltersProps) {
   return (
-    <div className="flex gap-3 bg-muted/50 rounded-xl p-2 shadow-sm border border-border">
-      <Select value={selectedCity} onValueChange={onCityChange}>
-        <SelectTrigger className="flex-1 bg-card border-border">
-          <SelectValue placeholder="All Cities" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Cities</SelectItem>
-          {cities.map((city) => (
-            <SelectItem key={city} value={city}>
-              {city}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <div className="flex flex-col md:flex-row gap-4 md:items-end">
+      <div className="flex-1 space-y-1.5">
+        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+          City
+        </label>
+        <Select value={selectedCity} onValueChange={onCityChange}>
+          <SelectTrigger className="bg-card border-border">
+            <SelectValue placeholder="All Cities" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Cities</SelectItem>
+            {cities.map((city) => (
+              <SelectItem key={city} value={city}>
+                {city}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-      <Select value={selectedNeighborhood} onValueChange={onNeighborhoodChange}>
-        <SelectTrigger className="flex-1 bg-card border-border">
-          <SelectValue placeholder="All Neighborhoods" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Neighborhoods</SelectItem>
-          {neighborhoods.map((n) => (
-            <SelectItem key={n} value={n}>
-              {n}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <div className="flex-1 space-y-1.5">
+        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+          Neighborhood
+        </label>
+        <Select value={selectedNeighborhood} onValueChange={onNeighborhoodChange}>
+          <SelectTrigger className="bg-card border-border">
+            <SelectValue placeholder="All Neighborhoods" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Neighborhoods</SelectItem>
+            {neighborhoods.map((n) => (
+              <SelectItem key={n} value={n}>
+                {n}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }
