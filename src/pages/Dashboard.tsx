@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, LogOut, ArrowLeft, Home, Plus, Upload, X, PawPrint, Cigarette, Pencil, MapPin, User, BedDouble, Eye, EyeOff, Image, Heart, DollarSign } from 'lucide-react';
+import { Shield, LogOut, ArrowLeft, Home, Plus, Upload, X, PawPrint, Cigarette, Pencil, MapPin, User, BedDouble, Eye, EyeOff, Image, Heart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -358,7 +358,7 @@ export default function Dashboard() {
 
         {/* Pricing */}
         <div className="flex items-center gap-2 text-sm">
-          <DollarSign className="h-4 w-4 text-primary shrink-0" />
+          <span className="text-primary font-medium">₪</span>
           {(listing as any).price_type === 'free' ? (
             <span className="font-medium text-green-700">Free — חסד (act of kindness)</span>
           ) : (
@@ -521,7 +521,7 @@ export default function Dashboard() {
                 onClick={() => setPriceType('paid')}
                 className="flex-1"
               >
-                <DollarSign className="h-4 w-4 mr-1.5" />
+                <span className="mr-1.5">₪</span>
                 Subsidized
               </Button>
             </div>

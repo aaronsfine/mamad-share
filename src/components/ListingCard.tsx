@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { MapPin, User, MessageCircle, BedDouble, Shield, PawPrint, Cigarette, ChevronLeft, ChevronRight, Image, Heart, DollarSign, Info } from 'lucide-react';
+import { MapPin, User, MessageCircle, BedDouble, Shield, PawPrint, Cigarette, ChevronLeft, ChevronRight, Image, Heart, Info } from 'lucide-react';
 import { buildWhatsAppLink } from '@/lib/whatsapp';
 import { formatDistance } from '@/lib/distance';
 import type { Tables } from '@/integrations/supabase/types';
@@ -81,7 +81,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
             </Badge>
           ) : (listing as any).price_per_night ? (
             <Badge variant="secondary" className="w-fit text-xs gap-1">
-              <DollarSign className="h-3 w-3" /> ₪{(listing as any).price_per_night}/night
+              ₪{(listing as any).price_per_night}/night
             </Badge>
           ) : null}
 
