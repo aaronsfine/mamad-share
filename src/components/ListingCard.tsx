@@ -22,26 +22,35 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
 
   return (
     <>
-      <Card className="overflow-hidden bg-card border-border shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-150 rounded-2xl">
-        {/* Photo section */}
-        {hasPhotos && (
-          <div
-            className="relative h-44 cursor-pointer group"
-            onClick={() => { setLightboxIndex(0); setLightboxOpen(true); }}
-          >
-            <img
-              src={photoUrls[0]}
-              alt={`${listing.city}, ${listing.neighborhood}`}
-              className="w-full h-full object-cover"
-            />
-            {photoUrls.length > 1 && (
-              <Badge className="absolute bottom-2 right-2 bg-black/60 text-white border-0 text-xs">
-                <Image className="h-3 w-3 mr-1" />
-                {photoUrls.length} photos
-              </Badge>
-            )}
-          </div>
-        )}
+      <Card className="overflow-hidden bg-card border-border shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-150 rounded-2xl flex flex-col">
+        {/* Photo or placeholder header — consistent height for all cards */}
+        <div
+          className={`relative h-36 ${hasPhotos ? 'cursor-pointer' : ''}`}
+          onClick={hasPhotos ? () => { setLightboxIndex(0); setLightboxOpen(true); } : undefined}
+        >
+          {hasPhotos ? (
+            <>
+              <img
+                src={photoUrls[0]}
+                alt={`${listing.city}, ${listing.neighborhood}`}
+                className="w-full h-full object-cover"
+              />
+              {photoUrls.length > 1 && (
+                <Badge className="absolute bottom-2 right-2 bg-black/60 text-white border-0 text-xs">
+                  <Image className="h-3 w-3 mr-1" />
+                  {photoUrls.length} photos
+                </Badge>
+              )}
+            </>
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/30 flex items-center justify-center">
+              <div className="text-center">
+                <MapPin className="h-8 w-8 text-primary/40 mx-auto mb-1" />
+                <span className="text-xs text-primary/50 font-medium">{listing.city}</span>
+              </div>
+            </div>
+          )}
+        </div>
 
         <CardContent className="p-5 md:p-6 flex flex-col gap-3">
           {/* Header: Location + Host */}

@@ -1,12 +1,13 @@
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, LogOut, ArrowLeft, Home, Plus, Upload, X, PawPrint, Cigarette } from 'lucide-react';
+import { Shield, LogOut, ArrowLeft, Home, Plus, Upload, X, PawPrint, Cigarette, Pencil, MapPin, User, BedDouble, Eye, EyeOff, Image } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -22,7 +23,7 @@ export default function Dashboard() {
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -46,6 +47,22 @@ export default function Dashboard() {
   const [newPhotos, setNewPhotos] = useState<File[]>([]);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const populateForm = (data: Listing) => {
+    setHostName(data.host_name);
+    setPhone(data.phone);
+    setCity(data.city);
+    setNeighborhood(data.neighborhood);
+    setAddress(data.address || '');
+    setBedrooms(data.bedrooms);
+    setTotalBeds(data.total_beds);
+    setMamadSize(data.mamad_size_sqm);
+    setSleepingNotes(data.sleeping_notes || '');
+    setMamadNotes(data.mamad_notes || '');
+    setIsActive(data.is_active);
+    setPetsAllowed((data as any).pets_allowed ?? false);
+    setSmokingAllowed((data as any).smoking_allowed ?? false);
+  };
 
   useEffect(() => {
     const checkSession = async () => {
@@ -81,7 +98,6 @@ export default function Dashboard() {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  // Load existing listing
   useEffect(() => {
     if (!user) return;
 
@@ -96,21 +112,8 @@ export default function Dashboard() {
         toast({ title: 'Error loading listing', description: error.message, variant: 'destructive' });
       } else if (data) {
         setListing(data);
-        setHostName(data.host_name);
-        setPhone(data.phone);
-        setCity(data.city);
-        setNeighborhood(data.neighborhood);
-        setAddress(data.address || '');
-        setBedrooms(data.bedrooms);
-        setTotalBeds(data.total_beds);
-        setMamadSize(data.mamad_size_sqm);
-        setSleepingNotes(data.sleeping_notes || '');
-        setMamadNotes(data.mamad_notes || '');
-        setIsActive(data.is_active);
-        setPetsAllowed((data as any).pets_allowed ?? false);
-        setSmokingAllowed((data as any).smoking_allowed ?? false);
+        populateForm(data);
 
-        // Load existing photos
         const { data: files } = await supabase.storage
           .from('listing-photos')
           .list(data.id, { limit: 10 });
@@ -171,7 +174,6 @@ export default function Dashboard() {
       listingId = result.data?.id;
     }
 
-    // Upload new photos
     if (!error && listingId && newPhotos.length > 0) {
       setUploadingPhotos(true);
       for (const file of newPhotos) {
@@ -197,7 +199,7 @@ export default function Dashboard() {
       const { data } = await supabase.from('listings').select('*').eq('host_id', user.id).maybeSingle();
       if (data) {
         setListing(data);
-        // Refresh photos
+        populateForm(data);
         const { data: files } = await supabase.storage
           .from('listing-photos')
           .list(data.id, { limit: 10 });
@@ -206,8 +208,11 @@ export default function Dashboard() {
             name: f.name,
             url: supabase.storage.from('listing-photos').getPublicUrl(`${data.id}/${f.name}`).data.publicUrl,
           })));
+        } else {
+          setExistingPhotos([]);
         }
       }
+      setEditing(false);
     }
   };
 
@@ -216,15 +221,45 @@ export default function Dashboard() {
     navigate('/login');
   };
 
+  const handleStartEdit = () => {
+    if (listing) populateForm(listing);
+    setEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    if (listing) populateForm(listing);
+    setNewPhotos([]);
+    setEditing(false);
+  };
+
+  // --- HEADER (shared) ---
+  const header = (
+    <header className="bg-primary text-primary-foreground shadow-md">
+      <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Shield className="h-6 w-6" />
+          <h1 className="text-lg font-bold">Host Dashboard</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" asChild className="text-primary-foreground hover:bg-primary-foreground/10">
+            <Link to="/">
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Feed
+            </Link>
+          </Button>
+          <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-primary-foreground hover:bg-primary-foreground/10">
+            <LogOut className="h-4 w-4 mr-1" />
+            Sign Out
+          </Button>
+        </div>
+      </div>
+    </header>
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <header className="bg-primary text-primary-foreground shadow-md">
-          <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-2">
-            <Shield className="h-6 w-6" />
-            <h1 className="text-lg font-bold">Host Dashboard</h1>
-          </div>
-        </header>
+        {header}
         <main className="max-w-2xl mx-auto px-4 py-6">
           <Card>
             <CardHeader>
@@ -245,31 +280,291 @@ export default function Dashboard() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-primary text-primary-foreground shadow-md">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Shield className="h-6 w-6" />
-            <h1 className="text-lg font-bold">Host Dashboard</h1>
+  // --- VIEW MODE ---
+  const viewMode = listing && !editing && (
+    <Card>
+      <CardHeader className="flex flex-row items-start justify-between">
+        <div>
+          <CardTitle>Your Listing</CardTitle>
+          <CardDescription className="flex items-center gap-1.5 mt-1">
+            {listing.is_active ? (
+              <><Eye className="h-3.5 w-3.5 text-green-600" /> <span className="text-green-600">Live — visible to families</span></>
+            ) : (
+              <><EyeOff className="h-3.5 w-3.5 text-muted-foreground" /> <span>Hidden from public feed</span></>
+            )}
+          </CardDescription>
+        </div>
+        <Button variant="outline" size="sm" onClick={handleStartEdit}>
+          <Pencil className="h-4 w-4 mr-1.5" />
+          Edit
+        </Button>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Photos */}
+        {existingPhotos.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {existingPhotos.map((photo) => (
+              <img key={photo.name} src={photo.url} alt="" className="h-24 w-32 object-cover rounded-lg border border-border shrink-0" />
+            ))}
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" asChild className="text-primary-foreground hover:bg-primary-foreground/10">
-              <Link to="/">
-                <ArrowLeft className="h-4 w-4 mr-1" />
-                Feed
-              </Link>
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-primary-foreground hover:bg-primary-foreground/10">
-              <LogOut className="h-4 w-4 mr-1" />
-              Sign Out
-            </Button>
+        )}
+
+        {/* Location & Host */}
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-1.5">
+            <MapPin className="h-4 w-4 text-primary shrink-0" />
+            <span className="text-base font-semibold text-foreground">{listing.city} · {listing.neighborhood}</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <User className="h-3.5 w-3.5" />
+            <span>{listing.host_name}</span>
           </div>
         </div>
-      </header>
+
+        <div className="border-t border-border" />
+
+        {/* Stats */}
+        <p className="text-sm text-muted-foreground">
+          {listing.bedrooms} bedroom{listing.bedrooms !== 1 ? 's' : ''} · {listing.total_beds} bed{listing.total_beds !== 1 ? 's' : ''} · {listing.mamad_size_sqm} sqm mamad
+        </p>
+
+        {/* Pets & Smoking */}
+        <div className="flex flex-wrap gap-2">
+          {(listing as any).pets_allowed ? (
+            <Badge variant="outline" className="text-xs gap-1 border-green-200 text-green-700 bg-green-50">
+              <PawPrint className="h-3 w-3" /> Pets Welcome
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-xs gap-1 border-red-200 text-red-600 bg-red-50">
+              <PawPrint className="h-3 w-3" /> No Pets
+            </Badge>
+          )}
+          {(listing as any).smoking_allowed ? (
+            <Badge variant="outline" className="text-xs gap-1 border-green-200 text-green-700 bg-green-50">
+              <Cigarette className="h-3 w-3" /> Smoking OK
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-xs gap-1 border-red-200 text-red-600 bg-red-50">
+              <Cigarette className="h-3 w-3" /> No Smoking
+            </Badge>
+          )}
+        </div>
+
+        {/* Notes */}
+        {(listing.sleeping_notes || listing.mamad_notes) && (
+          <div className="space-y-1.5">
+            {listing.sleeping_notes && (
+              <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                <BedDouble className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                <span>{listing.sleeping_notes}</span>
+              </div>
+            )}
+            {listing.mamad_notes && (
+              <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                <Shield className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                <span>{listing.mamad_notes}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {listing.address && (
+          <p className="text-xs text-muted-foreground/70">
+            📍 Private address: {listing.address}
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+
+  // --- EDIT / CREATE FORM ---
+  const formMode = (editing || !listing) && (
+    <Card>
+      <CardHeader className="flex flex-row items-start justify-between">
+        <div>
+          <CardTitle>{listing ? 'Edit Your Listing' : 'Create Your Listing'}</CardTitle>
+          <CardDescription>
+            {listing ? 'Update your shelter information below.' : 'Fill out the form to list your shelter.'}
+          </CardDescription>
+        </div>
+        {listing && (
+          <Button variant="ghost" size="sm" onClick={handleCancelEdit}>
+            Cancel
+          </Button>
+        )}
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSave} className="space-y-5">
+          {/* Active toggle */}
+          <div className="flex items-center justify-between rounded-lg border border-border p-4">
+            <div>
+              <Label className="text-sm font-medium">Listing Status</Label>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {isActive ? 'Your listing is visible to families.' : 'Your listing is hidden from the public feed.'}
+              </p>
+            </div>
+            <Switch checked={isActive} onCheckedChange={setIsActive} />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="hostName">Your Name</Label>
+              <Input id="hostName" value={hostName} onChange={(e) => setHostName(e.target.value)} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone (with country code)</Label>
+              <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="972501234567" required />
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>City</Label>
+              <SearchableSelect
+                options={ALL_CITIES}
+                value={city}
+                onValueChange={(v) => { setCity(v); setNeighborhood(''); }}
+                placeholder="Search city..."
+                showAll={false}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Neighborhood</Label>
+              <SearchableSelect
+                options={city ? getNeighborhoods(city) : []}
+                value={neighborhood}
+                onValueChange={setNeighborhood}
+                placeholder="Search neighborhood..."
+                showAll={false}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="address">Approximate Address</Label>
+            <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="e.g. Near Dizengoff Center" />
+            <p className="text-xs text-muted-foreground">Private — not shown publicly.</p>
+          </div>
+
+          <div className="grid gap-4 grid-cols-3">
+            <div className="space-y-2">
+              <Label htmlFor="bedrooms">Bedrooms</Label>
+              <Input id="bedrooms" type="number" min={0} value={bedrooms} onChange={(e) => setBedrooms(Number(e.target.value))} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="totalBeds">Total Beds</Label>
+              <Input id="totalBeds" type="number" min={0} value={totalBeds} onChange={(e) => setTotalBeds(Number(e.target.value))} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="mamadSize">Mamad (sqm)</Label>
+              <Input id="mamadSize" type="number" min={1} value={mamadSize} onChange={(e) => setMamadSize(Number(e.target.value))} required />
+            </div>
+          </div>
+
+          {/* Pets & Smoking */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="flex items-center justify-between rounded-lg border border-border p-4">
+              <div className="flex items-center gap-2">
+                <PawPrint className="h-4 w-4 text-muted-foreground" />
+                <Label className="text-sm font-medium">Pets Welcome</Label>
+              </div>
+              <Switch checked={petsAllowed} onCheckedChange={setPetsAllowed} />
+            </div>
+            <div className="flex items-center justify-between rounded-lg border border-border p-4">
+              <div className="flex items-center gap-2">
+                <Cigarette className="h-4 w-4 text-muted-foreground" />
+                <Label className="text-sm font-medium">Smoking OK</Label>
+              </div>
+              <Switch checked={smokingAllowed} onCheckedChange={setSmokingAllowed} />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="sleepingNotes">Sleeping Notes (optional)</Label>
+            <Textarea id="sleepingNotes" value={sleepingNotes} onChange={(e) => setSleepingNotes(e.target.value)} placeholder="e.g. 2 mattresses available, sofa bed in living room" rows={2} />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="mamadNotes">Mamad Notes (optional)</Label>
+            <Textarea id="mamadNotes" value={mamadNotes} onChange={(e) => setMamadNotes(e.target.value)} placeholder="e.g. Reinforced door, stocked with water" rows={2} />
+          </div>
+
+          {/* Photo Upload */}
+          <div className="space-y-3">
+            <Label>Photos (optional)</Label>
+            <p className="text-xs text-muted-foreground">Add photos of your space to help families feel comfortable. Max 5 photos.</p>
+
+            {existingPhotos.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {existingPhotos.map((photo) => (
+                  <div key={photo.name} className="relative group w-20 h-20 rounded-lg overflow-hidden border border-border">
+                    <img src={photo.url} alt="" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePhoto(photo.name)}
+                      className="absolute top-0.5 right-0.5 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {newPhotos.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {newPhotos.map((file, i) => (
+                  <div key={i} className="relative group w-20 h-20 rounded-lg overflow-hidden border border-border border-dashed">
+                    <img src={URL.createObjectURL(file)} alt="" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setNewPhotos(prev => prev.filter((_, idx) => idx !== i))}
+                      className="absolute top-0.5 right-0.5 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {existingPhotos.length + newPhotos.length < 5 && (
+              <>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files || []);
+                    const remaining = 5 - existingPhotos.length - newPhotos.length;
+                    setNewPhotos(prev => [...prev, ...files.slice(0, remaining)]);
+                    e.target.value = '';
+                  }}
+                />
+                <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+                  <Upload className="h-4 w-4 mr-1.5" />
+                  Add Photos
+                </Button>
+              </>
+            )}
+          </div>
+
+          <Button type="submit" className="w-full" size="lg" disabled={saving || uploadingPhotos}>
+            {saving || uploadingPhotos ? 'Saving...' : listing ? 'Update Listing' : 'Create Listing'}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+
+  return (
+    <div className="min-h-screen bg-background">
+      {header}
 
       <main className="max-w-2xl mx-auto px-4 py-6">
-        {!listing && !showForm ? (
+        {!listing && !editing ? (
           <div className="text-center py-24">
             <Home className="h-16 w-16 mx-auto text-muted-foreground/30 mb-5" strokeWidth={1.5} />
             <h2 className="text-xl font-semibold text-foreground mb-2">
@@ -278,185 +573,16 @@ export default function Dashboard() {
             <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6">
               Add your mamad to help families in need. Your listing will appear in the public directory once published.
             </p>
-            <Button size="lg" onClick={() => setShowForm(true)}>
+            <Button size="lg" onClick={() => setEditing(true)}>
               <Plus className="h-5 w-5 mr-1.5" />
               Create Listing
             </Button>
           </div>
         ) : (
-          <Card>
-            <CardHeader>
-              <CardTitle>{listing ? 'Edit Your Listing' : 'Create Your Listing'}</CardTitle>
-              <CardDescription>
-                {listing ? 'Update your shelter information below.' : 'Fill out the form to list your shelter.'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSave} className="space-y-5">
-                {/* Active toggle */}
-                <div className="flex items-center justify-between rounded-lg border border-border p-4">
-                  <div>
-                    <Label className="text-sm font-medium">Listing Status</Label>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {isActive ? 'Your listing is visible to families.' : 'Your listing is hidden from the public feed.'}
-                    </p>
-                  </div>
-                  <Switch checked={isActive} onCheckedChange={setIsActive} />
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="hostName">Your Name</Label>
-                    <Input id="hostName" value={hostName} onChange={(e) => setHostName(e.target.value)} required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone (with country code)</Label>
-                    <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="972501234567" required />
-                  </div>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>City</Label>
-                    <SearchableSelect
-                      options={ALL_CITIES}
-                      value={city}
-                      onValueChange={(v) => { setCity(v); setNeighborhood(''); }}
-                      placeholder="Search city..."
-                      showAll={false}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Neighborhood</Label>
-                    <SearchableSelect
-                      options={city ? getNeighborhoods(city) : []}
-                      value={neighborhood}
-                      onValueChange={setNeighborhood}
-                      placeholder="Search neighborhood..."
-                      showAll={false}
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="address">Approximate Address</Label>
-                  <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="e.g. Near Dizengoff Center" />
-                  <p className="text-xs text-muted-foreground">Private — not shown publicly.</p>
-                </div>
-
-                <div className="grid gap-4 grid-cols-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="bedrooms">Bedrooms</Label>
-                    <Input id="bedrooms" type="number" min={0} value={bedrooms} onChange={(e) => setBedrooms(Number(e.target.value))} required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="totalBeds">Total Beds</Label>
-                    <Input id="totalBeds" type="number" min={0} value={totalBeds} onChange={(e) => setTotalBeds(Number(e.target.value))} required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="mamadSize">Mamad (sqm)</Label>
-                    <Input id="mamadSize" type="number" min={1} value={mamadSize} onChange={(e) => setMamadSize(Number(e.target.value))} required />
-                  </div>
-                </div>
-
-                {/* Pets & Smoking */}
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="flex items-center justify-between rounded-lg border border-border p-4">
-                    <div className="flex items-center gap-2">
-                      <PawPrint className="h-4 w-4 text-muted-foreground" />
-                      <Label className="text-sm font-medium">Pets Welcome</Label>
-                    </div>
-                    <Switch checked={petsAllowed} onCheckedChange={setPetsAllowed} />
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg border border-border p-4">
-                    <div className="flex items-center gap-2">
-                      <Cigarette className="h-4 w-4 text-muted-foreground" />
-                      <Label className="text-sm font-medium">Smoking OK</Label>
-                    </div>
-                    <Switch checked={smokingAllowed} onCheckedChange={setSmokingAllowed} />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="sleepingNotes">Sleeping Notes (optional)</Label>
-                  <Textarea id="sleepingNotes" value={sleepingNotes} onChange={(e) => setSleepingNotes(e.target.value)} placeholder="e.g. 2 mattresses available, sofa bed in living room" rows={2} />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="mamadNotes">Mamad Notes (optional)</Label>
-                  <Textarea id="mamadNotes" value={mamadNotes} onChange={(e) => setMamadNotes(e.target.value)} placeholder="e.g. Reinforced door, stocked with water" rows={2} />
-                </div>
-
-                {/* Photo Upload */}
-                <div className="space-y-3">
-                  <Label>Photos (optional)</Label>
-                  <p className="text-xs text-muted-foreground">Add photos of your space to help families feel comfortable. Max 5 photos.</p>
-
-                  {/* Existing photos */}
-                  {existingPhotos.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {existingPhotos.map((photo) => (
-                        <div key={photo.name} className="relative group w-20 h-20 rounded-lg overflow-hidden border border-border">
-                          <img src={photo.url} alt="" className="w-full h-full object-cover" />
-                          <button
-                            type="button"
-                            onClick={() => handleDeletePhoto(photo.name)}
-                            className="absolute top-0.5 right-0.5 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* New photo previews */}
-                  {newPhotos.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {newPhotos.map((file, i) => (
-                        <div key={i} className="relative group w-20 h-20 rounded-lg overflow-hidden border border-border border-dashed">
-                          <img src={URL.createObjectURL(file)} alt="" className="w-full h-full object-cover" />
-                          <button
-                            type="button"
-                            onClick={() => setNewPhotos(prev => prev.filter((_, idx) => idx !== i))}
-                            className="absolute top-0.5 right-0.5 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {existingPhotos.length + newPhotos.length < 5 && (
-                    <>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        className="hidden"
-                        onChange={(e) => {
-                          const files = Array.from(e.target.files || []);
-                          const remaining = 5 - existingPhotos.length - newPhotos.length;
-                          setNewPhotos(prev => [...prev, ...files.slice(0, remaining)]);
-                          e.target.value = '';
-                        }}
-                      />
-                      <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
-                        <Upload className="h-4 w-4 mr-1.5" />
-                        Add Photos
-                      </Button>
-                    </>
-                  )}
-                </div>
-
-                <Button type="submit" className="w-full" size="lg" disabled={saving || uploadingPhotos}>
-                  {saving || uploadingPhotos ? 'Saving...' : listing ? 'Update Listing' : 'Create Listing'}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+          <>
+            {viewMode}
+            {formMode}
+          </>
         )}
       </main>
     </div>
