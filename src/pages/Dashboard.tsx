@@ -1,6 +1,6 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, LogOut, ArrowLeft, Home, Plus } from 'lucide-react';
+import { Shield, LogOut, ArrowLeft, Home, Plus, Upload, X, PawPrint, Cigarette } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,6 +38,14 @@ export default function Dashboard() {
   const [sleepingNotes, setSleepingNotes] = useState('');
   const [mamadNotes, setMamadNotes] = useState('');
   const [isActive, setIsActive] = useState(true);
+  const [petsAllowed, setPetsAllowed] = useState(false);
+  const [smokingAllowed, setSmokingAllowed] = useState(false);
+
+  // Photo state
+  const [existingPhotos, setExistingPhotos] = useState<{ name: string; url: string }[]>([]);
+  const [newPhotos, setNewPhotos] = useState<File[]>([]);
+  const [uploadingPhotos, setUploadingPhotos] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -47,7 +55,6 @@ export default function Dashboard() {
         return;
       }
 
-      // Check onboarding
       const { data: profile } = await supabase
         .from('profiles')
         .select('onboarding_completed, full_name, whatsapp_phone')
@@ -60,8 +67,6 @@ export default function Dashboard() {
       }
 
       setUser({ id: session.user.id });
-
-      // Pre-fill host name and phone from profile if creating new listing
       if (profile.full_name) setHostName(profile.full_name);
       if (profile.whatsapp_phone) setPhone(profile.whatsapp_phone);
     };
@@ -73,7 +78,6 @@ export default function Dashboard() {
     });
 
     checkSession();
-
     return () => subscription.unsubscribe();
   }, [navigate]);
 
@@ -103,12 +107,37 @@ export default function Dashboard() {
         setSleepingNotes(data.sleeping_notes || '');
         setMamadNotes(data.mamad_notes || '');
         setIsActive(data.is_active);
+        setPetsAllowed((data as any).pets_allowed ?? false);
+        setSmokingAllowed((data as any).smoking_allowed ?? false);
+
+        // Load existing photos
+        const { data: files } = await supabase.storage
+          .from('listing-photos')
+          .list(data.id, { limit: 10 });
+        if (files && files.length > 0) {
+          setExistingPhotos(files.map(f => ({
+            name: f.name,
+            url: supabase.storage.from('listing-photos').getPublicUrl(`${data.id}/${f.name}`).data.publicUrl,
+          })));
+        }
       }
       setLoading(false);
     };
 
     fetchListing();
   }, [user, toast]);
+
+  const handleDeletePhoto = async (fileName: string) => {
+    if (!listing) return;
+    const { error } = await supabase.storage
+      .from('listing-photos')
+      .remove([`${listing.id}/${fileName}`]);
+    if (error) {
+      toast({ title: 'Error deleting photo', description: error.message, variant: 'destructive' });
+    } else {
+      setExistingPhotos(prev => prev.filter(p => p.name !== fileName));
+    }
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,13 +157,35 @@ export default function Dashboard() {
       sleeping_notes: sleepingNotes || null,
       mamad_notes: mamadNotes || null,
       is_active: isActive,
+      pets_allowed: petsAllowed,
+      smoking_allowed: smokingAllowed,
     };
 
     let error;
+    let listingId = listing?.id;
     if (listing) {
       ({ error } = await supabase.from('listings').update(payload).eq('id', listing.id));
     } else {
-      ({ error } = await supabase.from('listings').insert(payload));
+      const result = await supabase.from('listings').insert(payload).select('id').single();
+      error = result.error;
+      listingId = result.data?.id;
+    }
+
+    // Upload new photos
+    if (!error && listingId && newPhotos.length > 0) {
+      setUploadingPhotos(true);
+      for (const file of newPhotos) {
+        const ext = file.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { error: uploadError } = await supabase.storage
+          .from('listing-photos')
+          .upload(`${listingId}/${fileName}`, file);
+        if (uploadError) {
+          toast({ title: 'Photo upload error', description: uploadError.message, variant: 'destructive' });
+        }
+      }
+      setUploadingPhotos(false);
+      setNewPhotos([]);
     }
 
     setSaving(false);
@@ -143,9 +194,20 @@ export default function Dashboard() {
       toast({ title: 'Error saving', description: error.message, variant: 'destructive' });
     } else {
       toast({ title: listing ? 'Listing updated' : 'Listing created', description: 'Your changes are live.' });
-      // Refetch
       const { data } = await supabase.from('listings').select('*').eq('host_id', user.id).maybeSingle();
-      if (data) setListing(data);
+      if (data) {
+        setListing(data);
+        // Refresh photos
+        const { data: files } = await supabase.storage
+          .from('listing-photos')
+          .list(data.id, { limit: 10 });
+        if (files && files.length > 0) {
+          setExistingPhotos(files.map(f => ({
+            name: f.name,
+            url: supabase.storage.from('listing-photos').getPublicUrl(`${data.id}/${f.name}`).data.publicUrl,
+          })));
+        }
+      }
     }
   };
 
@@ -175,16 +237,6 @@ export default function Dashboard() {
                 <Skeleton className="h-16" />
                 <Skeleton className="h-16" />
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Skeleton className="h-16" />
-                <Skeleton className="h-16" />
-              </div>
-              <Skeleton className="h-16 w-full" />
-              <div className="grid gap-4 grid-cols-3">
-                <Skeleton className="h-16" />
-                <Skeleton className="h-16" />
-                <Skeleton className="h-16" />
-              </div>
               <Skeleton className="h-11 w-full rounded-lg" />
             </CardContent>
           </Card>
@@ -195,7 +247,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="bg-primary text-primary-foreground shadow-md">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -290,7 +341,7 @@ export default function Dashboard() {
                 <div className="space-y-2">
                   <Label htmlFor="address">Approximate Address</Label>
                   <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="e.g. Near Dizengoff Center" />
-                  <p className="text-xs text-muted-foreground">Private — not shown publicly. Used for distance calculation in a future update.</p>
+                  <p className="text-xs text-muted-foreground">Private — not shown publicly.</p>
                 </div>
 
                 <div className="grid gap-4 grid-cols-3">
@@ -308,6 +359,24 @@ export default function Dashboard() {
                   </div>
                 </div>
 
+                {/* Pets & Smoking */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="flex items-center justify-between rounded-lg border border-border p-4">
+                    <div className="flex items-center gap-2">
+                      <PawPrint className="h-4 w-4 text-muted-foreground" />
+                      <Label className="text-sm font-medium">Pets Welcome</Label>
+                    </div>
+                    <Switch checked={petsAllowed} onCheckedChange={setPetsAllowed} />
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg border border-border p-4">
+                    <div className="flex items-center gap-2">
+                      <Cigarette className="h-4 w-4 text-muted-foreground" />
+                      <Label className="text-sm font-medium">Smoking OK</Label>
+                    </div>
+                    <Switch checked={smokingAllowed} onCheckedChange={setSmokingAllowed} />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="sleepingNotes">Sleeping Notes (optional)</Label>
                   <Textarea id="sleepingNotes" value={sleepingNotes} onChange={(e) => setSleepingNotes(e.target.value)} placeholder="e.g. 2 mattresses available, sofa bed in living room" rows={2} />
@@ -318,8 +387,72 @@ export default function Dashboard() {
                   <Textarea id="mamadNotes" value={mamadNotes} onChange={(e) => setMamadNotes(e.target.value)} placeholder="e.g. Reinforced door, stocked with water" rows={2} />
                 </div>
 
-                <Button type="submit" className="w-full" size="lg" disabled={saving}>
-                  {saving ? 'Saving...' : listing ? 'Update Listing' : 'Create Listing'}
+                {/* Photo Upload */}
+                <div className="space-y-3">
+                  <Label>Photos (optional)</Label>
+                  <p className="text-xs text-muted-foreground">Add photos of your space to help families feel comfortable. Max 5 photos.</p>
+
+                  {/* Existing photos */}
+                  {existingPhotos.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {existingPhotos.map((photo) => (
+                        <div key={photo.name} className="relative group w-20 h-20 rounded-lg overflow-hidden border border-border">
+                          <img src={photo.url} alt="" className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => handleDeletePhoto(photo.name)}
+                            className="absolute top-0.5 right-0.5 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* New photo previews */}
+                  {newPhotos.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {newPhotos.map((file, i) => (
+                        <div key={i} className="relative group w-20 h-20 rounded-lg overflow-hidden border border-border border-dashed">
+                          <img src={URL.createObjectURL(file)} alt="" className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => setNewPhotos(prev => prev.filter((_, idx) => idx !== i))}
+                            className="absolute top-0.5 right-0.5 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {existingPhotos.length + newPhotos.length < 5 && (
+                    <>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={(e) => {
+                          const files = Array.from(e.target.files || []);
+                          const remaining = 5 - existingPhotos.length - newPhotos.length;
+                          setNewPhotos(prev => [...prev, ...files.slice(0, remaining)]);
+                          e.target.value = '';
+                        }}
+                      />
+                      <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+                        <Upload className="h-4 w-4 mr-1.5" />
+                        Add Photos
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                <Button type="submit" className="w-full" size="lg" disabled={saving || uploadingPhotos}>
+                  {saving || uploadingPhotos ? 'Saving...' : listing ? 'Update Listing' : 'Create Listing'}
                 </Button>
               </form>
             </CardContent>

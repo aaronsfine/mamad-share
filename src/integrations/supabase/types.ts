@@ -29,8 +29,10 @@ export type Database = {
           mamad_notes: string | null
           mamad_size_sqm: number
           neighborhood: string
+          pets_allowed: boolean
           phone: string
           sleeping_notes: string | null
+          smoking_allowed: boolean
           total_beds: number
           updated_at: string
         }
@@ -48,8 +50,10 @@ export type Database = {
           mamad_notes?: string | null
           mamad_size_sqm?: number
           neighborhood: string
+          pets_allowed?: boolean
           phone: string
           sleeping_notes?: string | null
+          smoking_allowed?: boolean
           total_beds?: number
           updated_at?: string
         }
@@ -67,8 +71,10 @@ export type Database = {
           mamad_notes?: string | null
           mamad_size_sqm?: number
           neighborhood?: string
+          pets_allowed?: boolean
           phone?: string
           sleeping_notes?: string | null
+          smoking_allowed?: boolean
           total_beds?: number
           updated_at?: string
         }
