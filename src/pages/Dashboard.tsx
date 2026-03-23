@@ -14,6 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import { SearchableSelect } from '@/components/SearchableSelect';
 import { ALL_CITIES, getNeighborhoods, getCityCoords } from '@/lib/locations';
+import { haversineDistance } from '@/lib/distance';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Listing = Tables<'listings'>;
