@@ -166,6 +166,8 @@ export default function Dashboard() {
       is_active: isActive,
       pets_allowed: petsAllowed,
       smoking_allowed: smokingAllowed,
+      price_type: priceType,
+      price_per_night: priceType === 'paid' ? (pricePerNight || null) : null,
     };
 
     let error;
