@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Shield, Home as HomeIcon, MapPinOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { ListingCard } from '@/components/ListingCard';
-import { ShelterFilters } from '@/components/ShelterFilters';
+import { ShelterFilters, type SortOption } from '@/components/ShelterFilters';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { haversineDistance } from '@/lib/distance';
 import { ALL_CITIES, getNeighborhoods } from '@/lib/locations';
@@ -20,6 +20,10 @@ export default function Index() {
   const [smokingFilter, setSmokingFilter] = useState<'all' | 'yes' | 'no'>('all');
   const [priceFilter, setPriceFilter] = useState<'all' | 'free'>('all');
   const [maxPrice, setMaxPrice] = useState(200);
+  const [sortBy, setSortBy] = useState<SortOption>('newest');
+  const [minBeds, setMinBeds] = useState(0);
+  const [minBedrooms, setMinBedrooms] = useState(0);
+  const [minMamad, setMinMamad] = useState(0);
   const geo = useGeolocation();
 
   const { data: listings = [], isLoading } = useQuery({
@@ -35,7 +39,6 @@ export default function Index() {
     },
   });
 
-  // Fetch photos for all listings
   const { data: listingPhotos = {} } = useQuery({
     queryKey: ['listing-photos', listings.map(l => l.id)],
     queryFn: async () => {
@@ -69,15 +72,18 @@ export default function Index() {
       if (smokingFilter === 'yes' && !(l as any).smoking_allowed) return false;
       if (smokingFilter === 'no' && (l as any).smoking_allowed) return false;
       if (priceFilter === 'free' && (l as any).price_type !== 'free') return false;
-      // Max price slider: free listings always pass, paid listings must be under max
       if (priceFilter !== 'free' && maxPrice < 200) {
         const pt = (l as any).price_type;
         const ppn = (l as any).price_per_night;
         if (pt === 'paid' && ppn != null && ppn > maxPrice) return false;
       }
+      // Capacity filters
+      if (minBeds > 0 && l.total_beds < minBeds) return false;
+      if (minBedrooms > 0 && l.bedrooms < minBedrooms) return false;
+      if (minMamad > 0 && l.mamad_size_sqm < minMamad) return false;
       return true;
     });
-  }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter, maxPrice]);
+  }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter, maxPrice, minBeds, minBedrooms, minMamad]);
 
   const sortedListings = useMemo(() => {
     const hasUserLocation = geo.latitude != null && geo.longitude != null;
@@ -88,16 +94,46 @@ export default function Index() {
       }
       return { listing, distanceKm };
     });
-    if (hasUserLocation) {
-      withDistance.sort((a, b) => {
-        if (a.distanceKm == null && b.distanceKm == null) return 0;
-        if (a.distanceKm == null) return 1;
-        if (b.distanceKm == null) return -1;
-        return a.distanceKm - b.distanceKm;
-      });
+
+    switch (sortBy) {
+      case 'nearest':
+        if (hasUserLocation) {
+          withDistance.sort((a, b) => {
+            if (a.distanceKm == null && b.distanceKm == null) return 0;
+            if (a.distanceKm == null) return 1;
+            if (b.distanceKm == null) return -1;
+            return a.distanceKm - b.distanceKm;
+          });
+        }
+        break;
+      case 'price_low':
+        withDistance.sort((a, b) => {
+          const aFree = (a.listing as any).price_type === 'free';
+          const bFree = (b.listing as any).price_type === 'free';
+          if (aFree && bFree) return 0;
+          if (aFree) return -1;
+          if (bFree) return 1;
+          return ((a.listing as any).price_per_night ?? 0) - ((b.listing as any).price_per_night ?? 0);
+        });
+        break;
+      case 'price_high':
+        withDistance.sort((a, b) => {
+          const aFree = (a.listing as any).price_type === 'free';
+          const bFree = (b.listing as any).price_type === 'free';
+          if (aFree && bFree) return 0;
+          if (aFree) return 1;
+          if (bFree) return -1;
+          return ((b.listing as any).price_per_night ?? 0) - ((a.listing as any).price_per_night ?? 0);
+        });
+        break;
+      case 'newest':
+      default:
+        // Already ordered by created_at desc from the query
+        break;
     }
+
     return withDistance;
-  }, [filtered, geo.latitude, geo.longitude]);
+  }, [filtered, geo.latitude, geo.longitude, sortBy]);
 
   const handleCityChange = (city: string) => {
     setSelectedCity(city);
@@ -150,7 +186,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Filters — tight spacing */}
+      {/* Filters */}
       <section className="bg-card border-b border-border">
         <div className="max-w-5xl mx-auto px-4 py-3">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 md:text-left text-center">
@@ -171,6 +207,17 @@ export default function Index() {
             onSmokingFilterChange={setSmokingFilter}
             onPriceFilterChange={setPriceFilter}
             onMaxPriceChange={setMaxPrice}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            minBeds={minBeds}
+            minBedrooms={minBedrooms}
+            minMamad={minMamad}
+            onMinBedsChange={setMinBeds}
+            onMinBedroomsChange={setMinBedrooms}
+            onMinMamadChange={setMinMamad}
+            geoLoading={geo.loading}
+            geoAvailable={geo.latitude != null}
+            onRequestLocation={geo.requestLocation}
           />
         </div>
       </section>
