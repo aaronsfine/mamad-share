@@ -35,7 +35,7 @@ export default function Dashboard() {
   const [address, setAddress] = useState('');
   const [bedrooms, setBedrooms] = useState(1);
   const [totalBeds, setTotalBeds] = useState(1);
-  const [mamadSize, setMamadSize] = useState(4);
+  
   const [sleepingNotes, setSleepingNotes] = useState('');
   const [mamadNotes, setMamadNotes] = useState('');
   const [isActive, setIsActive] = useState(true);
