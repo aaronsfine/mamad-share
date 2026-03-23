@@ -321,7 +321,7 @@ export default function Dashboard() {
                     <SearchableSelect
                       options={ALL_CITIES}
                       value={city}
-                      onValueChange={setCity}
+                      onValueChange={(v) => { setCity(v); setNeighborhood(''); }}
                       placeholder="Search city..."
                       showAll={false}
                     />
