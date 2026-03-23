@@ -75,7 +75,7 @@ export function ListingCard({ listing, distanceKm }: ListingCardProps) {
         {/* WhatsApp CTA */}
         <Button
           asChild
-          className="w-full bg-[hsl(var(--whatsapp))] hover:bg-[hsl(var(--whatsapp))]/90 text-[hsl(var(--whatsapp-foreground))] font-semibold"
+          className="w-full bg-whatsapp hover:bg-whatsapp/90 text-whatsapp-foreground font-semibold"
           size="lg"
         >
           <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
