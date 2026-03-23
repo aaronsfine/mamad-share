@@ -35,7 +35,7 @@ export default function Dashboard() {
   const [address, setAddress] = useState('');
   const [bedrooms, setBedrooms] = useState(1);
   const [totalBeds, setTotalBeds] = useState(1);
-  const [mamadSize, setMamadSize] = useState(4);
+  
   const [sleepingNotes, setSleepingNotes] = useState('');
   const [mamadNotes, setMamadNotes] = useState('');
   const [isActive, setIsActive] = useState(true);
@@ -58,7 +58,7 @@ export default function Dashboard() {
     setAddress(data.address || '');
     setBedrooms(data.bedrooms);
     setTotalBeds(data.total_beds);
-    setMamadSize(data.mamad_size_sqm);
+    
     setSleepingNotes(data.sleeping_notes || '');
     setMamadNotes(data.mamad_notes || '');
     setIsActive(data.is_active);
@@ -160,7 +160,7 @@ export default function Dashboard() {
       address: address || null,
       bedrooms,
       total_beds: totalBeds,
-      mamad_size_sqm: mamadSize,
+      
       sleeping_notes: sleepingNotes || null,
       mamad_notes: mamadNotes || null,
       is_active: isActive,
@@ -331,7 +331,7 @@ export default function Dashboard() {
 
         {/* Stats */}
         <p className="text-sm text-muted-foreground">
-          {listing.bedrooms} bedroom{listing.bedrooms !== 1 ? 's' : ''} · {listing.total_beds} bed{listing.total_beds !== 1 ? 's' : ''} · {listing.mamad_size_sqm} sqm mamad
+          {listing.bedrooms} bedroom{listing.bedrooms !== 1 ? 's' : ''} · {listing.total_beds} bed{listing.total_beds !== 1 ? 's' : ''}
         </p>
 
         {/* Pets & Smoking */}
@@ -462,7 +462,7 @@ export default function Dashboard() {
             <p className="text-xs text-muted-foreground">Private — not shown publicly.</p>
           </div>
 
-          <div className="grid gap-4 grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="bedrooms">Bedrooms</Label>
               <Input id="bedrooms" type="number" min={0} value={bedrooms} onChange={(e) => setBedrooms(Number(e.target.value))} required />
@@ -470,10 +470,6 @@ export default function Dashboard() {
             <div className="space-y-2">
               <Label htmlFor="totalBeds">Total Beds</Label>
               <Input id="totalBeds" type="number" min={0} value={totalBeds} onChange={(e) => setTotalBeds(Number(e.target.value))} required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="mamadSize">Mamad (sqm)</Label>
-              <Input id="mamadSize" type="number" min={1} value={mamadSize} onChange={(e) => setMamadSize(Number(e.target.value))} required />
             </div>
           </div>
 

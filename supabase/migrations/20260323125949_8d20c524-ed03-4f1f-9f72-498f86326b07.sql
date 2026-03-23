@@ -1,0 +1,1 @@
+ALTER TABLE public.listings DROP COLUMN mamad_size_sqm;

@@ -20,10 +20,10 @@ export default function Index() {
   const [smokingFilter, setSmokingFilter] = useState<'all' | 'yes' | 'no'>('all');
   const [priceFilter, setPriceFilter] = useState<'all' | 'free'>('all');
   const [maxPrice, setMaxPrice] = useState(200);
-  const [sortBy, setSortBy] = useState<SortOption>('newest');
+  const [sortBy, setSortBy] = useState<SortOption>('price_low');
   const [minBeds, setMinBeds] = useState(0);
   const [minBedrooms, setMinBedrooms] = useState(0);
-  const [minMamad, setMinMamad] = useState(0);
+  
   const geo = useGeolocation();
 
   const { data: listings = [], isLoading } = useQuery({
@@ -80,10 +80,10 @@ export default function Index() {
       // Capacity filters
       if (minBeds > 0 && l.total_beds < minBeds) return false;
       if (minBedrooms > 0 && l.bedrooms < minBedrooms) return false;
-      if (minMamad > 0 && l.mamad_size_sqm < minMamad) return false;
+      
       return true;
     });
-  }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter, maxPrice, minBeds, minBedrooms, minMamad]);
+  }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter, maxPrice, minBeds, minBedrooms]);
 
   const sortedListings = useMemo(() => {
     const hasUserLocation = geo.latitude != null && geo.longitude != null;
@@ -126,9 +126,7 @@ export default function Index() {
           return ((b.listing as any).price_per_night ?? 0) - ((a.listing as any).price_per_night ?? 0);
         });
         break;
-      case 'newest':
       default:
-        // Already ordered by created_at desc from the query
         break;
     }
 
@@ -211,10 +209,8 @@ export default function Index() {
             onSortChange={setSortBy}
             minBeds={minBeds}
             minBedrooms={minBedrooms}
-            minMamad={minMamad}
             onMinBedsChange={setMinBeds}
             onMinBedroomsChange={setMinBedrooms}
-            onMinMamadChange={setMinMamad}
             geoLoading={geo.loading}
             geoAvailable={geo.latitude != null}
             onRequestLocation={geo.requestLocation}

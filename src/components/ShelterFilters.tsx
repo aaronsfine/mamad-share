@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { SearchableSelect } from '@/components/SearchableSelect';
 import { Slider } from '@/components/ui/slider';
-import { PawPrint, Cigarette, Heart, MapPin, ArrowUpDown, BedDouble, Shield, Loader2, SlidersHorizontal, X } from 'lucide-react';
+import { PawPrint, Cigarette, Heart, MapPin, ArrowUpDown, BedDouble, Loader2, SlidersHorizontal, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export type SortOption = 'newest' | 'nearest' | 'price_low' | 'price_high';
+export type SortOption = 'nearest' | 'price_low' | 'price_high';
 
 interface ShelterFiltersProps {
   cities: string[];
@@ -25,10 +25,8 @@ interface ShelterFiltersProps {
   onSortChange: (v: SortOption) => void;
   minBeds: number;
   minBedrooms: number;
-  minMamad: number;
   onMinBedsChange: (v: number) => void;
   onMinBedroomsChange: (v: number) => void;
-  onMinMamadChange: (v: number) => void;
   geoLoading?: boolean;
   geoAvailable?: boolean;
   onRequestLocation?: () => void;
@@ -74,8 +72,8 @@ export function ShelterFilters({
   petsFilter, smokingFilter, priceFilter, maxPrice,
   onPetsFilterChange, onSmokingFilterChange, onPriceFilterChange, onMaxPriceChange,
   sortBy, onSortChange,
-  minBeds, minBedrooms, minMamad,
-  onMinBedsChange, onMinBedroomsChange, onMinMamadChange,
+  minBeds, minBedrooms,
+  onMinBedsChange, onMinBedroomsChange,
   geoLoading, onRequestLocation,
 }: ShelterFiltersProps) {
   const [showMore, setShowMore] = useState(false);
@@ -86,13 +84,12 @@ export function ShelterFilters({
     priceFilter !== 'all',
     minBeds > 0,
     minBedrooms > 0,
-    minMamad > 0,
     maxPrice < 200,
   ].filter(Boolean).length;
 
   return (
     <div className="space-y-2.5">
-      {/* Row 1: Location + Sort — always visible */}
+      {/* Row 1: Location + Sort dropdown + Nearby button */}
       <div className="flex flex-col sm:flex-row gap-2 sm:items-end">
         <div className="flex-1 min-w-0">
           <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">City</label>
@@ -107,36 +104,36 @@ export function ShelterFilters({
         <div className="flex items-center gap-2 sm:pb-0.5">
           <div className="flex items-center gap-1">
             <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
-            <select value={sortBy} onChange={(e) => {
-              const val = e.target.value as SortOption;
-              if (val === 'nearest') onRequestLocation?.();
-              onSortChange(val);
-            }} className="text-xs bg-card border border-border rounded-md px-2 py-[7px] text-foreground focus:outline-none focus:ring-1 focus:ring-primary">
-              <option value="newest">Newest</option>
-              <option value="nearest">Nearest</option>
+            <select value={sortBy} onChange={(e) => onSortChange(e.target.value as SortOption)}
+              className="text-xs bg-card border border-border rounded-md px-2 py-[7px] text-foreground focus:outline-none focus:ring-1 focus:ring-primary">
               <option value="price_low">Price ↑</option>
               <option value="price_high">Price ↓</option>
             </select>
           </div>
+          <Button
+            type="button"
+            variant={sortBy === 'nearest' ? 'default' : 'outline'}
+            size="sm"
+            className="rounded-full text-xs h-7 px-3"
+            onClick={() => {
+              if (sortBy === 'nearest') {
+                onSortChange('price_low');
+              } else {
+                onRequestLocation?.();
+                onSortChange('nearest');
+              }
+            }}
+          >
+            {geoLoading ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : <MapPin className="h-3 w-3 mr-1" />}
+            Nearby
+          </Button>
         </div>
       </div>
 
-      {/* Row 2: Quick pills + More filters toggle */}
+      {/* Row 2: Free pill + More filters toggle */}
       <div className="flex flex-wrap items-center gap-1.5">
         <Pill active={priceFilter === 'free'} onClick={() => onPriceFilterChange(priceFilter === 'free' ? 'all' : 'free')}>
           <Heart className="h-3 w-3" /> Free
-        </Pill>
-        <Pill active={petsFilter === 'yes'} onClick={() => onPetsFilterChange(petsFilter === 'yes' ? 'all' : 'yes')}>
-          <PawPrint className="h-3 w-3" /> Pets OK
-        </Pill>
-        <Pill active={smokingFilter === 'yes'} onClick={() => onSmokingFilterChange(smokingFilter === 'yes' ? 'all' : 'yes')}>
-          <Cigarette className="h-3 w-3" /> Smoking OK
-        </Pill>
-        <Pill active={sortBy === 'nearest'} onClick={() => {
-          if (sortBy === 'nearest') { onSortChange('newest'); }
-          else { onRequestLocation?.(); onSortChange('nearest'); }
-        }}>
-          {geoLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <MapPin className="h-3 w-3" />} Nearby
         </Pill>
 
         <button
@@ -153,14 +150,26 @@ export function ShelterFilters({
         </button>
       </div>
 
-      {/* Row 3: Expandable detail filters */}
+      {/* Row 3: Expandable detail filters — pets, smoking, capacity, price */}
       {showMore && (
         <div className="bg-muted/40 rounded-lg border border-border p-3 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
+          {/* Pets & Smoking */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Pill active={petsFilter === 'yes'} onClick={() => onPetsFilterChange(petsFilter === 'yes' ? 'all' : 'yes')}>
+              <PawPrint className="h-3 w-3" /> Pets OK
+            </Pill>
+            <Pill active={smokingFilter === 'yes'} onClick={() => onSmokingFilterChange(smokingFilter === 'yes' ? 'all' : 'yes')}>
+              <Cigarette className="h-3 w-3" /> Smoking OK
+            </Pill>
+          </div>
+
+          {/* Capacity */}
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <Counter label="Beds" value={minBeds} onChange={onMinBedsChange} icon={<BedDouble className="h-3.5 w-3.5" />} />
             <Counter label="Rooms" value={minBedrooms} onChange={onMinBedroomsChange} icon={<BedDouble className="h-3.5 w-3.5" />} />
-            <Counter label="Mamad m²" value={minMamad} onChange={onMinMamadChange} icon={<Shield className="h-3.5 w-3.5" />} />
           </div>
+
+          {/* Price slider */}
           {priceFilter !== 'free' && (
             <div className="flex items-center gap-3">
               <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">
