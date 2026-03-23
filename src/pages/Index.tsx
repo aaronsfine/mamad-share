@@ -80,7 +80,7 @@ export default function Index() {
   }, [sortedListings.length, selectedCity, selectedNeighborhood]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card border-b border-border">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
