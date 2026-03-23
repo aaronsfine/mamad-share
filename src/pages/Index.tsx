@@ -80,7 +80,7 @@ export default function Index() {
       // Capacity filters
       if (minBeds > 0 && l.total_beds < minBeds) return false;
       if (minBedrooms > 0 && l.bedrooms < minBedrooms) return false;
-      if (minMamad > 0 && l.mamad_size_sqm < minMamad) return false;
+      
       return true;
     });
   }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter, maxPrice, minBeds, minBedrooms, minMamad]);
