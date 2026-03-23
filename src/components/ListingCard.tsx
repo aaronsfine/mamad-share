@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { MapPin, User, MessageCircle, BedDouble, Shield, PawPrint, Cigarette, ChevronLeft, ChevronRight, Image, Heart, Info } from 'lucide-react';
 import { buildWhatsAppLink } from '@/lib/whatsapp';
 import { formatDistance } from '@/lib/distance';
+import { ApproxMap } from '@/components/ApproxMap';
 import type { Tables } from '@/integrations/supabase/types';
 
 interface ListingCardProps {
