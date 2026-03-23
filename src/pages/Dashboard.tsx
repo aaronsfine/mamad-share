@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, LogOut, ArrowLeft, Home, Plus, Upload, X, PawPrint, Cigarette, Pencil, MapPin, User, BedDouble, Eye, EyeOff, Image } from 'lucide-react';
+import { Shield, LogOut, ArrowLeft, Home, Plus, Upload, X, PawPrint, Cigarette, Pencil, MapPin, User, BedDouble, Eye, EyeOff, Image, Heart, DollarSign } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,6 +41,8 @@ export default function Dashboard() {
   const [isActive, setIsActive] = useState(true);
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [smokingAllowed, setSmokingAllowed] = useState(false);
+  const [priceType, setPriceType] = useState('free');
+  const [pricePerNight, setPricePerNight] = useState<number | ''>('');
 
   // Photo state
   const [existingPhotos, setExistingPhotos] = useState<{ name: string; url: string }[]>([]);
@@ -62,6 +64,8 @@ export default function Dashboard() {
     setIsActive(data.is_active);
     setPetsAllowed((data as any).pets_allowed ?? false);
     setSmokingAllowed((data as any).smoking_allowed ?? false);
+    setPriceType((data as any).price_type ?? 'free');
+    setPricePerNight((data as any).price_per_night ?? '');
   };
 
   useEffect(() => {
@@ -162,6 +166,8 @@ export default function Dashboard() {
       is_active: isActive,
       pets_allowed: petsAllowed,
       smoking_allowed: smokingAllowed,
+      price_type: priceType,
+      price_per_night: priceType === 'paid' ? (pricePerNight || null) : null,
     };
 
     let error;
@@ -350,6 +356,16 @@ export default function Dashboard() {
           )}
         </div>
 
+        {/* Pricing */}
+        <div className="flex items-center gap-2 text-sm">
+          <DollarSign className="h-4 w-4 text-primary shrink-0" />
+          {(listing as any).price_type === 'free' ? (
+            <span className="font-medium text-green-700">Free — חסד (act of kindness)</span>
+          ) : (
+            <span className="text-muted-foreground">₪{(listing as any).price_per_night}/night <span className="text-xs">(subsidized)</span></span>
+          )}
+        </div>
+
         {/* Notes */}
         {(listing.sleeping_notes || listing.mamad_notes) && (
           <div className="space-y-1.5">
@@ -477,6 +493,55 @@ export default function Dashboard() {
               </div>
               <Switch checked={smokingAllowed} onCheckedChange={setSmokingAllowed} />
             </div>
+          </div>
+
+          {/* Pricing */}
+          <div className="space-y-3 rounded-lg border border-border p-4">
+            <div>
+              <Label className="text-sm font-medium">Pricing</Label>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                🕊️ This platform is built on חסד — kindness. We encourage offering your space for free or at a symbolic cost to cover expenses. This is about helping families in need.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant={priceType === 'free' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setPriceType('free')}
+                className="flex-1"
+              >
+                <Heart className="h-4 w-4 mr-1.5" />
+                Free (חסד)
+              </Button>
+              <Button
+                type="button"
+                variant={priceType === 'paid' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setPriceType('paid')}
+                className="flex-1"
+              >
+                <DollarSign className="h-4 w-4 mr-1.5" />
+                Subsidized
+              </Button>
+            </div>
+            {priceType === 'paid' && (
+              <div className="space-y-2">
+                <Label htmlFor="pricePerNight">Price per night (₪)</Label>
+                <Input
+                  id="pricePerNight"
+                  type="number"
+                  min={0}
+                  max={200}
+                  value={pricePerNight}
+                  onChange={(e) => setPricePerNight(e.target.value ? Number(e.target.value) : '')}
+                  placeholder="e.g. 50"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Please keep costs minimal — just enough to cover utilities or supplies. Families are counting on your generosity. 💙
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
