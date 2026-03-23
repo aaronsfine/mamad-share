@@ -58,7 +58,7 @@ export default function Dashboard() {
     setAddress(data.address || '');
     setBedrooms(data.bedrooms);
     setTotalBeds(data.total_beds);
-    setMamadSize(data.mamad_size_sqm);
+    
     setSleepingNotes(data.sleeping_notes || '');
     setMamadNotes(data.mamad_notes || '');
     setIsActive(data.is_active);
