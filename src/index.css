@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 210 33% 98%;
+    --background: 220 20% 97%;
     --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
@@ -19,7 +19,7 @@
     --secondary: 210 40% 96%;
     --secondary-foreground: 215 25% 15%;
 
-    --muted: 210 33% 95%;
+    --muted: 220 14% 96%;
     --muted-foreground: 215 16% 47%;
 
     --accent: 210 40% 96%;
@@ -28,8 +28,8 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
     --ring: 213 72% 44%;
 
     --radius: 0.75rem;
@@ -43,50 +43,8 @@
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 210 40% 96%;
     --sidebar-accent-foreground: 215 25% 15%;
-    --sidebar-border: 214 32% 91%;
+    --sidebar-border: 220 13% 91%;
     --sidebar-ring: 213 72% 44%;
-  }
-
-  .dark {
-    --background: 215 25% 8%;
-    --foreground: 210 33% 95%;
-
-    --card: 215 25% 12%;
-    --card-foreground: 210 33% 95%;
-
-    --popover: 215 25% 12%;
-    --popover-foreground: 210 33% 95%;
-
-    --primary: 213 72% 54%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 215 25% 18%;
-    --secondary-foreground: 210 33% 95%;
-
-    --muted: 215 25% 18%;
-    --muted-foreground: 215 16% 65%;
-
-    --accent: 215 25% 18%;
-    --accent-foreground: 210 33% 95%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 33% 95%;
-
-    --border: 215 25% 18%;
-    --input: 215 25% 18%;
-    --ring: 213 72% 54%;
-
-    --whatsapp: 142 70% 45%;
-    --whatsapp-foreground: 0 0% 100%;
-
-    --sidebar-background: 215 25% 10%;
-    --sidebar-foreground: 210 33% 95%;
-    --sidebar-primary: 213 72% 54%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 25% 18%;
-    --sidebar-accent-foreground: 210 33% 95%;
-    --sidebar-border: 215 25% 18%;
-    --sidebar-ring: 213 72% 54%;
   }
 }
 
