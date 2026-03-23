@@ -7,6 +7,7 @@ import { ListingCard } from '@/components/ListingCard';
 import { ShelterFilters } from '@/components/ShelterFilters';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { haversineDistance } from '@/lib/distance';
+import { ALL_CITIES, getNeighborhoods } from '@/lib/locations';
 import { Button } from '@/components/ui/button';
 import { ListingCardSkeleton } from '@/components/ListingCardSkeleton';
 import { Footer } from '@/components/Footer';
@@ -30,11 +31,10 @@ export default function Index() {
     },
   });
 
-  const cities = useMemo(() => [...new Set(listings.map((l) => l.city))].sort(), [listings]);
+  const cities = ALL_CITIES;
   const neighborhoods = useMemo(() => {
-    const filtered = selectedCity !== 'all' ? listings.filter((l) => l.city === selectedCity) : listings;
-    return [...new Set(filtered.map((l) => l.neighborhood))].sort();
-  }, [listings, selectedCity]);
+    return selectedCity !== 'all' ? getNeighborhoods(selectedCity) : [];
+  }, [selectedCity]);
 
   const filtered = useMemo(() => {
     return listings.filter((l) => {

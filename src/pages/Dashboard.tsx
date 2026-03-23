@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, LogOut, ArrowLeft, Home, Plus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,6 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
+import { SearchableSelect } from '@/components/SearchableSelect';
+import { ALL_CITIES, getNeighborhoods } from '@/lib/locations';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Listing = Tables<'listings'>;
@@ -264,12 +266,24 @@ export default function Dashboard() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="city">City</Label>
-                    <Input id="city" value={city} onChange={(e) => setCity(e.target.value)} required />
+                    <Label>City</Label>
+                    <SearchableSelect
+                      options={ALL_CITIES}
+                      value={city}
+                      onValueChange={setCity}
+                      placeholder="Search city..."
+                      showAll={false}
+                    />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="neighborhood">Neighborhood</Label>
-                    <Input id="neighborhood" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} required />
+                    <Label>Neighborhood</Label>
+                    <SearchableSelect
+                      options={city ? getNeighborhoods(city) : []}
+                      value={neighborhood}
+                      onValueChange={setNeighborhood}
+                      placeholder="Search neighborhood..."
+                      showAll={false}
+                    />
                   </div>
                 </div>
 
