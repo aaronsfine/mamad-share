@@ -521,7 +521,7 @@ export default function Dashboard() {
                 onClick={() => setPriceType('paid')}
                 className="flex-1"
               >
-                <DollarSign className="h-4 w-4 mr-1.5" />
+                <span className="mr-1.5">₪</span>
                 Subsidized
               </Button>
             </div>
