@@ -164,7 +164,8 @@ export default function Dashboard() {
       [city, 'Israel'].filter(Boolean).join(', '),
     ].filter((q) => q.length > 0)));
 
-    for (const q of queries) {
+    for (let i = 0; i < queries.length; i++) {
+      const q = queries[i];
       try {
         const arcgisUrl = new URL('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates');
         arcgisUrl.searchParams.set('f', 'json');
@@ -177,8 +178,27 @@ export default function Dashboard() {
           const arcgisData = await arcgisRes.json();
           const candidate = arcgisData?.candidates?.[0];
           if (candidate?.location?.y != null && candidate?.location?.x != null) {
-            lat = Number(candidate.location.y);
-            lng = Number(candidate.location.x);
+            const candidateLat = Number(candidate.location.y);
+            const candidateLng = Number(candidate.location.x);
+
+            // Sanity check: is the result within ~15km of the selected city?
+            const cityCenter = getCityCoords(city);
+            if (cityCenter && i < 2) {
+              // Only validate street-level queries (first two), not neighborhood/city fallbacks
+              const dist = haversineDistance(candidateLat, candidateLng, cityCenter.lat, cityCenter.lng);
+              if (dist > 15) {
+                toast({
+                  title: 'Address mismatch',
+                  description: `The address doesn't appear to be in ${city}. Using approximate location instead.`,
+                  variant: 'destructive',
+                });
+                // Skip this result, continue to neighborhood/city fallback
+                continue;
+              }
+            }
+
+            lat = candidateLat;
+            lng = candidateLng;
             break;
           }
         }
