@@ -14,6 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import { SearchableSelect } from '@/components/SearchableSelect';
 import { ALL_CITIES, getNeighborhoods, getCityCoords } from '@/lib/locations';
+import { haversineDistance } from '@/lib/distance';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Listing = Tables<'listings'>;
@@ -163,7 +164,8 @@ export default function Dashboard() {
       [city, 'Israel'].filter(Boolean).join(', '),
     ].filter((q) => q.length > 0)));
 
-    for (const q of queries) {
+    for (let i = 0; i < queries.length; i++) {
+      const q = queries[i];
       try {
         const arcgisUrl = new URL('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates');
         arcgisUrl.searchParams.set('f', 'json');
@@ -176,8 +178,27 @@ export default function Dashboard() {
           const arcgisData = await arcgisRes.json();
           const candidate = arcgisData?.candidates?.[0];
           if (candidate?.location?.y != null && candidate?.location?.x != null) {
-            lat = Number(candidate.location.y);
-            lng = Number(candidate.location.x);
+            const candidateLat = Number(candidate.location.y);
+            const candidateLng = Number(candidate.location.x);
+
+            // Sanity check: is the result within ~15km of the selected city?
+            const cityCenter = getCityCoords(city);
+            if (cityCenter && i < 2) {
+              // Only validate street-level queries (first two), not neighborhood/city fallbacks
+              const dist = haversineDistance(candidateLat, candidateLng, cityCenter.lat, cityCenter.lng);
+              if (dist > 15) {
+                toast({
+                  title: 'Address mismatch',
+                  description: `The address doesn't appear to be in ${city}. Using approximate location instead.`,
+                  variant: 'destructive',
+                });
+                // Skip this result, continue to neighborhood/city fallback
+                continue;
+              }
+            }
+
+            lat = candidateLat;
+            lng = candidateLng;
             break;
           }
         }
@@ -504,7 +525,11 @@ export default function Dashboard() {
           <div className="space-y-2">
             <Label htmlFor="address">Approximate Address</Label>
             <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="e.g. Near Dizengoff Center" />
-            <p className="text-xs text-muted-foreground">Private — not shown publicly.</p>
+            <p className="text-xs text-muted-foreground">
+              {city && neighborhood
+                ? `Enter your street address in ${city}, ${neighborhood}. Used for the approximate map only — never shown publicly.`
+                : 'Private — not shown publicly. Used only for the approximate map.'}
+            </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
