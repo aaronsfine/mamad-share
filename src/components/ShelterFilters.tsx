@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { SearchableSelect } from '@/components/SearchableSelect';
 import { Slider } from '@/components/ui/slider';
-import { PawPrint, Cigarette, Heart, MapPin, ArrowUpDown, BedDouble, Shield, Loader2 } from 'lucide-react';
+import { PawPrint, Cigarette, Heart, MapPin, ArrowUpDown, BedDouble, Shield, Loader2, SlidersHorizontal, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export type SortOption = 'newest' | 'nearest' | 'price_low' | 'price_high';
 
@@ -32,12 +34,12 @@ interface ShelterFiltersProps {
   onRequestLocation?: () => void;
 }
 
-function TogglePill({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+function Pill({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium transition-all border ${
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-all border whitespace-nowrap ${
         active
           ? 'bg-primary text-primary-foreground border-primary'
           : 'bg-card text-muted-foreground border-border hover:border-primary/40'
@@ -48,160 +50,127 @@ function TogglePill({ active, onClick, children }: { active: boolean; onClick: (
   );
 }
 
-function CompactCounter({ label, value, onChange, min = 0, max = 10, icon }: {
+function Counter({ label, value, onChange, min = 0, max = 10, icon }: {
   label: string; value: number; onChange: (v: number) => void; min?: number; max?: number; icon: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5">
       <span className="text-muted-foreground">{icon}</span>
-      <span className="text-xs text-muted-foreground whitespace-nowrap">{label}</span>
-      <div className="flex items-center border border-border rounded-lg overflow-hidden">
-        <button
-          type="button"
-          onClick={() => onChange(Math.max(min, value - 1))}
-          className="px-2 py-1 text-xs text-muted-foreground hover:bg-muted transition disabled:opacity-30"
-          disabled={value <= min}
-        >−</button>
-        <span className="px-2 py-1 text-xs font-medium min-w-[24px] text-center">{value}</span>
-        <button
-          type="button"
-          onClick={() => onChange(Math.min(max, value + 1))}
-          className="px-2 py-1 text-xs text-muted-foreground hover:bg-muted transition disabled:opacity-30"
-          disabled={value >= max}
-        >+</button>
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <div className="flex items-center border border-border rounded-md overflow-hidden">
+        <button type="button" onClick={() => onChange(Math.max(min, value - 1))}
+          className="px-1.5 py-0.5 text-xs text-muted-foreground hover:bg-muted transition disabled:opacity-30" disabled={value <= min}>−</button>
+        <span className="px-1.5 py-0.5 text-xs font-medium min-w-[20px] text-center">{value}</span>
+        <button type="button" onClick={() => onChange(Math.min(max, value + 1))}
+          className="px-1.5 py-0.5 text-xs text-muted-foreground hover:bg-muted transition disabled:opacity-30" disabled={value >= max}>+</button>
       </div>
     </div>
   );
 }
 
 export function ShelterFilters({
-  cities,
-  neighborhoods,
-  selectedCity,
-  selectedNeighborhood,
-  onCityChange,
-  onNeighborhoodChange,
-  petsFilter,
-  smokingFilter,
-  priceFilter,
-  maxPrice,
-  onPetsFilterChange,
-  onSmokingFilterChange,
-  onPriceFilterChange,
-  onMaxPriceChange,
-  sortBy,
-  onSortChange,
-  minBeds,
-  minBedrooms,
-  minMamad,
-  onMinBedsChange,
-  onMinBedroomsChange,
-  onMinMamadChange,
-  geoLoading,
-  geoAvailable,
-  onRequestLocation,
+  cities, neighborhoods, selectedCity, selectedNeighborhood,
+  onCityChange, onNeighborhoodChange,
+  petsFilter, smokingFilter, priceFilter, maxPrice,
+  onPetsFilterChange, onSmokingFilterChange, onPriceFilterChange, onMaxPriceChange,
+  sortBy, onSortChange,
+  minBeds, minBedrooms, minMamad,
+  onMinBedsChange, onMinBedroomsChange, onMinMamadChange,
+  geoLoading, onRequestLocation,
 }: ShelterFiltersProps) {
+  const [showMore, setShowMore] = useState(false);
+
+  const activeFilterCount = [
+    petsFilter !== 'all',
+    smokingFilter !== 'all',
+    priceFilter !== 'all',
+    minBeds > 0,
+    minBedrooms > 0,
+    minMamad > 0,
+    maxPrice < 200,
+  ].filter(Boolean).length;
+
   return (
-    <div className="space-y-3">
-      {/* Row 1: Location filters */}
-      <div className="flex flex-col md:flex-row gap-4 md:items-end">
-        <div className="flex-1 space-y-1.5">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-            City
-          </label>
-          <SearchableSelect
-            options={cities}
-            value={selectedCity}
-            onValueChange={onCityChange}
-            placeholder="Search city..."
-            allLabel="All Cities"
-          />
+    <div className="space-y-2.5">
+      {/* Row 1: Location + Sort — always visible */}
+      <div className="flex flex-col sm:flex-row gap-2 sm:items-end">
+        <div className="flex-1 min-w-0">
+          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">City</label>
+          <SearchableSelect options={cities} value={selectedCity} onValueChange={onCityChange}
+            placeholder="Search city..." allLabel="All Cities" />
         </div>
-
-        <div className="flex-1 space-y-1.5">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-            Neighborhood
-          </label>
-          <SearchableSelect
-            options={neighborhoods}
-            value={selectedNeighborhood}
-            onValueChange={onNeighborhoodChange}
-            placeholder="Search neighborhood..."
-            allLabel="All Neighborhoods"
-          />
+        <div className="flex-1 min-w-0">
+          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Neighborhood</label>
+          <SearchableSelect options={neighborhoods} value={selectedNeighborhood} onValueChange={onNeighborhoodChange}
+            placeholder="Search neighborhood..." allLabel="All Neighborhoods" />
         </div>
-      </div>
-
-      {/* Row 2: Quick filter pills + sort */}
-      <div className="flex flex-col md:flex-row md:items-center gap-3">
-        <div className="flex flex-wrap gap-2">
-          <TogglePill active={priceFilter === 'free'} onClick={() => onPriceFilterChange(priceFilter === 'free' ? 'all' : 'free')}>
-            <Heart className="h-3 w-3" /> Free only
-          </TogglePill>
-          <TogglePill active={petsFilter === 'yes'} onClick={() => onPetsFilterChange(petsFilter === 'yes' ? 'all' : 'yes')}>
-            <PawPrint className="h-3 w-3" /> Pets OK
-          </TogglePill>
-          <TogglePill active={smokingFilter === 'yes'} onClick={() => onSmokingFilterChange(smokingFilter === 'yes' ? 'all' : 'yes')}>
-            <Cigarette className="h-3 w-3" /> Smoking OK
-          </TogglePill>
-          <TogglePill
-            active={sortBy === 'nearest'}
-            onClick={() => {
-              if (sortBy === 'nearest') {
-                onSortChange('newest');
-              } else {
-                onRequestLocation?.();
-                onSortChange('nearest');
-              }
-            }}
-          >
-            {geoLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <MapPin className="h-3 w-3" />}
-            Nearest to me
-          </TogglePill>
-        </div>
-
-        {/* Sort dropdown */}
-        <div className="flex items-center gap-2 md:ml-auto">
-          <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
-          <select
-            value={sortBy}
-            onChange={(e) => {
+        <div className="flex items-center gap-2 sm:pb-0.5">
+          <div className="flex items-center gap-1">
+            <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
+            <select value={sortBy} onChange={(e) => {
               const val = e.target.value as SortOption;
               if (val === 'nearest') onRequestLocation?.();
               onSortChange(val);
-            }}
-            className="text-xs bg-card border border-border rounded-lg px-2 py-1.5 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-          >
-            <option value="newest">Newest first</option>
-            <option value="nearest">Nearest to me</option>
-            <option value="price_low">Price: low → high</option>
-            <option value="price_high">Price: high → low</option>
-          </select>
+            }} className="text-xs bg-card border border-border rounded-md px-2 py-[7px] text-foreground focus:outline-none focus:ring-1 focus:ring-primary">
+              <option value="newest">Newest</option>
+              <option value="nearest">Nearest</option>
+              <option value="price_low">Price ↑</option>
+              <option value="price_high">Price ↓</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* Row 3: Capacity filters + price slider */}
-      <div className="flex flex-wrap items-center gap-4">
-        <CompactCounter label="Beds" value={minBeds} onChange={onMinBedsChange} icon={<BedDouble className="h-3.5 w-3.5" />} />
-        <CompactCounter label="Rooms" value={minBedrooms} onChange={onMinBedroomsChange} icon={<BedDouble className="h-3.5 w-3.5" />} />
-        <CompactCounter label="Mamad sqm" value={minMamad} onChange={onMinMamadChange} icon={<Shield className="h-3.5 w-3.5" />} />
+      {/* Row 2: Quick pills + More filters toggle */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <Pill active={priceFilter === 'free'} onClick={() => onPriceFilterChange(priceFilter === 'free' ? 'all' : 'free')}>
+          <Heart className="h-3 w-3" /> Free
+        </Pill>
+        <Pill active={petsFilter === 'yes'} onClick={() => onPetsFilterChange(petsFilter === 'yes' ? 'all' : 'yes')}>
+          <PawPrint className="h-3 w-3" /> Pets OK
+        </Pill>
+        <Pill active={smokingFilter === 'yes'} onClick={() => onSmokingFilterChange(smokingFilter === 'yes' ? 'all' : 'yes')}>
+          <Cigarette className="h-3 w-3" /> Smoking OK
+        </Pill>
+        <Pill active={sortBy === 'nearest'} onClick={() => {
+          if (sortBy === 'nearest') { onSortChange('newest'); }
+          else { onRequestLocation?.(); onSortChange('nearest'); }
+        }}>
+          {geoLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <MapPin className="h-3 w-3" />} Nearby
+        </Pill>
 
-        {priceFilter !== 'free' && (
-          <div className="flex items-center gap-3 md:ml-auto">
-            <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">
-              Max ₪{maxPrice === 200 ? '200+' : maxPrice}/night
-            </label>
-            <Slider
-              value={[maxPrice]}
-              onValueChange={(v) => onMaxPriceChange(v[0])}
-              min={0}
-              max={200}
-              step={10}
-              className="w-32"
-            />
-          </div>
-        )}
+        <button
+          type="button"
+          onClick={() => setShowMore(!showMore)}
+          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium border transition-all ml-auto ${
+            showMore || activeFilterCount > 0
+              ? 'bg-primary/10 text-primary border-primary/30'
+              : 'bg-card text-muted-foreground border-border hover:border-primary/40'
+          }`}
+        >
+          {showMore ? <X className="h-3 w-3" /> : <SlidersHorizontal className="h-3 w-3" />}
+          {activeFilterCount > 0 ? `Filters (${activeFilterCount})` : 'More'}
+        </button>
       </div>
+
+      {/* Row 3: Expandable detail filters */}
+      {showMore && (
+        <div className="bg-muted/40 rounded-lg border border-border p-3 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <Counter label="Beds" value={minBeds} onChange={onMinBedsChange} icon={<BedDouble className="h-3.5 w-3.5" />} />
+            <Counter label="Rooms" value={minBedrooms} onChange={onMinBedroomsChange} icon={<BedDouble className="h-3.5 w-3.5" />} />
+            <Counter label="Mamad m²" value={minMamad} onChange={onMinMamadChange} icon={<Shield className="h-3.5 w-3.5" />} />
+          </div>
+          {priceFilter !== 'free' && (
+            <div className="flex items-center gap-3">
+              <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+                Max ₪{maxPrice === 200 ? '200+' : maxPrice}/night
+              </label>
+              <Slider value={[maxPrice]} onValueChange={(v) => onMaxPriceChange(v[0])} min={0} max={200} step={10} className="w-36" />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
