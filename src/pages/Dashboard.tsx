@@ -41,6 +41,8 @@ export default function Dashboard() {
   const [isActive, setIsActive] = useState(true);
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [smokingAllowed, setSmokingAllowed] = useState(false);
+  const [priceType, setPriceType] = useState('free');
+  const [pricePerNight, setPricePerNight] = useState<number | ''>('');
 
   // Photo state
   const [existingPhotos, setExistingPhotos] = useState<{ name: string; url: string }[]>([]);
