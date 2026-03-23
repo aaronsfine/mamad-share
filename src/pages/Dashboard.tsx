@@ -154,8 +154,39 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+      <div className="min-h-screen bg-background">
+        <header className="bg-primary text-primary-foreground shadow-md">
+          <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-2">
+            <Shield className="h-6 w-6" />
+            <h1 className="text-lg font-bold">Host Dashboard</h1>
+          </div>
+        </header>
+        <main className="max-w-2xl mx-auto px-4 py-6">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-7 w-48" />
+              <Skeleton className="h-4 w-64 mt-2" />
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Skeleton className="h-16" />
+                <Skeleton className="h-16" />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Skeleton className="h-16" />
+                <Skeleton className="h-16" />
+              </div>
+              <Skeleton className="h-16 w-full" />
+              <div className="grid gap-4 grid-cols-3">
+                <Skeleton className="h-16" />
+                <Skeleton className="h-16" />
+                <Skeleton className="h-16" />
+              </div>
+              <Skeleton className="h-11 w-full rounded-lg" />
+            </CardContent>
+          </Card>
+        </main>
       </div>
     );
   }
