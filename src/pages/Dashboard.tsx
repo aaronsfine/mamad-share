@@ -160,7 +160,7 @@ export default function Dashboard() {
       address: address || null,
       bedrooms,
       total_beds: totalBeds,
-      mamad_size_sqm: mamadSize,
+      
       sleeping_notes: sleepingNotes || null,
       mamad_notes: mamadNotes || null,
       is_active: isActive,
