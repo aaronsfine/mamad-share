@@ -64,6 +64,8 @@ export default function Dashboard() {
     setIsActive(data.is_active);
     setPetsAllowed((data as any).pets_allowed ?? false);
     setSmokingAllowed((data as any).smoking_allowed ?? false);
+    setPriceType((data as any).price_type ?? 'free');
+    setPricePerNight((data as any).price_per_night ?? '');
   };
 
   useEffect(() => {
