@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, LogOut, ArrowLeft, Home, Plus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,6 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
+import { SearchableSelect } from '@/components/SearchableSelect';
+import { ALL_CITIES, getNeighborhoods } from '@/lib/locations';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Listing = Tables<'listings'>;
