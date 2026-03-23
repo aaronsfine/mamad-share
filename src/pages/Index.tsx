@@ -157,6 +157,12 @@ export default function Index() {
             selectedNeighborhood={selectedNeighborhood}
             onCityChange={handleCityChange}
             onNeighborhoodChange={setSelectedNeighborhood}
+            petsFilter={petsFilter}
+            smokingFilter={smokingFilter}
+            priceFilter={priceFilter}
+            onPetsFilterChange={setPetsFilter}
+            onSmokingFilterChange={setSmokingFilter}
+            onPriceFilterChange={setPriceFilter}
           />
         </div>
       </section>

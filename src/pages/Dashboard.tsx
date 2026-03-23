@@ -495,6 +495,55 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {/* Pricing */}
+          <div className="space-y-3 rounded-lg border border-border p-4">
+            <div>
+              <Label className="text-sm font-medium">Pricing</Label>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                🕊️ This platform is built on חסד — kindness. We encourage offering your space for free or at a symbolic cost to cover expenses. This is about helping families in need.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant={priceType === 'free' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setPriceType('free')}
+                className="flex-1"
+              >
+                <Heart className="h-4 w-4 mr-1.5" />
+                Free (חסד)
+              </Button>
+              <Button
+                type="button"
+                variant={priceType === 'paid' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setPriceType('paid')}
+                className="flex-1"
+              >
+                <DollarSign className="h-4 w-4 mr-1.5" />
+                Subsidized
+              </Button>
+            </div>
+            {priceType === 'paid' && (
+              <div className="space-y-2">
+                <Label htmlFor="pricePerNight">Price per night (₪)</Label>
+                <Input
+                  id="pricePerNight"
+                  type="number"
+                  min={0}
+                  max={200}
+                  value={pricePerNight}
+                  onChange={(e) => setPricePerNight(e.target.value ? Number(e.target.value) : '')}
+                  placeholder="e.g. 50"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Please keep costs minimal — just enough to cover utilities or supplies. Families are counting on your generosity. 💙
+                </p>
+              </div>
+            )}
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="sleepingNotes">Sleeping Notes (optional)</Label>
             <Textarea id="sleepingNotes" value={sleepingNotes} onChange={(e) => setSleepingNotes(e.target.value)} placeholder="e.g. 2 mattresses available, sofa bed in living room" rows={2} />
