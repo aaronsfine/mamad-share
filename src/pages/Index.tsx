@@ -23,7 +23,7 @@ export default function Index() {
   const [sortBy, setSortBy] = useState<SortOption>('newest');
   const [minBeds, setMinBeds] = useState(0);
   const [minBedrooms, setMinBedrooms] = useState(0);
-  const [minMamad, setMinMamad] = useState(0);
+  
   const geo = useGeolocation();
 
   const { data: listings = [], isLoading } = useQuery({
