@@ -17,25 +17,30 @@ export function ApproxMap({ lat, lng, label }: ApproxMapProps) {
 
     const map = L.map(mapRef.current, {
       center: [lat, lng],
-      zoom: 15,
+      zoom: 16,
       scrollWheelZoom: false,
       dragging: true,
-      zoomControl: true,
-      attributionControl: true,
+      zoomControl: false,
+      attributionControl: false,
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
+    // Clean, minimal tile layer (CartoDB Positron)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap contributors, © CARTO',
+      maxZoom: 19,
     }).addTo(map);
 
-    // Shaded circle — ~300m radius to obscure exact location
+    // Small attribution in corner
+    L.control.attribution({ position: 'bottomright', prefix: false }).addTo(map);
+
+    // Shaded circle — ~100m radius
     L.circle([lat, lng], {
-      radius: 300,
+      radius: 100,
       color: 'hsl(221, 83%, 53%)',
       fillColor: 'hsl(221, 83%, 53%)',
-      fillOpacity: 0.15,
+      fillOpacity: 0.18,
       weight: 2,
-      opacity: 0.4,
+      opacity: 0.5,
     }).addTo(map);
 
     mapInstance.current = map;
