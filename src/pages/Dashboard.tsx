@@ -525,7 +525,11 @@ export default function Dashboard() {
           <div className="space-y-2">
             <Label htmlFor="address">Approximate Address</Label>
             <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="e.g. Near Dizengoff Center" />
-            <p className="text-xs text-muted-foreground">Private — not shown publicly.</p>
+            <p className="text-xs text-muted-foreground">
+              {city && neighborhood
+                ? `Enter your street address in ${city}, ${neighborhood}. Used for the approximate map only — never shown publicly.`
+                : 'Private — not shown publicly. Used only for the approximate map.'}
+            </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
