@@ -20,7 +20,7 @@ export default function Index() {
   const [smokingFilter, setSmokingFilter] = useState<'all' | 'yes' | 'no'>('all');
   const [priceFilter, setPriceFilter] = useState<'all' | 'free'>('all');
   const [maxPrice, setMaxPrice] = useState(200);
-  const [sortBy, setSortBy] = useState<SortOption>('newest');
+  const [sortBy, setSortBy] = useState<SortOption>('price_low');
   const [minBeds, setMinBeds] = useState(0);
   const [minBedrooms, setMinBedrooms] = useState(0);
   
