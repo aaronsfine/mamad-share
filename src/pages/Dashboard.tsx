@@ -462,7 +462,7 @@ export default function Dashboard() {
             <p className="text-xs text-muted-foreground">Private — not shown publicly.</p>
           </div>
 
-          <div className="grid gap-4 grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="bedrooms">Bedrooms</Label>
               <Input id="bedrooms" type="number" min={0} value={bedrooms} onChange={(e) => setBedrooms(Number(e.target.value))} required />
@@ -470,10 +470,6 @@ export default function Dashboard() {
             <div className="space-y-2">
               <Label htmlFor="totalBeds">Total Beds</Label>
               <Input id="totalBeds" type="number" min={0} value={totalBeds} onChange={(e) => setTotalBeds(Number(e.target.value))} required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="mamadSize">Mamad (sqm)</Label>
-              <Input id="mamadSize" type="number" min={1} value={mamadSize} onChange={(e) => setMamadSize(Number(e.target.value))} required />
             </div>
           </div>
 

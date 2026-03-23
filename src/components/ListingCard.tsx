@@ -165,7 +165,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
             </p>
             <div className="border-t border-border" />
             <p className="text-sm text-muted-foreground">
-              {listing.bedrooms} bedroom{listing.bedrooms !== 1 ? 's' : ''} · {listing.total_beds} bed{listing.total_beds !== 1 ? 's' : ''} · {listing.mamad_size_sqm} sqm mamad
+              {listing.bedrooms} bedroom{listing.bedrooms !== 1 ? 's' : ''} · {listing.total_beds} bed{listing.total_beds !== 1 ? 's' : ''}
             </p>
             {listing.sleeping_notes && (
               <div className="flex items-start gap-2 text-sm text-foreground">

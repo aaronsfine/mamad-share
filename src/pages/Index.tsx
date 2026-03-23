@@ -211,10 +211,8 @@ export default function Index() {
             onSortChange={setSortBy}
             minBeds={minBeds}
             minBedrooms={minBedrooms}
-            minMamad={minMamad}
             onMinBedsChange={setMinBeds}
             onMinBedroomsChange={setMinBedrooms}
-            onMinMamadChange={setMinMamad}
             geoLoading={geo.loading}
             geoAvailable={geo.latitude != null}
             onRequestLocation={geo.requestLocation}
