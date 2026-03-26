@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import { Shield, Home as HomeIcon, MapPinOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { ListingCard } from '@/components/ListingCard';
-import { ShelterFilters, type SortOption } from '@/components/ShelterFilters';
+import { ShelterFilters } from '@/components/ShelterFilters';
+
+type SortOption = 'nearest' | 'price_low' | 'price_high';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { haversineDistance } from '@/lib/distance';
 import { ALL_CITIES, getNeighborhoods } from '@/lib/locations';
@@ -197,23 +199,6 @@ export default function Index() {
             selectedNeighborhood={selectedNeighborhood}
             onCityChange={handleCityChange}
             onNeighborhoodChange={setSelectedNeighborhood}
-            petsFilter={petsFilter}
-            smokingFilter={smokingFilter}
-            priceFilter={priceFilter}
-            maxPrice={maxPrice}
-            onPetsFilterChange={setPetsFilter}
-            onSmokingFilterChange={setSmokingFilter}
-            onPriceFilterChange={setPriceFilter}
-            onMaxPriceChange={setMaxPrice}
-            sortBy={sortBy}
-            onSortChange={setSortBy}
-            minBeds={minBeds}
-            minBedrooms={minBedrooms}
-            onMinBedsChange={setMinBeds}
-            onMinBedroomsChange={setMinBedrooms}
-            geoLoading={geo.loading}
-            geoAvailable={geo.latitude != null}
-            onRequestLocation={geo.requestLocation}
           />
         </div>
       </section>
