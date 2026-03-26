@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import { Shield, Home as HomeIcon, MapPinOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { ListingCard } from '@/components/ListingCard';
-import { ShelterFilters, type SortOption } from '@/components/ShelterFilters';
+import { ShelterFilters } from '@/components/ShelterFilters';
+
+type SortOption = 'nearest' | 'price_low' | 'price_high';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { haversineDistance } from '@/lib/distance';
 import { ALL_CITIES, getNeighborhoods } from '@/lib/locations';
