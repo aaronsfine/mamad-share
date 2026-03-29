@@ -198,6 +198,21 @@ export default function Index() {
             selectedNeighborhood={selectedNeighborhood}
             onCityChange={handleCityChange}
             onNeighborhoodChange={setSelectedNeighborhood}
+            petsFilter={petsFilter}
+            onPetsFilterChange={setPetsFilter}
+            smokingFilter={smokingFilter}
+            onSmokingFilterChange={setSmokingFilter}
+            priceFilter={priceFilter}
+            onPriceFilterChange={setPriceFilter}
+            maxPrice={maxPrice}
+            onMaxPriceChange={setMaxPrice}
+            minBeds={minBeds}
+            onMinBedsChange={setMinBeds}
+            minBedrooms={minBedrooms}
+            onMinBedroomsChange={setMinBedrooms}
+            sortBy={sortBy}
+            onSortByChange={setSortBy}
+            hasLocation={geo.latitude != null && geo.longitude != null}
           />
         </div>
       </section>
