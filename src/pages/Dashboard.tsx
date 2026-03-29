@@ -494,11 +494,11 @@ export default function Dashboard() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="hostName">Your Name</Label>
+              <Label htmlFor="hostName">{t('dash.yourName')}</Label>
               <Input id="hostName" value={hostName} onChange={(e) => setHostName(e.target.value)} required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone (with country code)</Label>
+              <Label htmlFor="phone">{t('dash.phone')}</Label>
               <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="972501234567" required />
             </div>
           </div>
