@@ -15,6 +15,8 @@ import { Footer } from '@/components/Footer';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { useLanguage } from '@/i18n/LanguageContext';
 import type { Tables } from '@/integrations/supabase/types';
+import heroBanner from '@/assets/hero-banner.jpg';
+import mamadEmblem from '@/assets/mamad-emblem.png';
 
 export default function Index() {
   const { t } = useLanguage();
