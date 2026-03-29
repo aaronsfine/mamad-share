@@ -15,8 +15,6 @@ import { Footer } from '@/components/Footer';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { useLanguage } from '@/i18n/LanguageContext';
 import type { Tables } from '@/integrations/supabase/types';
-import heroBanner from '@/assets/hero-banner.jpg';
-import mamadEmblem from '@/assets/mamad-emblem.png';
 
 export default function Index() {
   const { t } = useLanguage();
@@ -150,17 +148,17 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="sticky top-0 z-50 bg-[hsl(213,35%,15%)] border-b border-[hsl(213,35%,25%)]">
+      <header className="sticky top-0 z-50 bg-card border-b border-border">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={mamadEmblem} alt="" className="h-7 w-7" />
-            <h1 className="text-base font-bold text-white tracking-wide">{t('app.name')}</h1>
+            <Shield className="h-5 w-5 text-primary" />
+            <h1 className="text-base font-semibold text-primary">{t('app.name')}</h1>
           </div>
           <div className="flex items-center gap-2">
             <LanguageToggle />
-            <Button variant="outline" size="sm" asChild className="rounded-full border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent">
+            <Button variant="outline" size="sm" asChild className="rounded-full border-primary text-primary hover:bg-accent">
               <Link to="/login">
-                <Shield className="h-4 w-4 mr-1.5" />
+                <HomeIcon className="h-4 w-4 mr-1.5" />
                 {t('nav.listApartment')}
               </Link>
             </Button>
@@ -168,26 +166,18 @@ export default function Index() {
         </div>
       </header>
 
-      <section className="relative overflow-hidden">
-        <img src={heroBanner} alt="" className="absolute inset-0 w-full h-full object-cover" width={1920} height={640} />
-        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(213,35%,10%)/85%] via-[hsl(213,35%,10%)/70%] to-[hsl(213,35%,10%)/90%]" />
-        <div className="relative max-w-5xl mx-auto px-4 py-14 md:py-20 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-3 drop-shadow-lg">
-            {t('hero.title')}
-          </h2>
-          <p className="text-sm md:text-lg text-white/90 max-w-2xl mx-auto mt-3 leading-relaxed">
-            {t('hero.subtitle')}
-          </p>
-          <p className="text-xs md:text-sm text-white/70 mt-3 font-medium">
-            {t('hero.subtext')}
-          </p>
-          <div className="mt-6 flex justify-center gap-3">
-            <Button size="lg" asChild className="rounded-full bg-white text-[hsl(213,35%,15%)] hover:bg-white/90 font-semibold shadow-lg">
-              <Link to="/login">
-                <Shield className="h-4 w-4 mr-2" />
-                {t('nav.listApartment')}
-              </Link>
-            </Button>
+      <section className="bg-card border-b border-border">
+        <div className="max-w-5xl mx-auto px-4 pt-6 pb-4">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-primary mb-2">
+              {t('hero.title')}
+            </h2>
+            <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto mt-2">
+              {t('hero.subtitle')}
+            </p>
+            <p className="text-xs text-muted-foreground/70 mt-1">
+              {t('hero.subtext')}
+            </p>
           </div>
         </div>
       </section>
