@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import { Shield, ArrowLeft, Search, MessageCircle, Home } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Footer } from '@/components/Footer';
+import { Link } from "react-router-dom";
+import { Shield, ArrowLeft, Search, MessageCircle, Home } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/Footer";
 
 export default function HowItWorks() {
   return (
@@ -10,7 +10,9 @@ export default function HowItWorks() {
       <header className="sticky top-0 z-50 bg-card border-b border-border">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
           <Button variant="ghost" size="icon" asChild>
-            <Link to="/"><ArrowLeft className="h-4 w-4" /></Link>
+            <Link to="/">
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
           </Button>
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-primary" />
@@ -64,7 +66,7 @@ export default function HowItWorks() {
               number={2}
               icon={<Home className="h-5 w-5" />}
               title="Add your listing"
-              description="Share details about your apartment — bedrooms, mamad size, and your city. Your exact address stays private."
+              description="Share details about your apartment — number of beds, bedrooms, and your city. Your exact address stays private."
             />
             <Step
               number={3}
@@ -87,7 +89,17 @@ export default function HowItWorks() {
   );
 }
 
-function Step({ number, icon, title, description }: { number: number; icon: React.ReactNode; title: string; description: string }) {
+function Step({
+  number,
+  icon,
+  title,
+  description,
+}: {
+  number: number;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
     <div className="flex gap-4">
       <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent flex items-center justify-center text-primary font-semibold text-sm">
