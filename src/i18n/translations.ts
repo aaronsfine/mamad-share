@@ -155,15 +155,15 @@ const translations = {
 
   // About
   'about.title': { en: 'About Mamad Directory', he: 'אודות מדריך ממ"ד' },
-  'about.intro': { en: 'Mamad Directory is a community-driven platform connecting families who need a safe place to sleep during rocket sirens with generous hosts who have a secure room (mamad) in their apartment.', he: 'מדריך ממ"ד הוא פלטפורמה קהילתית המחברת משפחות הזקוקות למקום בטוח ללון בזמן אזעקות עם מארחים נדיבים שיש להם ממ"ד בדירתם.' },
-  'about.community': { en: 'Community First', he: 'קהילה קודמת' },
-  'about.communityDesc': { en: 'Built by people who care, for people in need. No fees, no middlemen.', he: 'נבנה על ידי אנשים שאכפת להם, עבור אנשים נזקקים. ללא עמלות, ללא מתווכים.' },
-  'about.people': { en: 'People Helping People', he: 'אנשים עוזרים לאנשים' },
-  'about.peopleDesc': { en: 'Real families opening their homes to help others stay safe.', he: 'משפחות אמיתיות פותחות את בתיהן כדי לעזור לאחרים להישאר בטוחים.' },
-  'about.shelter': { en: 'Safe Shelter', he: 'מקלט בטוח' },
-  'about.shelterDesc': { en: 'Every listing includes a mamad — a reinforced safe room for protection.', he: 'כל רישום כולל ממ"ד — חדר מוגן מחוזק להגנה.' },
-  'about.believe': { en: 'We believe that in times of crisis, the strongest thing a community can do is come together. This platform makes it easy for hosts to share their space and for families to find safety — all through a simple, direct WhatsApp connection.', he: 'אנחנו מאמינים שבזמני משבר, הדבר החזק ביותר שקהילה יכולה לעשות הוא להתאחד. הפלטפורמה הזו מקלה על מארחים לשתף את המקום שלהם ועל משפחות למצוא בטיחות — הכל דרך חיבור פשוט וישיר בוואטסאפ.' },
-  'about.free': { en: 'Mamad Directory is free to use, open to everyone, and built with love for Israel.', he: 'מדריך ממ"ד הוא חינמי, פתוח לכולם, ונבנה באהבה לישראל.' },
+  'about.intro': { en: 'Mamad Directory is Israel\'s civilian shelter network — connecting families who need a safe room with patriots who have one to share. While the IDF defends our skies, we defend our neighbors.', he: 'מדריך ממ"ד הוא רשת המקלטים האזרחית של ישראל — מחברת משפחות שצריכות חדר בטוח עם פטריוטים שיש להם אחד לשתף. בזמן שצה"ל מגן על השמיים שלנו, אנחנו מגנים על השכנים שלנו.' },
+  'about.community': { en: 'Home Front Defense', he: 'הגנת העורף' },
+  'about.communityDesc': { en: 'Every mamad listed strengthens our national resilience. You don\'t need a uniform to serve.', he: 'כל ממ"ד שמפורסם מחזק את החוסן הלאומי שלנו. לא צריך מדים כדי לשרת.' },
+  'about.people': { en: 'Am Yisrael Chai', he: 'עם ישראל חי' },
+  'about.peopleDesc': { en: 'Real families opening their doors because that\'s what we do — we protect each other.', he: 'משפחות אמיתיות פותחות את דלתותיהן כי ככה אנחנו — אנחנו מגנים אחד על השני.' },
+  'about.shelter': { en: 'Every Room Counts', he: 'כל חדר חשוב' },
+  'about.shelterDesc': { en: 'Every listing is a reinforced safe room (mamad) that could save a family\'s life tonight.', he: 'כל רישום הוא חדר מוגן (ממ"ד) שיכול להציל חיי משפחה הלילה.' },
+  'about.believe': { en: 'Our soldiers fight on the front. Our pilots defend the skies. And we — the civilians — defend each other. This platform makes it simple: share your safe room, save a family. Together, we are unbreakable.', he: 'החיילים שלנו נלחמים בחזית. הטייסים שלנו מגנים על השמיים. ואנחנו — האזרחים — מגנים אחד על השני. הפלטפורמה הזו מפשטת את זה: שתף את החדר הבטוח שלך, הצל משפחה. ביחד, אנחנו בלתי שבירים.' },
+  'about.free': { en: 'Mamad Directory is free, open to all, and built with love for Israel. 🇮🇱', he: 'מדריך ממ"ד הוא חינמי, פתוח לכולם, ונבנה באהבה לישראל. 🇮🇱' },
 
   // How It Works
   'how.title': { en: 'How It Works', he: 'איך זה עובד' },
