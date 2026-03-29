@@ -643,8 +643,8 @@ export default function Dashboard() {
                   }}
                 />
                 <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
-                  <Upload className="h-4 w-4 mr-1.5" />
-                  Add Photos
+                  <Upload className="h-4 w-4 me-1.5" />
+                  {t('dash.addPhotos')}
                 </Button>
               </>
             )}
