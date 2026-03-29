@@ -666,15 +666,11 @@ export default function Dashboard() {
         {!listing && !editing ? (
           <div className="text-center py-24">
             <Home className="h-16 w-16 mx-auto text-muted-foreground/30 mb-5" strokeWidth={1.5} />
-            <h2 className="text-xl font-semibold text-foreground mb-2">
-              You haven't added a shelter yet
-            </h2>
-            <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6">
-              Add your mamad to help families in need. Your listing will appear in the public directory once published.
-            </p>
+            <h2 className="text-xl font-semibold text-foreground mb-2">{t('dash.noListing.title')}</h2>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6">{t('dash.noListing.text')}</p>
             <Button size="lg" onClick={() => setEditing(true)}>
-              <Plus className="h-5 w-5 mr-1.5" />
-              Create Listing
+              <Plus className="h-5 w-5 me-1.5" />
+              {t('dash.createListing')}
             </Button>
           </div>
         ) : (
