@@ -526,11 +526,11 @@ export default function Dashboard() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="bedrooms">Bedrooms</Label>
+              <Label htmlFor="bedrooms">{t('dash.bedrooms')}</Label>
               <Input id="bedrooms" type="number" min={0} value={bedrooms} onChange={(e) => setBedrooms(Number(e.target.value))} required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="totalBeds">Total Beds</Label>
+              <Label htmlFor="totalBeds">{t('dash.totalBeds')}</Label>
               <Input id="totalBeds" type="number" min={0} value={totalBeds} onChange={(e) => setTotalBeds(Number(e.target.value))} required />
             </div>
           </div>
