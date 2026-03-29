@@ -12,9 +12,12 @@ import { ALL_CITIES, getNeighborhoods } from '@/lib/locations';
 import { Button } from '@/components/ui/button';
 import { ListingCardSkeleton } from '@/components/ListingCardSkeleton';
 import { Footer } from '@/components/Footer';
+import { LanguageToggle } from '@/components/LanguageToggle';
+import { useLanguage } from '@/i18n/LanguageContext';
 import type { Tables } from '@/integrations/supabase/types';
 
 export default function Index() {
+  const { t } = useLanguage();
   const [selectedCity, setSelectedCity] = useState('all');
   const [selectedNeighborhood, setSelectedNeighborhood] = useState('all');
   const [petsFilter, setPetsFilter] = useState<'all' | 'yes' | 'no'>('all');
@@ -68,20 +71,16 @@ export default function Index() {
     return listings.filter((l) => {
       if (selectedCity !== 'all' && l.city !== selectedCity) return false;
       if (selectedNeighborhood !== 'all' && l.neighborhood !== selectedNeighborhood) return false;
-      if (petsFilter === 'yes' && !(l as any).pets_allowed) return false;
-      if (petsFilter === 'no' && (l as any).pets_allowed) return false;
-      if (smokingFilter === 'yes' && !(l as any).smoking_allowed) return false;
-      if (smokingFilter === 'no' && (l as any).smoking_allowed) return false;
-      if (priceFilter === 'free' && (l as any).price_type !== 'free') return false;
+      if (petsFilter === 'yes' && !l.pets_allowed) return false;
+      if (petsFilter === 'no' && l.pets_allowed) return false;
+      if (smokingFilter === 'yes' && !l.smoking_allowed) return false;
+      if (smokingFilter === 'no' && l.smoking_allowed) return false;
+      if (priceFilter === 'free' && l.price_type !== 'free') return false;
       if (priceFilter !== 'free' && maxPrice < 200) {
-        const pt = (l as any).price_type;
-        const ppn = (l as any).price_per_night;
-        if (pt === 'paid' && ppn != null && ppn > maxPrice) return false;
+        if (l.price_type === 'paid' && l.price_per_night != null && l.price_per_night > maxPrice) return false;
       }
-      // Capacity filters
       if (minBeds > 0 && l.total_beds < minBeds) return false;
       if (minBedrooms > 0 && l.bedrooms < minBedrooms) return false;
-      
       return true;
     });
   }, [listings, selectedCity, selectedNeighborhood, petsFilter, smokingFilter, priceFilter, maxPrice, minBeds, minBedrooms]);
@@ -109,25 +108,23 @@ export default function Index() {
         break;
       case 'price_low':
         withDistance.sort((a, b) => {
-          const aFree = (a.listing as any).price_type === 'free';
-          const bFree = (b.listing as any).price_type === 'free';
+          const aFree = a.listing.price_type === 'free';
+          const bFree = b.listing.price_type === 'free';
           if (aFree && bFree) return 0;
           if (aFree) return -1;
           if (bFree) return 1;
-          return ((a.listing as any).price_per_night ?? 0) - ((b.listing as any).price_per_night ?? 0);
+          return (a.listing.price_per_night ?? 0) - (b.listing.price_per_night ?? 0);
         });
         break;
       case 'price_high':
         withDistance.sort((a, b) => {
-          const aFree = (a.listing as any).price_type === 'free';
-          const bFree = (b.listing as any).price_type === 'free';
+          const aFree = a.listing.price_type === 'free';
+          const bFree = b.listing.price_type === 'free';
           if (aFree && bFree) return 0;
           if (aFree) return 1;
           if (bFree) return -1;
-          return ((b.listing as any).price_per_night ?? 0) - ((a.listing as any).price_per_night ?? 0);
+          return (b.listing.price_per_night ?? 0) - (a.listing.price_per_night ?? 0);
         });
-        break;
-      default:
         break;
     }
 
@@ -143,53 +140,52 @@ export default function Index() {
     const count = sortedListings.length;
     const cityLabel = selectedCity !== 'all' ? selectedCity : '';
     const neighborhoodLabel = selectedNeighborhood !== 'all' ? `, ${selectedNeighborhood}` : '';
-    const location = cityLabel ? ` in ${cityLabel}${neighborhoodLabel}` : '';
-    if (count === 0) return `No places found${location}. Try another city or neighborhood.`;
-    if (count <= 2) return `${count} place${count > 1 ? 's' : ''} found${location} — only a few rooms available right now.`;
-    return `${count} places found${location}`;
-  }, [sortedListings.length, selectedCity, selectedNeighborhood]);
+    const location = cityLabel ? ` ${t('results.in')} ${cityLabel}${neighborhoodLabel}` : '';
+    if (count === 0) return `${t('results.none.text')}`;
+    if (count <= 2) return `${count} ${t('results.found')}${location} — ${t('results.few')}`;
+    return `${count} ${t('results.found')}${location}`;
+  }, [sortedListings.length, selectedCity, selectedNeighborhood, t]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
       <header className="sticky top-0 z-50 bg-card border-b border-border">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-primary" />
-            <h1 className="text-base font-semibold text-primary">Mamad Directory</h1>
+            <h1 className="text-base font-semibold text-primary">{t('app.name')}</h1>
           </div>
-          <Button variant="outline" size="sm" asChild className="rounded-full border-primary text-primary hover:bg-accent">
-            <Link to="/login">
-              <HomeIcon className="h-4 w-4 mr-1.5" />
-              List Your Apartment
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <Button variant="outline" size="sm" asChild className="rounded-full border-primary text-primary hover:bg-accent">
+              <Link to="/login">
+                <HomeIcon className="h-4 w-4 mr-1.5" />
+                {t('nav.listApartment')}
+              </Link>
+            </Button>
+          </div>
         </div>
       </header>
 
-      {/* Hero — compact */}
       <section className="bg-card border-b border-border">
         <div className="max-w-5xl mx-auto px-4 pt-6 pb-4">
           <div className="text-center">
             <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-primary mb-2">
-              Find a Safe Place to Sleep Tonight
+              {t('hero.title')}
             </h2>
             <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto mt-2">
-              Families across Israel are opening their homes to help others stay safe during sirens.
-              Find a nearby apartment with a secure room (mamad) and contact the host directly.
+              {t('hero.subtitle')}
             </p>
             <p className="text-xs text-muted-foreground/70 mt-1">
-              Simple. Fast. Community-driven and free to use.
+              {t('hero.subtext')}
             </p>
           </div>
         </div>
       </section>
 
-      {/* Filters */}
       <section className="bg-card border-b border-border">
         <div className="max-w-5xl mx-auto px-4 py-3">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 md:text-left text-center">
-            Browse available safe rooms
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 md:text-start text-center">
+            {t('filters.browse')}
           </p>
           <ShelterFilters
             cities={cities}
@@ -217,7 +213,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Content */}
       <main className="max-w-5xl mx-auto px-4 py-5 flex-1">
         {isLoading ? (
           <div className="bg-card rounded-2xl border border-border shadow-sm px-4 py-5 md:px-6 md:py-6">
@@ -230,21 +225,21 @@ export default function Index() {
         ) : sortedListings.length === 0 ? (
           <div className="bg-card rounded-2xl border border-border shadow-sm px-4 py-10 text-center">
             <MapPinOff className="h-14 w-14 mx-auto text-muted-foreground/30 mb-4" strokeWidth={1.5} />
-            <h3 className="text-lg font-semibold text-foreground mb-1.5">No safe rooms here yet</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-1.5">{t('results.none.title')}</h3>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto mb-5">
-              Try another city or neighborhood, or check back soon as more families open their homes.
+              {t('results.none.text')}
             </p>
             <Button variant="outline" asChild className="rounded-full border-primary text-primary hover:bg-accent">
               <Link to="/login">
                 <HomeIcon className="h-4 w-4 mr-1.5" />
-                List your apartment
+                {t('results.none.cta')}
               </Link>
             </Button>
           </div>
         ) : (
           <div className="bg-card rounded-2xl border border-border shadow-sm px-4 py-5 md:px-6 md:py-6">
             <div className="mb-3">
-              <h3 className="text-lg font-semibold text-foreground">Safe rooms available</h3>
+              <h3 className="text-lg font-semibold text-foreground">{t('results.title')}</h3>
               <p className="text-sm text-muted-foreground">{resultsLabel}</p>
             </div>
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
