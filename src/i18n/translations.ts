@@ -135,7 +135,7 @@ const translations = {
   'dash.petsWelcome': { en: 'Pets Welcome', he: 'מותר חיות מחמד' },
   'dash.smokingOk': { en: 'Smoking OK', he: 'מותר עישון' },
   'dash.pricing': { en: 'Pricing', he: 'תמחור' },
-  'dash.pricingHint': { en: '🕊️ This platform is built on חסד — kindness. We encourage offering your space for free or at a symbolic cost to cover expenses. This is about helping families in need.', he: '🕊️ הפלטפורמה נבנתה על חסד. אנחנו מעודדים להציע את המקום שלך בחינם או בעלות סמלית לכיסוי הוצאות. מדובר בעזרה למשפחות נזקקות.' },
+  'dash.pricingHint': { en: '🇮🇱 This is part of the national effort. We encourage offering your space for free or at a symbolic cost. Every family you shelter is a victory for the home front.', he: '🇮🇱 זה חלק מהמאמץ הלאומי. אנחנו מעודדים להציע את המקום שלך בחינם או בעלות סמלית. כל משפחה שאתה מגן עליה היא ניצחון של העורף.' },
   'dash.free': { en: 'Free (חסד)', he: 'חינם (חסד)' },
   'dash.subsidized': { en: 'Subsidized', he: 'מסובסד' },
   'dash.pricePerNight': { en: 'Price per night (₪)', he: 'מחיר ללילה (₪)' },
