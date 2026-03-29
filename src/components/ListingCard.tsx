@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { MapPin, User, MessageCircle, BedDouble, Shield, PawPrint, Cigarette, ChevronLeft, ChevronRight, Image, Heart, Info } from 'lucide-react';
-import { buildWhatsAppLink } from '@/lib/whatsapp';
 import { formatDistance } from '@/lib/distance';
 import { ApproxMap } from '@/components/ApproxMap';
+import { supabase } from '@/integrations/supabase/client';
 import type { Tables } from '@/integrations/supabase/types';
 
 interface ListingCardProps {
@@ -16,12 +16,19 @@ interface ListingCardProps {
 }
 
 export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCardProps) {
-  const whatsappUrl = buildWhatsAppLink(listing.phone, listing.host_name, listing.city);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const hasPhotos = photoUrls.length > 0;
   const hasNotes = !!(listing.sleeping_notes || listing.mamad_notes);
+
+  const handleWhatsAppClick = useCallback(async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const { data } = await supabase.rpc('get_whatsapp_url', { listing_id: listing.id });
+    if (data) {
+      window.open(data, '_blank', 'noopener,noreferrer');
+    }
+  }, [listing.id]);
 
   return (
     <>
