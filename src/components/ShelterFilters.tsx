@@ -107,7 +107,7 @@ export function ShelterFilters({
             <SelectContent>
               <SelectItem value="all">{t('filters.allCities')}</SelectItem>
               {cities.map((city) => (
-                <SelectItem key={city} value={city}>{city}</SelectItem>
+                <SelectItem key={city} value={city}>{getCityDisplayName(city, lang)}</SelectItem>
               ))}
             </SelectContent>
           </Select>
