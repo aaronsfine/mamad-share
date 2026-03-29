@@ -146,7 +146,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
               className="w-full bg-whatsapp hover:bg-whatsapp/85 active:scale-[0.98] text-whatsapp-foreground font-semibold rounded-lg transition-all duration-150"
               size="lg"
             >
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+              <a href="#" onClick={handleWhatsAppClick}>
                 <MessageCircle className="h-5 w-5 mr-2" />
                 Contact via WhatsApp
               </a>
