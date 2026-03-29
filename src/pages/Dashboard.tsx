@@ -590,8 +590,8 @@ export default function Dashboard() {
 
           {/* Photo Upload */}
           <div className="space-y-3">
-            <Label>Photos (optional)</Label>
-            <p className="text-xs text-muted-foreground">Add photos of your space to help families feel comfortable. Max 5 photos.</p>
+            <Label>{t('dash.photos')}</Label>
+            <p className="text-xs text-muted-foreground">{t('dash.photosHint')}</p>
 
             {existingPhotos.length > 0 && (
               <div className="flex flex-wrap gap-2">
