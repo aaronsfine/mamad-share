@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { MapPin, User, MessageCircle, BedDouble, Shield, PawPrint, Cigarette, ChevronLeft, ChevronRight, Image, Heart, Info } from 'lucide-react';
 import { formatDistance } from '@/lib/distance';
-import { ApproxMap } from '@/components/ApproxMap';
+import { getCityDisplayName, getNeighborhoodDisplayName } from '@/lib/locations';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/i18n/LanguageContext';
 import type { Tables } from '@/integrations/supabase/types';
