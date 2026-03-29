@@ -484,9 +484,9 @@ export default function Dashboard() {
           {/* Active toggle */}
           <div className="flex items-center justify-between rounded-lg border border-border p-4">
             <div>
-              <Label className="text-sm font-medium">Listing Status</Label>
+              <Label className="text-sm font-medium">{t('dash.status')}</Label>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {isActive ? 'Your listing is visible to families.' : 'Your listing is hidden from the public feed.'}
+                {isActive ? t('dash.statusActive') : t('dash.statusHidden')}
               </p>
             </div>
             <Switch checked={isActive} onCheckedChange={setIsActive} />
