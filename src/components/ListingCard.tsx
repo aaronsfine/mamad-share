@@ -203,14 +203,12 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
             )}
             <div className="border-t border-border pt-2">
               <Button
-                asChild
+                onClick={handleWhatsAppClick}
                 className="w-full bg-whatsapp hover:bg-whatsapp/85 text-whatsapp-foreground font-semibold rounded-lg"
                 size="lg"
               >
-                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="h-5 w-5 mr-2" />
-                  Contact via WhatsApp
-                </a>
+                <MessageCircle className="h-5 w-5 mr-2" />
+                Contact via WhatsApp
               </Button>
             </div>
           </div>
