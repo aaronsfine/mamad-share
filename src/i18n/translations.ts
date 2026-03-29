@@ -3,17 +3,17 @@ export type Lang = 'en' | 'he';
 const translations = {
   // Common
   'app.name': { en: 'Mamad Directory', he: 'מדריך ממ"ד' },
-  'app.tagline': { en: 'The home front needs you. Open your door, protect a family.', he: 'העורף צריך אותך. פתח את הדלת, הגן על משפחה.' },
+  'app.tagline': { en: 'A community project helping families find safe shelter.', he: 'פרויקט קהילתי שעוזר למשפחות למצוא מקלט בטוח.' },
 
   // Nav / Header
-  'nav.listApartment': { en: 'Join the Effort', he: 'הצטרף למאמץ' },
+  'nav.listApartment': { en: 'List Your Apartment', he: 'פרסם דירה' },
   'nav.feed': { en: 'Feed', he: 'רשימה' },
   'nav.signOut': { en: 'Sign Out', he: 'התנתק' },
 
   // Hero
-  'hero.title': { en: 'The Home Front Needs You', he: 'העורף צריך אותך' },
-  'hero.subtitle': { en: 'While our soldiers fight on the front lines, you can protect families on the home front. Open your mamad — give a family safety tonight.', he: 'בזמן שהחיילים שלנו נלחמים בחזית, אתה יכול להגן על משפחות בעורף. פתח את הממ"ד שלך — תן למשפחה ביטחון הלילה.' },
-  'hero.subtext': { en: 'Every apartment listed is another family protected. 🇮🇱', he: 'כל דירה שמפורסמת היא עוד משפחה מוגנת. 🇮🇱' },
+  'hero.title': { en: 'Find a Safe Place to Sleep Tonight', he: 'מצא מקום בטוח ללון הלילה' },
+  'hero.subtitle': { en: 'Families across Israel are opening their homes to help others stay safe during sirens. Find a nearby apartment with a secure room (mamad) and contact the host directly.', he: 'משפחות ברחבי ישראל פותחות את בתיהן כדי לעזור לאחרים להישאר בטוחים בזמן אזעקות. מצא דירה קרובה עם ממ"ד ופנה למארח ישירות.' },
+  'hero.subtext': { en: 'Simple. Fast. Community-driven and free to use.', he: 'פשוט. מהיר. מונע קהילתית וחינמי.' },
 
   // Filters
   'filters.browse': { en: 'Browse available safe rooms', he: 'חפש חדרים בטוחים זמינים' },
