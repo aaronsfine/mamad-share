@@ -313,18 +313,19 @@ export default function Dashboard() {
       <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Shield className="h-6 w-6" />
-          <h1 className="text-lg font-bold">Host Dashboard</h1>
+          <h1 className="text-lg font-bold">{t('dash.title')}</h1>
         </div>
         <div className="flex items-center gap-2">
+          <LanguageToggle />
           <Button variant="ghost" size="sm" asChild className="text-primary-foreground hover:bg-primary-foreground/10">
             <Link to="/">
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Feed
+              <ArrowLeft className="h-4 w-4 me-1" />
+              {t('nav.feed')}
             </Link>
           </Button>
           <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-primary-foreground hover:bg-primary-foreground/10">
-            <LogOut className="h-4 w-4 mr-1" />
-            Sign Out
+            <LogOut className="h-4 w-4 me-1" />
+            {t('nav.signOut')}
           </Button>
         </div>
       </div>
