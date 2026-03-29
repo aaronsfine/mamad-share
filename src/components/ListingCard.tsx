@@ -17,7 +17,9 @@ interface ListingCardProps {
 }
 
 export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCardProps) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const cityName = getCityDisplayName(listing.city, lang);
+  const neighborhoodName = getNeighborhoodDisplayName(listing.neighborhood, listing.city, lang);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(false);
