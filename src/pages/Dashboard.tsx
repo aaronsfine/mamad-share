@@ -22,7 +22,7 @@ import type { Tables } from '@/integrations/supabase/types';
 type Listing = Tables<'listings'>;
 
 export default function Dashboard() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [user, setUser] = useState<{ id: string } | null>(null);
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
