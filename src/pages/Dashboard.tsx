@@ -371,8 +371,8 @@ export default function Dashboard() {
           </CardDescription>
         </div>
         <Button variant="outline" size="sm" onClick={handleStartEdit}>
-          <Pencil className="h-4 w-4 mr-1.5" />
-          Edit
+          <Pencil className="h-4 w-4 me-1.5" />
+          {t('dash.edit')}
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">
