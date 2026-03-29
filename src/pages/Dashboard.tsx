@@ -15,11 +15,14 @@ import { Link } from 'react-router-dom';
 import { SearchableSelect } from '@/components/SearchableSelect';
 import { ALL_CITIES, getNeighborhoods, getCityCoords } from '@/lib/locations';
 import { haversineDistance } from '@/lib/distance';
+import { useLanguage } from '@/i18n/LanguageContext';
+import { LanguageToggle } from '@/components/LanguageToggle';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Listing = Tables<'listings'>;
 
 export default function Dashboard() {
+  const { t } = useLanguage();
   const [user, setUser] = useState<{ id: string } | null>(null);
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
@@ -310,18 +313,19 @@ export default function Dashboard() {
       <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Shield className="h-6 w-6" />
-          <h1 className="text-lg font-bold">Host Dashboard</h1>
+          <h1 className="text-lg font-bold">{t('dash.title')}</h1>
         </div>
         <div className="flex items-center gap-2">
+          <LanguageToggle />
           <Button variant="ghost" size="sm" asChild className="text-primary-foreground hover:bg-primary-foreground/10">
             <Link to="/">
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Feed
+              <ArrowLeft className="h-4 w-4 me-1" />
+              {t('nav.feed')}
             </Link>
           </Button>
           <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-primary-foreground hover:bg-primary-foreground/10">
-            <LogOut className="h-4 w-4 mr-1" />
-            Sign Out
+            <LogOut className="h-4 w-4 me-1" />
+            {t('nav.signOut')}
           </Button>
         </div>
       </div>
@@ -357,18 +361,18 @@ export default function Dashboard() {
     <Card>
       <CardHeader className="flex flex-row items-start justify-between">
         <div>
-          <CardTitle>Your Listing</CardTitle>
+          <CardTitle>{t('dash.yourListing')}</CardTitle>
           <CardDescription className="flex items-center gap-1.5 mt-1">
             {listing.is_active ? (
-              <><Eye className="h-3.5 w-3.5 text-green-600" /> <span className="text-green-600">Live — visible to families</span></>
+              <><Eye className="h-3.5 w-3.5 text-green-600" /> <span className="text-green-600">{t('dash.live')}</span></>
             ) : (
-              <><EyeOff className="h-3.5 w-3.5 text-muted-foreground" /> <span>Hidden from public feed</span></>
+              <><EyeOff className="h-3.5 w-3.5 text-muted-foreground" /> <span>{t('dash.hidden')}</span></>
             )}
           </CardDescription>
         </div>
         <Button variant="outline" size="sm" onClick={handleStartEdit}>
-          <Pencil className="h-4 w-4 mr-1.5" />
-          Edit
+          <Pencil className="h-4 w-4 me-1.5" />
+          {t('dash.edit')}
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -464,14 +468,14 @@ export default function Dashboard() {
     <Card>
       <CardHeader className="flex flex-row items-start justify-between">
         <div>
-          <CardTitle>{listing ? 'Edit Your Listing' : 'Create Your Listing'}</CardTitle>
+          <CardTitle>{listing ? t('dash.editTitle') : t('dash.createTitle')}</CardTitle>
           <CardDescription>
-            {listing ? 'Update your shelter information below.' : 'Fill out the form to list your shelter.'}
+            {listing ? t('dash.editSubtitle') : t('dash.createSubtitle')}
           </CardDescription>
         </div>
         {listing && (
           <Button variant="ghost" size="sm" onClick={handleCancelEdit}>
-            Cancel
+            {t('dash.cancel')}
           </Button>
         )}
       </CardHeader>
@@ -480,9 +484,9 @@ export default function Dashboard() {
           {/* Active toggle */}
           <div className="flex items-center justify-between rounded-lg border border-border p-4">
             <div>
-              <Label className="text-sm font-medium">Listing Status</Label>
+              <Label className="text-sm font-medium">{t('dash.status')}</Label>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {isActive ? 'Your listing is visible to families.' : 'Your listing is hidden from the public feed.'}
+                {isActive ? t('dash.statusActive') : t('dash.statusHidden')}
               </p>
             </div>
             <Switch checked={isActive} onCheckedChange={setIsActive} />
@@ -490,55 +494,43 @@ export default function Dashboard() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="hostName">Your Name</Label>
+              <Label htmlFor="hostName">{t('dash.yourName')}</Label>
               <Input id="hostName" value={hostName} onChange={(e) => setHostName(e.target.value)} required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone (with country code)</Label>
+              <Label htmlFor="phone">{t('dash.phone')}</Label>
               <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="972501234567" required />
             </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label>City</Label>
-              <SearchableSelect
-                options={ALL_CITIES}
-                value={city}
-                onValueChange={(v) => { setCity(v); setNeighborhood(''); }}
-                placeholder="Search city..."
-                showAll={false}
-              />
+              <Label>{t('filters.city')}</Label>
+              <SearchableSelect options={ALL_CITIES} value={city} onValueChange={(v) => { setCity(v); setNeighborhood(''); }} placeholder={t('filters.allCities')} showAll={false} />
             </div>
             <div className="space-y-2">
-              <Label>Neighborhood</Label>
-              <SearchableSelect
-                options={city ? getNeighborhoods(city) : []}
-                value={neighborhood}
-                onValueChange={setNeighborhood}
-                placeholder="Search neighborhood..."
-                showAll={false}
-              />
+              <Label>{t('filters.neighborhood')}</Label>
+              <SearchableSelect options={city ? getNeighborhoods(city) : []} value={neighborhood} onValueChange={setNeighborhood} placeholder={t('filters.allNeighborhoods')} showAll={false} />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address">Approximate Address</Label>
-            <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="e.g. Near Dizengoff Center" />
+            <Label htmlFor="address">{t('dash.address')}</Label>
+            <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} />
             <p className="text-xs text-muted-foreground">
               {city && neighborhood
-                ? `Enter your street address in ${city}, ${neighborhood}. Used for the approximate map only — never shown publicly.`
-                : 'Private — not shown publicly. Used only for the approximate map.'}
+                ? `${t('dash.addressHint').split('.')[0]} ${city}, ${neighborhood}.`
+                : t('dash.addressHint')}
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="bedrooms">Bedrooms</Label>
+              <Label htmlFor="bedrooms">{t('dash.bedrooms')}</Label>
               <Input id="bedrooms" type="number" min={0} value={bedrooms} onChange={(e) => setBedrooms(Number(e.target.value))} required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="totalBeds">Total Beds</Label>
+              <Label htmlFor="totalBeds">{t('dash.totalBeds')}</Label>
               <Input id="totalBeds" type="number" min={0} value={totalBeds} onChange={(e) => setTotalBeds(Number(e.target.value))} required />
             </div>
           </div>
@@ -548,14 +540,14 @@ export default function Dashboard() {
             <div className="flex items-center justify-between rounded-lg border border-border p-4">
               <div className="flex items-center gap-2">
                 <PawPrint className="h-4 w-4 text-muted-foreground" />
-                <Label className="text-sm font-medium">Pets Welcome</Label>
+                <Label className="text-sm font-medium">{t('dash.petsWelcome')}</Label>
               </div>
               <Switch checked={petsAllowed} onCheckedChange={setPetsAllowed} />
             </div>
             <div className="flex items-center justify-between rounded-lg border border-border p-4">
               <div className="flex items-center gap-2">
                 <Cigarette className="h-4 w-4 text-muted-foreground" />
-                <Label className="text-sm font-medium">Smoking OK</Label>
+                <Label className="text-sm font-medium">{t('dash.smokingOk')}</Label>
               </div>
               <Switch checked={smokingAllowed} onCheckedChange={setSmokingAllowed} />
             </div>
@@ -564,66 +556,42 @@ export default function Dashboard() {
           {/* Pricing */}
           <div className="space-y-3 rounded-lg border border-border p-4">
             <div>
-              <Label className="text-sm font-medium">Pricing</Label>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                🕊️ This platform is built on חסד — kindness. We encourage offering your space for free or at a symbolic cost to cover expenses. This is about helping families in need.
-              </p>
+              <Label className="text-sm font-medium">{t('dash.pricing')}</Label>
+              <p className="text-xs text-muted-foreground mt-0.5">{t('dash.pricingHint')}</p>
             </div>
             <div className="flex gap-3">
-              <Button
-                type="button"
-                variant={priceType === 'free' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setPriceType('free')}
-                className="flex-1"
-              >
-                <Heart className="h-4 w-4 mr-1.5" />
-                Free (חסד)
+              <Button type="button" variant={priceType === 'free' ? 'default' : 'outline'} size="sm" onClick={() => setPriceType('free')} className="flex-1">
+                <Heart className="h-4 w-4 me-1.5" />
+                {t('dash.free')}
               </Button>
-              <Button
-                type="button"
-                variant={priceType === 'paid' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setPriceType('paid')}
-                className="flex-1"
-              >
-                <span className="mr-1.5">₪</span>
-                Subsidized
+              <Button type="button" variant={priceType === 'paid' ? 'default' : 'outline'} size="sm" onClick={() => setPriceType('paid')} className="flex-1">
+                <span className="me-1.5">₪</span>
+                {t('dash.subsidized')}
               </Button>
             </div>
             {priceType === 'paid' && (
               <div className="space-y-2">
-                <Label htmlFor="pricePerNight">Price per night (₪)</Label>
-                <Input
-                  id="pricePerNight"
-                  type="number"
-                  min={0}
-                  max={200}
-                  value={pricePerNight}
-                  onChange={(e) => setPricePerNight(e.target.value ? Number(e.target.value) : '')}
-                  placeholder="e.g. 50"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Please keep costs minimal — just enough to cover utilities or supplies. Families are counting on your generosity. 💙
-                </p>
+                <Label htmlFor="pricePerNight">{t('dash.pricePerNight')}</Label>
+                <Input id="pricePerNight" type="number" min={0} max={200} value={pricePerNight} onChange={(e) => setPricePerNight(e.target.value ? Number(e.target.value) : '')} placeholder="e.g. 50" />
+                <p className="text-xs text-muted-foreground">{t('dash.priceHint')}</p>
               </div>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="sleepingNotes">Sleeping Notes (optional)</Label>
-            <Textarea id="sleepingNotes" value={sleepingNotes} onChange={(e) => setSleepingNotes(e.target.value)} placeholder="e.g. 2 mattresses available, sofa bed in living room" rows={2} />
+            <Label htmlFor="sleepingNotes">{t('dash.sleepingNotes')}</Label>
+            <Textarea id="sleepingNotes" value={sleepingNotes} onChange={(e) => setSleepingNotes(e.target.value)} rows={2} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="mamadNotes">Mamad Notes (optional)</Label>
-            <Textarea id="mamadNotes" value={mamadNotes} onChange={(e) => setMamadNotes(e.target.value)} placeholder="e.g. Reinforced door, stocked with water" rows={2} />
+            <Label htmlFor="mamadNotes">{t('dash.mamadNotes')}</Label>
+            <Textarea id="mamadNotes" value={mamadNotes} onChange={(e) => setMamadNotes(e.target.value)} rows={2} />
           </div>
 
           {/* Photo Upload */}
           <div className="space-y-3">
-            <Label>Photos (optional)</Label>
-            <p className="text-xs text-muted-foreground">Add photos of your space to help families feel comfortable. Max 5 photos.</p>
+            <Label>{t('dash.photos')}</Label>
+            <p className="text-xs text-muted-foreground">{t('dash.photosHint')}</p>
 
             {existingPhotos.length > 0 && (
               <div className="flex flex-wrap gap-2">
@@ -675,15 +643,15 @@ export default function Dashboard() {
                   }}
                 />
                 <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
-                  <Upload className="h-4 w-4 mr-1.5" />
-                  Add Photos
+                  <Upload className="h-4 w-4 me-1.5" />
+                  {t('dash.addPhotos')}
                 </Button>
               </>
             )}
           </div>
 
           <Button type="submit" className="w-full" size="lg" disabled={saving || uploadingPhotos}>
-            {saving || uploadingPhotos ? 'Saving...' : listing ? 'Update Listing' : 'Create Listing'}
+            {saving || uploadingPhotos ? t('dash.saving') : listing ? t('dash.updateListing') : t('dash.createListing')}
           </Button>
         </form>
       </CardContent>
@@ -698,15 +666,11 @@ export default function Dashboard() {
         {!listing && !editing ? (
           <div className="text-center py-24">
             <Home className="h-16 w-16 mx-auto text-muted-foreground/30 mb-5" strokeWidth={1.5} />
-            <h2 className="text-xl font-semibold text-foreground mb-2">
-              You haven't added a shelter yet
-            </h2>
-            <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6">
-              Add your mamad to help families in need. Your listing will appear in the public directory once published.
-            </p>
+            <h2 className="text-xl font-semibold text-foreground mb-2">{t('dash.noListing.title')}</h2>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6">{t('dash.noListing.text')}</p>
             <Button size="lg" onClick={() => setEditing(true)}>
-              <Plus className="h-5 w-5 mr-1.5" />
-              Create Listing
+              <Plus className="h-5 w-5 me-1.5" />
+              {t('dash.createListing')}
             </Button>
           </div>
         ) : (

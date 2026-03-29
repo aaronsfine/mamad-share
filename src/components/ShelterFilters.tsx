@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { ChevronDown, Heart, PawPrint, Cigarette, MapPin, X } from 'lucide-react';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export type SortOption = 'nearest' | 'price_low' | 'price_high';
 
@@ -31,6 +33,33 @@ interface ShelterFiltersProps {
   hasLocation: boolean;
 }
 
+function ToggleChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-medium transition-colors ${
+        active
+          ? 'bg-primary text-primary-foreground border-primary'
+          : 'bg-card text-muted-foreground border-border hover:border-primary/40'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function StepperControl({ label, value, onChange, min = 0, max = 10 }: { label: string; value: number; onChange: (v: number) => void; min?: number; max?: number }) {
+  return (
+    <div className="inline-flex items-center gap-1.5 text-xs">
+      <span className="text-muted-foreground">{label}</span>
+      <button type="button" onClick={() => onChange(Math.max(min, value - 1))} className="w-6 h-6 rounded border border-border flex items-center justify-center text-muted-foreground hover:bg-accent">−</button>
+      <span className="w-5 text-center font-medium text-foreground">{value}</span>
+      <button type="button" onClick={() => onChange(Math.min(max, value + 1))} className="w-6 h-6 rounded border border-border flex items-center justify-center text-muted-foreground hover:bg-accent">+</button>
+    </div>
+  );
+}
+
 export function ShelterFilters({
   cities,
   neighborhoods,
@@ -54,6 +83,7 @@ export function ShelterFilters({
   onSortByChange,
   hasLocation,
 }: ShelterFiltersProps) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
 
   const hasActiveFilters =
@@ -65,17 +95,17 @@ export function ShelterFilters({
     minBedrooms > 0;
 
   return (
-    <div className="space-y-3">
-      {/* Primary: City + Neighborhood + Sort */}
-      <div className="flex flex-col md:flex-row gap-3 md:items-end w-full">
-        <div className="flex-1 min-w-0 space-y-1.5">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">City</label>
+    <div className="space-y-2.5">
+      {/* Row 1: City, Neighborhood, Sort, Nearby */}
+      <div className="flex flex-col md:flex-row gap-2.5 md:items-end w-full">
+        <div className="flex-1 min-w-0 space-y-1">
+          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('filters.city')}</label>
           <Select value={selectedCity} onValueChange={onCityChange}>
-            <SelectTrigger className="bg-card border-border">
-              <SelectValue placeholder="All Cities" />
+            <SelectTrigger className="bg-card border-border h-9">
+              <SelectValue placeholder={t('filters.allCities')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Cities</SelectItem>
+              <SelectItem value="all">{t('filters.allCities')}</SelectItem>
               {cities.map((city) => (
                 <SelectItem key={city} value={city}>{city}</SelectItem>
               ))}
@@ -83,14 +113,14 @@ export function ShelterFilters({
           </Select>
         </div>
 
-        <div className="flex-1 min-w-0 space-y-1.5">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Neighborhood</label>
+        <div className="flex-1 min-w-0 space-y-1">
+          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('filters.neighborhood')}</label>
           <Select value={selectedNeighborhood} onValueChange={onNeighborhoodChange}>
-            <SelectTrigger className="bg-card border-border">
-              <SelectValue placeholder="All Neighborhoods" />
+            <SelectTrigger className="bg-card border-border h-9">
+              <SelectValue placeholder={t('filters.allNeighborhoods')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Neighborhoods</SelectItem>
+              <SelectItem value="all">{t('filters.allNeighborhoods')}</SelectItem>
               {neighborhoods.map((n) => (
                 <SelectItem key={n} value={n}>{n}</SelectItem>
               ))}
@@ -98,125 +128,83 @@ export function ShelterFilters({
           </Select>
         </div>
 
-        <div className="flex-1 min-w-0 space-y-1.5">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Sort By</label>
+        <div className="flex items-center gap-2">
           <Select value={sortBy} onValueChange={(v) => onSortByChange(v as SortOption)}>
-            <SelectTrigger className="bg-card border-border">
+            <SelectTrigger className="bg-card border-border h-9 w-[140px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="price_low">Price: Low → High</SelectItem>
-              <SelectItem value="price_high">Price: High → Low</SelectItem>
-              {hasLocation && <SelectItem value="nearest">Nearest First</SelectItem>}
+              <SelectItem value="price_low">{t('filters.priceLow')}</SelectItem>
+              <SelectItem value="price_high">{t('filters.priceHigh')}</SelectItem>
+              {hasLocation && <SelectItem value="nearest">{t('filters.nearest')}</SelectItem>}
             </SelectContent>
           </Select>
+
+          {hasLocation && (
+            <ToggleChip active={sortBy === 'nearest'} onClick={() => onSortByChange('nearest')}>
+              <MapPin className="h-3 w-3" />
+              {t('filters.nearby')}
+            </ToggleChip>
+          )}
         </div>
       </div>
 
-      {/* Collapsible: More Filters */}
+      {/* Row 2: Quick chips + More toggle */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <ToggleChip active={priceFilter === 'free'} onClick={() => onPriceFilterChange(priceFilter === 'free' ? 'all' : 'free')}>
+          <Heart className="h-3 w-3" />
+          {t('filters.free')}
+        </ToggleChip>
+
+        <div className="flex-1" />
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setOpen(!open)}
+          className={`rounded-full text-xs h-8 gap-1 ${hasActiveFilters ? 'border-primary text-primary' : ''}`}
+        >
+          {open ? <X className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+          {t('filters.more')}
+        </Button>
+      </div>
+
+      {/* Collapsible advanced filters */}
       <Collapsible open={open} onOpenChange={setOpen}>
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground gap-1.5">
-            <SlidersHorizontal className="h-3.5 w-3.5" />
-            More Filters
-            {hasActiveFilters && (
-              <span className="ml-1 bg-primary text-primary-foreground rounded-full w-4 h-4 text-[10px] flex items-center justify-center">
-                !
+        <CollapsibleContent>
+          <div className="rounded-lg border border-border bg-card/50 p-3 space-y-3">
+            {/* Toggle chips row */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <ToggleChip active={petsFilter === 'yes'} onClick={() => onPetsFilterChange(petsFilter === 'yes' ? 'all' : 'yes')}>
+                <PawPrint className="h-3 w-3" />
+                {t('filters.petsOk')}
+              </ToggleChip>
+              <ToggleChip active={smokingFilter === 'yes'} onClick={() => onSmokingFilterChange(smokingFilter === 'yes' ? 'all' : 'yes')}>
+                <Cigarette className="h-3 w-3" />
+                {t('filters.smokingOk')}
+              </ToggleChip>
+            </div>
+
+            {/* Steppers + Slider */}
+            <div className="flex items-center gap-4 flex-wrap">
+              <StepperControl label={t('filters.minBeds')} value={minBeds} onChange={onMinBedsChange} max={6} />
+              <StepperControl label={t('filters.minBedrooms')} value={minBedrooms} onChange={onMinBedroomsChange} max={5} />
+            </div>
+
+            <div className="flex items-center gap-3 max-w-xs">
+              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                {t('filters.maxPrice')}: ₪{maxPrice >= 200 ? '200+' : maxPrice}
               </span>
-            )}
-            <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
-          </Button>
-        </CollapsibleTrigger>
-        <CollapsibleContent className="pt-2">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Pets</label>
-              <Select value={petsFilter} onValueChange={(v) => onPetsFilterChange(v as 'all' | 'yes' | 'no')}>
-                <SelectTrigger className="bg-card border-border">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Any</SelectItem>
-                  <SelectItem value="yes">Pets OK</SelectItem>
-                  <SelectItem value="no">No Pets</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Smoking</label>
-              <Select value={smokingFilter} onValueChange={(v) => onSmokingFilterChange(v as 'all' | 'yes' | 'no')}>
-                <SelectTrigger className="bg-card border-border">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Any</SelectItem>
-                  <SelectItem value="yes">Smoking OK</SelectItem>
-                  <SelectItem value="no">No Smoking</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Price</label>
-              <Select value={priceFilter} onValueChange={(v) => onPriceFilterChange(v as 'all' | 'free')}>
-                <SelectTrigger className="bg-card border-border">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Any Price</SelectItem>
-                  <SelectItem value="free">Free Only</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Min Beds</label>
-              <Select value={String(minBeds)} onValueChange={(v) => onMinBedsChange(Number(v))}>
-                <SelectTrigger className="bg-card border-border">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">Any</SelectItem>
-                  <SelectItem value="1">1+</SelectItem>
-                  <SelectItem value="2">2+</SelectItem>
-                  <SelectItem value="3">3+</SelectItem>
-                  <SelectItem value="4">4+</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Min Bedrooms</label>
-              <Select value={String(minBedrooms)} onValueChange={(v) => onMinBedroomsChange(Number(v))}>
-                <SelectTrigger className="bg-card border-border">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">Any</SelectItem>
-                  <SelectItem value="1">1+</SelectItem>
-                  <SelectItem value="2">2+</SelectItem>
-                  <SelectItem value="3">3+</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {priceFilter === 'all' && (
-            <div className="mt-3 space-y-1.5 max-w-xs">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Max Price: ₪{maxPrice}/night
-              </label>
               <Slider
                 value={[maxPrice]}
                 onValueChange={([v]) => onMaxPriceChange(v)}
                 min={0}
                 max={200}
                 step={10}
-                className="w-full"
+                className="flex-1"
               />
             </div>
-          )}
+          </div>
         </CollapsibleContent>
       </Collapsible>
     </div>
