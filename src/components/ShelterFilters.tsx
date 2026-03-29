@@ -191,19 +191,21 @@ export function ShelterFilters({
               <StepperControl label={t('filters.minBedrooms')} value={minBedrooms} onChange={onMinBedroomsChange} max={5} />
             </div>
 
-            <div className="flex items-center gap-3 max-w-xs">
-              <span className="text-xs text-muted-foreground whitespace-nowrap">
-                {t('filters.maxPrice')}: ₪{maxPrice >= 200 ? '200+' : maxPrice}
-              </span>
-              <Slider
-                value={[maxPrice]}
-                onValueChange={([v]) => onMaxPriceChange(v)}
-                min={0}
-                max={200}
-                step={10}
-                className="flex-1"
-              />
-            </div>
+            {priceFilter !== 'free' && (
+              <div className="flex items-center gap-3 max-w-xs">
+                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                  {t('filters.maxPrice')}: ₪{maxPrice >= 200 ? '200+' : maxPrice}
+                </span>
+                <Slider
+                  value={[maxPrice]}
+                  onValueChange={([v]) => onMaxPriceChange(v)}
+                  min={0}
+                  max={200}
+                  step={10}
+                  className="flex-1"
+                />
+              </div>
+            )}
           </div>
         </CollapsibleContent>
       </Collapsible>

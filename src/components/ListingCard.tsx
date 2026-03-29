@@ -177,9 +177,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
                 </div>
               </div>
             )}
-            {listing.latitude != null && listing.longitude != null && (
-              <ApproxMap lat={listing.latitude} lng={listing.longitude} label={`${listing.city}, ${listing.neighborhood}`} />
-            )}
+            {/* Map disabled for this version — geocoding accuracy needs improvement */}
             <div className="border-t border-border pt-2">
               <Button
                 onClick={handleWhatsAppClick}
