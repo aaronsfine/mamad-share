@@ -540,14 +540,14 @@ export default function Dashboard() {
             <div className="flex items-center justify-between rounded-lg border border-border p-4">
               <div className="flex items-center gap-2">
                 <PawPrint className="h-4 w-4 text-muted-foreground" />
-                <Label className="text-sm font-medium">Pets Welcome</Label>
+                <Label className="text-sm font-medium">{t('dash.petsWelcome')}</Label>
               </div>
               <Switch checked={petsAllowed} onCheckedChange={setPetsAllowed} />
             </div>
             <div className="flex items-center justify-between rounded-lg border border-border p-4">
               <div className="flex items-center gap-2">
                 <Cigarette className="h-4 w-4 text-muted-foreground" />
-                <Label className="text-sm font-medium">Smoking OK</Label>
+                <Label className="text-sm font-medium">{t('dash.smokingOk')}</Label>
               </div>
               <Switch checked={smokingAllowed} onCheckedChange={setSmokingAllowed} />
             </div>
