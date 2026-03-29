@@ -5,8 +5,7 @@ import { Shield, Home as HomeIcon, MapPinOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { ListingCard } from '@/components/ListingCard';
 import { ShelterFilters } from '@/components/ShelterFilters';
-
-type SortOption = 'nearest' | 'price_low' | 'price_high';
+import type { SortOption } from '@/components/ShelterFilters';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { haversineDistance } from '@/lib/distance';
 import { ALL_CITIES, getNeighborhoods } from '@/lib/locations';
@@ -199,6 +198,21 @@ export default function Index() {
             selectedNeighborhood={selectedNeighborhood}
             onCityChange={handleCityChange}
             onNeighborhoodChange={setSelectedNeighborhood}
+            petsFilter={petsFilter}
+            onPetsFilterChange={setPetsFilter}
+            smokingFilter={smokingFilter}
+            onSmokingFilterChange={setSmokingFilter}
+            priceFilter={priceFilter}
+            onPriceFilterChange={setPriceFilter}
+            maxPrice={maxPrice}
+            onMaxPriceChange={setMaxPrice}
+            minBeds={minBeds}
+            onMinBedsChange={setMinBeds}
+            minBedrooms={minBedrooms}
+            onMinBedroomsChange={setMinBedrooms}
+            sortBy={sortBy}
+            onSortByChange={setSortBy}
+            hasLocation={geo.latitude != null && geo.longitude != null}
           />
         </div>
       </section>
