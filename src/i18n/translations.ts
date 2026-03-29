@@ -148,8 +148,8 @@ const translations = {
   'dash.saving': { en: 'Saving...', he: 'שומר...' },
   'dash.updateListing': { en: 'Update Listing', he: 'עדכן רישום' },
   'dash.createListing': { en: 'Create Listing', he: 'צור רישום' },
-  'dash.noListing.title': { en: "Your mamad can save lives", he: 'הממ"ד שלך יכול להציל חיים' },
-  'dash.noListing.text': { en: 'Families across Israel need shelter tonight. Add your mamad to the directory and become part of the home front defense.', he: 'משפחות ברחבי ישראל צריכות מקלט הלילה. הוסף את הממ"ד שלך למדריך והפוך לחלק מהגנת העורף.' },
+  'dash.noListing.title': { en: "You haven't added a shelter yet", he: 'עדיין לא הוספת מקלט' },
+  'dash.noListing.text': { en: 'Add your mamad to help families in need. Your listing will appear in the public directory once published.', he: 'הוסף את הממ"ד שלך כדי לעזור למשפחות נזקקות. הרישום שלך יופיע במדריך הציבורי לאחר הפרסום.' },
   'dash.privateAddress': { en: 'Private address', he: 'כתובת פרטית' },
   'dash.freeKindness': { en: 'Free — חסד (act of kindness)', he: 'חינם — חסד' },
 
