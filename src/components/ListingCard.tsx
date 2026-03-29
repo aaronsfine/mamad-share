@@ -150,7 +150,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
           <DialogHeader>
             <DialogTitle className="flex items-center gap-1.5">
               <MapPin className="h-4 w-4 text-primary" />
-              {listing.city} · {listing.neighborhood}
+              {cityName} · {neighborhoodName}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
