@@ -506,11 +506,11 @@ export default function Dashboard() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>{t('filters.city')}</Label>
-              <SearchableSelect options={ALL_CITIES} value={city} onValueChange={(v) => { setCity(v); setNeighborhood(''); }} placeholder={t('filters.allCities')} showAll={false} />
+              <SearchableSelect options={ALL_CITIES.map(c => ({ value: c, label: getCityDisplayName(c, lang), keywords: getCityDisplayName(c, lang === 'en' ? 'he' : 'en') }))} value={city} onValueChange={(v) => { setCity(v); setNeighborhood(''); }} placeholder={t('filters.allCities')} showAll={false} />
             </div>
             <div className="space-y-2">
               <Label>{t('filters.neighborhood')}</Label>
-              <SearchableSelect options={city ? getNeighborhoods(city) : []} value={neighborhood} onValueChange={setNeighborhood} placeholder={t('filters.allNeighborhoods')} showAll={false} />
+              <SearchableSelect options={(city ? getNeighborhoods(city) : []).map(n => ({ value: n, label: getNeighborhoodDisplayName(n, city, lang), keywords: getNeighborhoodDisplayName(n, city, lang === 'en' ? 'he' : 'en') }))} value={neighborhood} onValueChange={setNeighborhood} placeholder={t('filters.allNeighborhoods')} showAll={false} />
             </div>
           </div>
 
