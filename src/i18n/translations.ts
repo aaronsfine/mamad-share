@@ -3,17 +3,17 @@ export type Lang = 'en' | 'he';
 const translations = {
   // Common
   'app.name': { en: 'Mamad Directory', he: 'מדריך ממ"ד' },
-  'app.tagline': { en: 'The home front needs you. Open your door, protect a family.', he: 'העורף צריך אותך. פתח את הדלת, הגן על משפחה.' },
+  'app.tagline': { en: 'A community project helping families find safe shelter.', he: 'פרויקט קהילתי שעוזר למשפחות למצוא מקלט בטוח.' },
 
   // Nav / Header
-  'nav.listApartment': { en: 'Join the Effort', he: 'הצטרף למאמץ' },
+  'nav.listApartment': { en: 'List Your Apartment', he: 'פרסם דירה' },
   'nav.feed': { en: 'Feed', he: 'רשימה' },
   'nav.signOut': { en: 'Sign Out', he: 'התנתק' },
 
   // Hero
-  'hero.title': { en: 'The Home Front Needs You', he: 'העורף צריך אותך' },
-  'hero.subtitle': { en: 'While our soldiers fight on the front lines, you can protect families on the home front. Open your mamad — give a family safety tonight.', he: 'בזמן שהחיילים שלנו נלחמים בחזית, אתה יכול להגן על משפחות בעורף. פתח את הממ"ד שלך — תן למשפחה ביטחון הלילה.' },
-  'hero.subtext': { en: 'Every apartment listed is another family protected. 🇮🇱', he: 'כל דירה שמפורסמת היא עוד משפחה מוגנת. 🇮🇱' },
+  'hero.title': { en: 'Find a Safe Place to Sleep Tonight', he: 'מצא מקום בטוח ללון הלילה' },
+  'hero.subtitle': { en: 'Families across Israel are opening their homes to help others stay safe during sirens. Find a nearby apartment with a secure room (mamad) and contact the host directly.', he: 'משפחות ברחבי ישראל פותחות את בתיהן כדי לעזור לאחרים להישאר בטוחים בזמן אזעקות. מצא דירה קרובה עם ממ"ד ופנה למארח ישירות.' },
+  'hero.subtext': { en: 'Simple. Fast. Community-driven and free to use.', he: 'פשוט. מהיר. מונע קהילתית וחינמי.' },
 
   // Filters
   'filters.browse': { en: 'Browse available safe rooms', he: 'חפש חדרים בטוחים זמינים' },
@@ -43,12 +43,12 @@ const translations = {
   'filters.nearby': { en: 'Nearby', he: 'בקרבת מקום' },
 
   // Results
-  'results.title': { en: 'Available shelters', he: 'מקלטים זמינים' },
-  'results.none.title': { en: 'No shelters listed here yet', he: 'עדיין אין מקלטים כאן' },
-  'results.none.text': { en: 'Be the first to help. List your mamad and protect a family tonight.', he: 'היה הראשון לעזור. פרסם את הממ"ד שלך והגן על משפחה הלילה.' },
-  'results.none.cta': { en: 'List your mamad now', he: 'פרסם את הממ"ד שלך עכשיו' },
-  'results.found': { en: 'shelters available', he: 'מקלטים זמינים' },
-  'results.few': { en: 'we need more — list yours to help', he: 'אנחנו צריכים עוד — פרסם את שלך כדי לעזור' },
+  'results.title': { en: 'Safe rooms available', he: 'חדרים בטוחים זמינים' },
+  'results.none.title': { en: 'No safe rooms here yet', he: 'עדיין אין חדרים בטוחים כאן' },
+  'results.none.text': { en: 'Try another city or neighborhood, or check back soon as more families open their homes.', he: 'נסה עיר או שכונה אחרת, או חזור בקרוב כשמשפחות נוספות פותחות את בתיהן.' },
+  'results.none.cta': { en: 'List your apartment', he: 'פרסם את הדירה שלך' },
+  'results.found': { en: 'places found', he: 'מקומות נמצאו' },
+  'results.few': { en: 'only a few rooms available right now', he: 'רק מעט חדרים זמינים כרגע' },
   'results.in': { en: 'in', he: 'ב' },
 
   // Listing Card
@@ -135,7 +135,7 @@ const translations = {
   'dash.petsWelcome': { en: 'Pets Welcome', he: 'מותר חיות מחמד' },
   'dash.smokingOk': { en: 'Smoking OK', he: 'מותר עישון' },
   'dash.pricing': { en: 'Pricing', he: 'תמחור' },
-  'dash.pricingHint': { en: '🇮🇱 This is part of the national effort. We encourage offering your space for free or at a symbolic cost. Every family you shelter is a victory for the home front.', he: '🇮🇱 זה חלק מהמאמץ הלאומי. אנחנו מעודדים להציע את המקום שלך בחינם או בעלות סמלית. כל משפחה שאתה מגן עליה היא ניצחון של העורף.' },
+  'dash.pricingHint': { en: '🕊️ This platform is built on חסד — kindness. We encourage offering your space for free or at a symbolic cost to cover expenses. This is about helping families in need.', he: '🕊️ הפלטפורמה נבנתה על חסד. אנחנו מעודדים להציע את המקום שלך בחינם או בעלות סמלית לכיסוי הוצאות. מדובר בעזרה למשפחות נזקקות.' },
   'dash.free': { en: 'Free (חסד)', he: 'חינם (חסד)' },
   'dash.subsidized': { en: 'Subsidized', he: 'מסובסד' },
   'dash.pricePerNight': { en: 'Price per night (₪)', he: 'מחיר ללילה (₪)' },
@@ -148,8 +148,8 @@ const translations = {
   'dash.saving': { en: 'Saving...', he: 'שומר...' },
   'dash.updateListing': { en: 'Update Listing', he: 'עדכן רישום' },
   'dash.createListing': { en: 'Create Listing', he: 'צור רישום' },
-  'dash.noListing.title': { en: "Your mamad can save lives", he: 'הממ"ד שלך יכול להציל חיים' },
-  'dash.noListing.text': { en: 'Families across Israel need shelter tonight. Add your mamad to the directory and become part of the home front defense.', he: 'משפחות ברחבי ישראל צריכות מקלט הלילה. הוסף את הממ"ד שלך למדריך והפוך לחלק מהגנת העורף.' },
+  'dash.noListing.title': { en: "You haven't added a shelter yet", he: 'עדיין לא הוספת מקלט' },
+  'dash.noListing.text': { en: 'Add your mamad to help families in need. Your listing will appear in the public directory once published.', he: 'הוסף את הממ"ד שלך כדי לעזור למשפחות נזקקות. הרישום שלך יופיע במדריך הציבורי לאחר הפרסום.' },
   'dash.privateAddress': { en: 'Private address', he: 'כתובת פרטית' },
   'dash.freeKindness': { en: 'Free — חסד (act of kindness)', he: 'חינם — חסד' },
 
