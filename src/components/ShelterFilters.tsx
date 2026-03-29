@@ -119,7 +119,9 @@ export function ShelterFilters({
           <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('filters.neighborhood')}</label>
           <Select value={selectedNeighborhood} onValueChange={onNeighborhoodChange}>
             <SelectTrigger className="bg-card border-border h-9">
-              <SelectValue placeholder={t('filters.allNeighborhoods')} />
+              <span className="truncate">
+                {selectedNeighborhood === 'all' ? t('filters.allNeighborhoods') : getNeighborhoodDisplayName(selectedNeighborhood, selectedCity, lang)}
+              </span>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t('filters.allNeighborhoods')}</SelectItem>
