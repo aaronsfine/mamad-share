@@ -468,14 +468,14 @@ export default function Dashboard() {
     <Card>
       <CardHeader className="flex flex-row items-start justify-between">
         <div>
-          <CardTitle>{listing ? 'Edit Your Listing' : 'Create Your Listing'}</CardTitle>
+          <CardTitle>{listing ? t('dash.editTitle') : t('dash.createTitle')}</CardTitle>
           <CardDescription>
-            {listing ? 'Update your shelter information below.' : 'Fill out the form to list your shelter.'}
+            {listing ? t('dash.editSubtitle') : t('dash.createSubtitle')}
           </CardDescription>
         </div>
         {listing && (
           <Button variant="ghost" size="sm" onClick={handleCancelEdit}>
-            Cancel
+            {t('dash.cancel')}
           </Button>
         )}
       </CardHeader>
