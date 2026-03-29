@@ -142,14 +142,12 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
           {/* WhatsApp CTA — always at bottom */}
           <div>
             <Button
-              asChild
+              onClick={handleWhatsAppClick}
               className="w-full bg-whatsapp hover:bg-whatsapp/85 active:scale-[0.98] text-whatsapp-foreground font-semibold rounded-lg transition-all duration-150"
               size="lg"
             >
-              <a href="#" onClick={handleWhatsAppClick}>
-                <MessageCircle className="h-5 w-5 mr-2" />
-                Contact via WhatsApp
-              </a>
+              <MessageCircle className="h-5 w-5 mr-2" />
+              Contact via WhatsApp
             </Button>
             <p className="mt-2 text-xs text-muted-foreground/70 text-center">
               You'll be taken to WhatsApp to message the host directly.
