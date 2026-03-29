@@ -505,34 +505,22 @@ export default function Dashboard() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label>City</Label>
-              <SearchableSelect
-                options={ALL_CITIES}
-                value={city}
-                onValueChange={(v) => { setCity(v); setNeighborhood(''); }}
-                placeholder="Search city..."
-                showAll={false}
-              />
+              <Label>{t('filters.city')}</Label>
+              <SearchableSelect options={ALL_CITIES} value={city} onValueChange={(v) => { setCity(v); setNeighborhood(''); }} placeholder={t('filters.allCities')} showAll={false} />
             </div>
             <div className="space-y-2">
-              <Label>Neighborhood</Label>
-              <SearchableSelect
-                options={city ? getNeighborhoods(city) : []}
-                value={neighborhood}
-                onValueChange={setNeighborhood}
-                placeholder="Search neighborhood..."
-                showAll={false}
-              />
+              <Label>{t('filters.neighborhood')}</Label>
+              <SearchableSelect options={city ? getNeighborhoods(city) : []} value={neighborhood} onValueChange={setNeighborhood} placeholder={t('filters.allNeighborhoods')} showAll={false} />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address">Approximate Address</Label>
-            <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="e.g. Near Dizengoff Center" />
+            <Label htmlFor="address">{t('dash.address')}</Label>
+            <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} />
             <p className="text-xs text-muted-foreground">
               {city && neighborhood
-                ? `Enter your street address in ${city}, ${neighborhood}. Used for the approximate map only — never shown publicly.`
-                : 'Private — not shown publicly. Used only for the approximate map.'}
+                ? `${t('dash.addressHint').split('.')[0]} ${city}, ${neighborhood}.`
+                : t('dash.addressHint')}
             </p>
           </div>
 
