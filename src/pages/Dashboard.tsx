@@ -651,7 +651,7 @@ export default function Dashboard() {
           </div>
 
           <Button type="submit" className="w-full" size="lg" disabled={saving || uploadingPhotos}>
-            {saving || uploadingPhotos ? 'Saving...' : listing ? 'Update Listing' : 'Create Listing'}
+            {saving || uploadingPhotos ? t('dash.saving') : listing ? t('dash.updateListing') : t('dash.createListing')}
           </Button>
         </form>
       </CardContent>
