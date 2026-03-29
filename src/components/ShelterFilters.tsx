@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 import { ChevronDown, Heart, PawPrint, Cigarette, MapPin, X } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { getCityDisplayName, getNeighborhoodDisplayName } from '@/lib/locations';
 
 export type SortOption = 'nearest' | 'price_low' | 'price_high';
 
@@ -83,7 +83,7 @@ export function ShelterFilters({
   onSortByChange,
   hasLocation,
 }: ShelterFiltersProps) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [open, setOpen] = useState(false);
 
   const hasActiveFilters =
@@ -102,12 +102,14 @@ export function ShelterFilters({
           <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('filters.city')}</label>
           <Select value={selectedCity} onValueChange={onCityChange}>
             <SelectTrigger className="bg-card border-border h-9">
-              <SelectValue placeholder={t('filters.allCities')} />
+              <span className="truncate">
+                {selectedCity === 'all' ? t('filters.allCities') : getCityDisplayName(selectedCity, lang)}
+              </span>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t('filters.allCities')}</SelectItem>
               {cities.map((city) => (
-                <SelectItem key={city} value={city}>{city}</SelectItem>
+                <SelectItem key={city} value={city}>{getCityDisplayName(city, lang)}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -117,12 +119,14 @@ export function ShelterFilters({
           <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('filters.neighborhood')}</label>
           <Select value={selectedNeighborhood} onValueChange={onNeighborhoodChange}>
             <SelectTrigger className="bg-card border-border h-9">
-              <SelectValue placeholder={t('filters.allNeighborhoods')} />
+              <span className="truncate">
+                {selectedNeighborhood === 'all' ? t('filters.allNeighborhoods') : getNeighborhoodDisplayName(selectedNeighborhood, selectedCity, lang)}
+              </span>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t('filters.allNeighborhoods')}</SelectItem>
               {neighborhoods.map((n) => (
-                <SelectItem key={n} value={n}>{n}</SelectItem>
+                <SelectItem key={n} value={n}>{getNeighborhoodDisplayName(n, selectedCity, lang)}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -191,19 +195,21 @@ export function ShelterFilters({
               <StepperControl label={t('filters.minBedrooms')} value={minBedrooms} onChange={onMinBedroomsChange} max={5} />
             </div>
 
-            <div className="flex items-center gap-3 max-w-xs">
-              <span className="text-xs text-muted-foreground whitespace-nowrap">
-                {t('filters.maxPrice')}: ₪{maxPrice >= 200 ? '200+' : maxPrice}
-              </span>
-              <Slider
-                value={[maxPrice]}
-                onValueChange={([v]) => onMaxPriceChange(v)}
-                min={0}
-                max={200}
-                step={10}
-                className="flex-1"
-              />
-            </div>
+            {priceFilter !== 'free' && (
+              <div className="flex items-center gap-3 max-w-xs">
+                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                  {t('filters.maxPrice')}: ₪{maxPrice >= 200 ? '200+' : maxPrice}
+                </span>
+                <Slider
+                  value={[maxPrice]}
+                  onValueChange={([v]) => onMaxPriceChange(v)}
+                  min={0}
+                  max={200}
+                  step={10}
+                  className="flex-1"
+                />
+              </div>
+            )}
           </div>
         </CollapsibleContent>
       </Collapsible>

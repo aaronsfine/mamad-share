@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { MapPin, User, MessageCircle, BedDouble, Shield, PawPrint, Cigarette, ChevronLeft, ChevronRight, Image, Heart, Info } from 'lucide-react';
 import { formatDistance } from '@/lib/distance';
-import { ApproxMap } from '@/components/ApproxMap';
+import { getCityDisplayName, getNeighborhoodDisplayName } from '@/lib/locations';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/i18n/LanguageContext';
 import type { Tables } from '@/integrations/supabase/types';
@@ -17,7 +17,9 @@ interface ListingCardProps {
 }
 
 export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCardProps) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const cityName = getCityDisplayName(listing.city, lang);
+  const neighborhoodName = getNeighborhoodDisplayName(listing.neighborhood, listing.city, lang);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -41,7 +43,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
         >
           {hasPhotos ? (
             <>
-              <img src={photoUrls[0]} alt={`${listing.city}, ${listing.neighborhood}`} className="w-full h-full object-cover" />
+              <img src={photoUrls[0]} alt={`${cityName}, ${neighborhoodName}`} className="w-full h-full object-cover" />
               {photoUrls.length > 1 && (
                 <Badge className="absolute bottom-2 end-2 bg-black/60 text-white border-0 text-xs">
                   <Image className="h-3 w-3 me-1" />
@@ -64,7 +66,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
             <div className="flex items-center gap-1.5">
               <MapPin className="h-4 w-4 text-primary shrink-0" />
               <h3 className="text-base font-semibold text-foreground leading-tight">
-                {listing.city} · {listing.neighborhood}
+                {cityName} · {neighborhoodName}
               </h3>
             </div>
             <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
@@ -148,7 +150,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
           <DialogHeader>
             <DialogTitle className="flex items-center gap-1.5">
               <MapPin className="h-4 w-4 text-primary" />
-              {listing.city} · {listing.neighborhood}
+              {cityName} · {neighborhoodName}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
@@ -177,9 +179,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
                 </div>
               </div>
             )}
-            {listing.latitude != null && listing.longitude != null && (
-              <ApproxMap lat={listing.latitude} lng={listing.longitude} label={`${listing.city}, ${listing.neighborhood}`} />
-            )}
+            {/* Map disabled for this version — geocoding accuracy needs improvement */}
             <div className="border-t border-border pt-2">
               <Button
                 onClick={handleWhatsAppClick}

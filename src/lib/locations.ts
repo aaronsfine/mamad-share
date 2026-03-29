@@ -1,7 +1,6 @@
 /**
  * Static list of major Israeli cities and their neighborhoods.
- * Used for consistent, searchable city/neighborhood selection
- * (avoids transliteration inconsistencies).
+ * Used for consistent, searchable city/neighborhood selection.
  */
 
 export interface CityData {
@@ -150,6 +149,141 @@ export const ISRAEL_LOCATIONS: CityData[] = [
     ],
   },
 ];
+
+/** Hebrew translations for city names (key = English name stored in DB) */
+export const CITY_HEBREW: Record<string, string> = {
+  'Jerusalem': 'ירושלים',
+  'Tel Aviv': 'תל אביב',
+  'Haifa': 'חיפה',
+  'Beer Sheva': 'באר שבע',
+  'Netanya': 'נתניה',
+  'Rishon LeZion': 'ראשון לציון',
+  'Petah Tikva': 'פתח תקווה',
+  'Ashdod': 'אשדוד',
+  'Ashkelon': 'אשקלון',
+  'Herzliya': 'הרצליה',
+  'Ramat Gan': 'רמת גן',
+  'Givatayim': 'גבעתיים',
+  'Bat Yam': 'בת ים',
+  'Holon': 'חולון',
+  'Kfar Saba': 'כפר סבא',
+  "Ra'anana": 'רעננה',
+  'Modiin': 'מודיעין',
+  'Rehovot': 'רחובות',
+  'Tiberias': 'טבריה',
+  'Sderot': 'שדרות',
+};
+
+/** Hebrew translations for neighborhood names */
+export const NEIGHBORHOOD_HEBREW: Record<string, Record<string, string>> = {
+  'Jerusalem': {
+    'Arnona': 'ארנונה', 'Baka': 'בקעה', 'Bayit Vegan': 'בית וגן', 'Beit Hakerem': 'בית הכרם',
+    'City Center': 'מרכז העיר', 'Ein Kerem': 'עין כרם', 'French Hill': 'גבעה הצרפתית',
+    'German Colony': 'המושבה הגרמנית', 'Gilo': 'גילה', 'Givat Masua': 'גבעת מסואה',
+    'Givat Shaul': 'גבעת שאול', 'Har Nof': 'הר נוף', 'Katamon': 'קטמון',
+    'Kiryat Hayovel': 'קריית היובל', 'Kiryat Moshe': 'קריית משה', 'Malha': 'מלחה',
+    'Mekor Baruch': 'מקור ברוך', 'Musrara': 'מוסררה', 'Nachlaot': 'נחלאות',
+    'Neve Yaakov': 'נווה יעקב', 'Old City': 'העיר העתיקה', 'Pisgat Zeev': 'פסגת זאב',
+    'Ramot': 'רמות', 'Ramat Eshkol': 'רמת אשכול', 'Rehavia': 'רחביה',
+    'San Simon': 'סן סימון', 'Talpiot': 'תלפיות', 'Talpiot Mizrach': 'תלפיות מזרח',
+  },
+  'Tel Aviv': {
+    'Florentin': 'פלורנטין', 'Jaffa': 'יפו', 'Kerem Hateimanim': 'כרם התימנים',
+    "Lev Ha'ir": 'לב העיר', "Neve Sha'anan": 'נווה שאנן', 'Neve Tzedek': 'נווה צדק',
+    'North Tel Aviv': 'צפון תל אביב', 'Old North': 'הצפון הישן', 'Ramat Aviv': 'רמת אביב',
+    'Sarona': 'שרונה', 'Shapira': 'שפירא', 'South Tel Aviv': 'דרום תל אביב',
+    'Yad Eliyahu': 'יד אליהו', 'Yarkon': 'ירקון',
+  },
+  'Haifa': {
+    'Ahuza': 'אחוזה', 'Bat Galim': 'בת גלים', 'Carmel Center': 'מרכז הכרמל',
+    'Denia': 'דניה', 'German Colony': 'המושבה הגרמנית', 'Hadar': 'הדר',
+    'Kiryat Eliezer': 'קריית אליעזר', 'Kiryat Shmuel': 'קריית שמואל',
+    "Neve Sha'anan": 'נווה שאנן', 'Ramat Almogi': 'רמת אלמוגי', 'Romema': 'רוממה',
+    'Wadi Nisnas': 'ואדי ניסנאס',
+  },
+  'Beer Sheva': {
+    'Dalet': 'ד׳', 'Gimmel': 'ג׳', 'Neve Noy': 'נווה נוי', "Neve Ze'ev": 'נווה זאב',
+    'Old City': 'העיר העתיקה', 'Ramot': 'רמות', 'Tet': 'ט׳',
+  },
+  'Netanya': {
+    'City Center': 'מרכז העיר', 'Ir Yamim': 'עיר ימים', 'Kiryat Hasharon': 'קריית השרון',
+    'Kiryat Nordau': 'קריית נורדאו', 'Neve Oz': 'נווה עוז', 'Poleg': 'פולג',
+    'South Netanya': 'דרום נתניה',
+  },
+  'Rishon LeZion': {
+    'East Rishon': 'מזרח ראשון', 'HaSharon': 'השרון', 'Kiryat Rishon': 'קריית ראשון',
+    'Maarav': 'מערב', 'Nachalat Yehuda': 'נחלת יהודה', 'Neve Dekalim': 'נווה דקלים',
+    'West Rishon': 'מערב ראשון',
+  },
+  'Petah Tikva': {
+    'Em Hamoshavot': 'אם המושבות', 'Hadar Ganim': 'הדר גנים', 'Kfar Ganim': 'כפר גנים',
+    'Kfar Avraham': 'כפר אברהם', 'Kiryat Arye': 'קריית אריה', 'Neve Oz': 'נווה עוז',
+    'Ramat Sigalov': 'רמת סיגלוב',
+  },
+  'Ashdod': {
+    'Alef': 'א׳', 'Bet': 'ב׳', 'Gimmel': 'ג׳', 'Dalet': 'ד׳', 'Hey': 'ה׳',
+    'Vav': 'ו׳', 'Zayin': 'ז׳', 'Chet': 'ח׳', 'Tet': 'ט׳', 'Yud': 'י׳', 'Marina': 'מרינה',
+  },
+  'Ashkelon': {
+    'Afridar': 'אפרידר', 'Barnea': 'ברנע', 'City Center': 'מרכז העיר',
+    'Neve Dekalim': 'נווה דקלים', 'Shimshon': 'שמשון', 'South Beach': 'חוף דרומי',
+  },
+  'Herzliya': {
+    'City Center': 'מרכז העיר', 'Herzliya Pituach': 'הרצליה פיתוח',
+    'Neve Amal': 'נווה עמל', 'Neve Yisrael': 'נווה ישראל', 'Nof Yam': 'נוף ים',
+  },
+  'Ramat Gan': {
+    'City Center': 'מרכז העיר', 'Diamond Exchange': 'בורסת היהלומים',
+    'Kiryat Bialik': 'קריית ביאליק', 'Neve Yehoshua': 'נווה יהושע',
+    'Ramat Chen': 'רמת חן', 'Ramat Efal': 'רמת אפעל',
+  },
+  'Givatayim': {
+    'Borochov': 'בורוכוב', 'City Center': 'מרכז העיר', 'Neve Golan': 'נווה גולן',
+    'Ramat Givatayim': 'רמת גבעתיים',
+  },
+  'Bat Yam': {
+    'City Center': 'מרכז העיר', 'North Bat Yam': 'צפון בת ים',
+    'Pardes Hanna': 'פרדס חנה', 'South Bat Yam': 'דרום בת ים',
+  },
+  'Holon': {
+    'City Center': 'מרכז העיר', 'Jesse Cohen': 'ג׳סי כהן', 'Kiryat Sharet': 'קריית שרת',
+    'Neve Rabin': 'נווה רבין', 'Wolfson': 'וולפסון',
+  },
+  'Kfar Saba': {
+    'City Center': 'מרכז העיר', 'Green Kfar Saba': 'כפר סבא הירוקה',
+    'Neve Yerek': 'נווה ירק', 'Ramat Efal': 'רמת אפעל',
+  },
+  "Ra'anana": {
+    'City Center': 'מרכז העיר', 'Neve Zemer': 'נווה זמר',
+    "North Ra'anana": 'צפון רעננה', "South Ra'anana": 'דרום רעננה',
+  },
+  'Modiin': {
+    'Buchman': 'בוכמן', 'Moriah': 'מוריה', 'Nave Modiin': 'נווה מודיעין', 'Yishai': 'ישי',
+  },
+  'Rehovot': {
+    'City Center': 'מרכז העיר', 'Kiryat Weizmann': 'קריית ויצמן',
+    'Neve Noy': 'נווה נוי', 'North Rehovot': 'צפון רחובות',
+  },
+  'Tiberias': {
+    'City Center': 'מרכז העיר', 'Kiryat Shmuel': 'קריית שמואל',
+    'North Tiberias': 'צפון טבריה', 'South Tiberias': 'דרום טבריה',
+  },
+  'Sderot': {
+    'City Center': 'מרכז העיר', 'North Sderot': 'צפון שדרות', 'South Sderot': 'דרום שדרות',
+  },
+};
+
+/** Get display name for a city based on language */
+export function getCityDisplayName(city: string, lang: 'en' | 'he'): string {
+  if (lang === 'he') return CITY_HEBREW[city] ?? city;
+  return city;
+}
+
+/** Get display name for a neighborhood based on language */
+export function getNeighborhoodDisplayName(neighborhood: string, city: string, lang: 'en' | 'he'): string {
+  if (lang === 'he') return NEIGHBORHOOD_HEBREW[city]?.[neighborhood] ?? neighborhood;
+  return neighborhood;
+}
 
 /** Sorted list of all city names */
 export const ALL_CITIES = ISRAEL_LOCATIONS.map((l) => l.city).sort();
