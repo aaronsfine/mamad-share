@@ -556,60 +556,36 @@ export default function Dashboard() {
           {/* Pricing */}
           <div className="space-y-3 rounded-lg border border-border p-4">
             <div>
-              <Label className="text-sm font-medium">Pricing</Label>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                🕊️ This platform is built on חסד — kindness. We encourage offering your space for free or at a symbolic cost to cover expenses. This is about helping families in need.
-              </p>
+              <Label className="text-sm font-medium">{t('dash.pricing')}</Label>
+              <p className="text-xs text-muted-foreground mt-0.5">{t('dash.pricingHint')}</p>
             </div>
             <div className="flex gap-3">
-              <Button
-                type="button"
-                variant={priceType === 'free' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setPriceType('free')}
-                className="flex-1"
-              >
-                <Heart className="h-4 w-4 mr-1.5" />
-                Free (חסד)
+              <Button type="button" variant={priceType === 'free' ? 'default' : 'outline'} size="sm" onClick={() => setPriceType('free')} className="flex-1">
+                <Heart className="h-4 w-4 me-1.5" />
+                {t('dash.free')}
               </Button>
-              <Button
-                type="button"
-                variant={priceType === 'paid' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setPriceType('paid')}
-                className="flex-1"
-              >
-                <span className="mr-1.5">₪</span>
-                Subsidized
+              <Button type="button" variant={priceType === 'paid' ? 'default' : 'outline'} size="sm" onClick={() => setPriceType('paid')} className="flex-1">
+                <span className="me-1.5">₪</span>
+                {t('dash.subsidized')}
               </Button>
             </div>
             {priceType === 'paid' && (
               <div className="space-y-2">
-                <Label htmlFor="pricePerNight">Price per night (₪)</Label>
-                <Input
-                  id="pricePerNight"
-                  type="number"
-                  min={0}
-                  max={200}
-                  value={pricePerNight}
-                  onChange={(e) => setPricePerNight(e.target.value ? Number(e.target.value) : '')}
-                  placeholder="e.g. 50"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Please keep costs minimal — just enough to cover utilities or supplies. Families are counting on your generosity. 💙
-                </p>
+                <Label htmlFor="pricePerNight">{t('dash.pricePerNight')}</Label>
+                <Input id="pricePerNight" type="number" min={0} max={200} value={pricePerNight} onChange={(e) => setPricePerNight(e.target.value ? Number(e.target.value) : '')} placeholder="e.g. 50" />
+                <p className="text-xs text-muted-foreground">{t('dash.priceHint')}</p>
               </div>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="sleepingNotes">Sleeping Notes (optional)</Label>
-            <Textarea id="sleepingNotes" value={sleepingNotes} onChange={(e) => setSleepingNotes(e.target.value)} placeholder="e.g. 2 mattresses available, sofa bed in living room" rows={2} />
+            <Label htmlFor="sleepingNotes">{t('dash.sleepingNotes')}</Label>
+            <Textarea id="sleepingNotes" value={sleepingNotes} onChange={(e) => setSleepingNotes(e.target.value)} rows={2} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="mamadNotes">Mamad Notes (optional)</Label>
-            <Textarea id="mamadNotes" value={mamadNotes} onChange={(e) => setMamadNotes(e.target.value)} placeholder="e.g. Reinforced door, stocked with water" rows={2} />
+            <Label htmlFor="mamadNotes">{t('dash.mamadNotes')}</Label>
+            <Textarea id="mamadNotes" value={mamadNotes} onChange={(e) => setMamadNotes(e.target.value)} rows={2} />
           </div>
 
           {/* Photo Upload */}
