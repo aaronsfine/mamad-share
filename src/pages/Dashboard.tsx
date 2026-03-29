@@ -361,12 +361,12 @@ export default function Dashboard() {
     <Card>
       <CardHeader className="flex flex-row items-start justify-between">
         <div>
-          <CardTitle>Your Listing</CardTitle>
+          <CardTitle>{t('dash.yourListing')}</CardTitle>
           <CardDescription className="flex items-center gap-1.5 mt-1">
             {listing.is_active ? (
-              <><Eye className="h-3.5 w-3.5 text-green-600" /> <span className="text-green-600">Live — visible to families</span></>
+              <><Eye className="h-3.5 w-3.5 text-green-600" /> <span className="text-green-600">{t('dash.live')}</span></>
             ) : (
-              <><EyeOff className="h-3.5 w-3.5 text-muted-foreground" /> <span>Hidden from public feed</span></>
+              <><EyeOff className="h-3.5 w-3.5 text-muted-foreground" /> <span>{t('dash.hidden')}</span></>
             )}
           </CardDescription>
         </div>
