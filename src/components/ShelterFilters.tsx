@@ -83,7 +83,7 @@ export function ShelterFilters({
   onSortByChange,
   hasLocation,
 }: ShelterFiltersProps) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [open, setOpen] = useState(false);
 
   const hasActiveFilters =
