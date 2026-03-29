@@ -66,7 +66,7 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
             <div className="flex items-center gap-1.5">
               <MapPin className="h-4 w-4 text-primary shrink-0" />
               <h3 className="text-base font-semibold text-foreground leading-tight">
-                {listing.city} · {listing.neighborhood}
+                {cityName} · {neighborhoodName}
               </h3>
             </div>
             <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
