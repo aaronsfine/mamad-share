@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 import { ChevronDown, Heart, PawPrint, Cigarette, MapPin, X } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { getCityDisplayName, getNeighborhoodDisplayName } from '@/lib/locations';
 
 export type SortOption = 'nearest' | 'price_low' | 'price_high';
 
