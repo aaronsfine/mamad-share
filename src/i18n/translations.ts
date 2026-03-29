@@ -43,12 +43,12 @@ const translations = {
   'filters.nearby': { en: 'Nearby', he: 'בקרבת מקום' },
 
   // Results
-  'results.title': { en: 'Available shelters', he: 'מקלטים זמינים' },
-  'results.none.title': { en: 'No shelters listed here yet', he: 'עדיין אין מקלטים כאן' },
-  'results.none.text': { en: 'Be the first to help. List your mamad and protect a family tonight.', he: 'היה הראשון לעזור. פרסם את הממ"ד שלך והגן על משפחה הלילה.' },
-  'results.none.cta': { en: 'List your mamad now', he: 'פרסם את הממ"ד שלך עכשיו' },
-  'results.found': { en: 'shelters available', he: 'מקלטים זמינים' },
-  'results.few': { en: 'we need more — list yours to help', he: 'אנחנו צריכים עוד — פרסם את שלך כדי לעזור' },
+  'results.title': { en: 'Safe rooms available', he: 'חדרים בטוחים זמינים' },
+  'results.none.title': { en: 'No safe rooms here yet', he: 'עדיין אין חדרים בטוחים כאן' },
+  'results.none.text': { en: 'Try another city or neighborhood, or check back soon as more families open their homes.', he: 'נסה עיר או שכונה אחרת, או חזור בקרוב כשמשפחות נוספות פותחות את בתיהן.' },
+  'results.none.cta': { en: 'List your apartment', he: 'פרסם את הדירה שלך' },
+  'results.found': { en: 'places found', he: 'מקומות נמצאו' },
+  'results.few': { en: 'only a few rooms available right now', he: 'רק מעט חדרים זמינים כרגע' },
   'results.in': { en: 'in', he: 'ב' },
 
   // Listing Card
