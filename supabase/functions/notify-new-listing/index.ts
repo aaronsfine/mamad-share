@@ -29,46 +29,37 @@ Deno.serve(async (req) => {
       .eq("is_demo", true)
       .eq("is_active", true);
 
-    // Get the newest non-demo listing
-    const { data: newest } = await supabase
+    const { count: totalAll } = await supabase
+      .from("listings")
+      .select("*", { count: "exact", head: true })
+      .eq("is_active", true);
+
+    // Get the most recent real listings
+    const { data: recentReal } = await supabase
       .from("listings")
       .select("host_name, city, neighborhood, created_at")
       .eq("is_demo", false)
       .eq("is_active", true)
       .order("created_at", { ascending: false })
-      .limit(1)
-      .single();
+      .limit(5);
 
-    // Try to send via transactional email system if available
-    try {
-      await supabase.functions.invoke("send-transactional-email", {
-        body: {
-          templateName: "new-listing-admin",
-          recipientEmail: req.headers.get("x-admin-email") || "",
-          idempotencyKey: `new-listing-${newest?.created_at || Date.now()}`,
-          templateData: {
-            hostName: newest?.host_name || "Unknown",
-            city: newest?.city || "Unknown",
-            neighborhood: newest?.neighborhood || "Unknown",
-            totalReal: totalReal || 0,
-            totalDemo: totalDemo || 0,
-          },
-        },
-      });
-    } catch {
-      // Transactional email not set up yet — log it
-      console.log("Transactional email not available yet. Stats:", {
-        totalReal,
-        totalDemo,
-        newest,
-      });
-    }
+    // Log for edge function logs (you can check these in the backend)
+    console.log(`📊 Listing Status Report:
+  🏠 Real listings: ${totalReal || 0}
+  🤖 Demo listings: ${totalDemo || 0}
+  📋 Total active: ${totalAll || 0}
+  📅 Recent real listings: ${JSON.stringify(recentReal || [], null, 2)}`);
 
     return new Response(
       JSON.stringify({
         success: true,
-        stats: { totalReal, totalDemo },
-        newest,
+        report: {
+          realListings: totalReal || 0,
+          demoListings: totalDemo || 0,
+          totalActive: totalAll || 0,
+          recentRealListings: recentReal || [],
+          timestamp: new Date().toISOString(),
+        },
       }),
       {
         status: 200,
@@ -78,7 +69,9 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("Error in notify-new-listing:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
+      JSON.stringify({
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
