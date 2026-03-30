@@ -79,7 +79,6 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
               <span>{t('card.hostedBy')} {listing.host_name}</span>
             </div>
           </div>
-          </div>
 
           {listing.price_type === 'free' ? (
             <Badge className="w-fit bg-green-50 text-green-700 border-green-200 border text-xs gap-1 hover:bg-green-50">
