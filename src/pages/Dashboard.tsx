@@ -21,6 +21,12 @@ import type { Tables } from '@/integrations/supabase/types';
 
 type Listing = Tables<'listings'>;
 
+function formatDisplayName(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length <= 1) return parts[0] || '';
+  return `${parts[0]} ${parts[parts.length - 1][0]}.`;
+}
+
 export default function Dashboard() {
   const { t, lang } = useLanguage();
   const [user, setUser] = useState<{ id: string } | null>(null);
