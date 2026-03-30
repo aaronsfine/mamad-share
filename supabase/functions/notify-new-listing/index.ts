@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
           demoListings: totalDemo || 0,
           totalActive: (totalReal || 0) + (totalDemo || 0),
           latestRealListing: { hostName, city, neighborhood },
-          notifiedEmail: adminEmail,
+          notifiedEmail: 'aaronsfine@gmail.com',
           timestamp: new Date().toISOString(),
         },
       }),
