@@ -19,10 +19,17 @@ interface ListingCardProps {
   photoUrls?: string[];
 }
 
+function formatHostName(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length <= 1) return name;
+  return `${parts[0]} ${parts[parts.length - 1][0]}.`;
+}
+
 export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrls = [] }: ListingCardProps) {
   const thumbs = thumbUrls ?? photoUrls;
   const fulls = fullUrls ?? photoUrls;
   const { t, lang } = useLanguage();
+  const displayName = formatHostName(listing.host_name);
   const cityName = getCityDisplayName(listing.city, lang);
   const neighborhoodName = getNeighborhoodDisplayName(listing.neighborhood, listing.city, lang);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -81,7 +88,7 @@ export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrl
             </div>
             <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
               <User className="h-3.5 w-3.5" />
-              <span>{t('card.hostedBy')} {listing.host_name}</span>
+              <span>{t('card.hostedBy')} {displayName}</span>
             </div>
           </div>
 
@@ -160,7 +167,7 @@ export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrl
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              {t('card.hostedBy')} {listing.host_name}
+              {t('card.hostedBy')} {displayName}
             </p>
             <div className="border-t border-border" />
             <p className="text-sm text-muted-foreground">
