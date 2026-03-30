@@ -202,10 +202,10 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
               <img src={photoUrls[lightboxIndex]} alt={`Photo ${lightboxIndex + 1}`} className="max-h-[80vh] max-w-full object-contain rounded" />
               {photoUrls.length > 1 && (
                 <>
-                  <button onClick={() => setLightboxIndex((lightboxIndex - 1 + photoUrls.length) % photoUrls.length)} className="absolute start-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 rounded-full p-1.5 transition">
+                  <button onClick={() => setLightboxIndex((lightboxIndex - 1 + photoUrls.length) % photoUrls.length)} className="absolute start-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition shadow-lg">
                     <ChevronLeft className="h-5 w-5 text-white" />
                   </button>
-                  <button onClick={() => setLightboxIndex((lightboxIndex + 1) % photoUrls.length)} className="absolute end-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 rounded-full p-1.5 transition">
+                  <button onClick={() => setLightboxIndex((lightboxIndex + 1) % photoUrls.length)} className="absolute end-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition shadow-lg">
                     <ChevronRight className="h-5 w-5 text-white" />
                   </button>
                   <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/70 text-xs">

@@ -92,7 +92,7 @@ export default function Dashboard() {
       }
 
       setUser({ id: session.user.id });
-      if (profile.full_name) setHostName(profile.full_name);
+      if (profile.full_name) setHostName(formatDisplayName(profile.full_name));
       if (profile.whatsapp_phone) setPhone(profile.whatsapp_phone);
     };
 
