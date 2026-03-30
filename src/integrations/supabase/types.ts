@@ -24,6 +24,7 @@ export type Database = {
           host_name: string
           id: string
           is_active: boolean
+          is_demo: boolean
           latitude: number | null
           longitude: number | null
           mamad_notes: string | null
@@ -46,6 +47,7 @@ export type Database = {
           host_name: string
           id?: string
           is_active?: boolean
+          is_demo?: boolean
           latitude?: number | null
           longitude?: number | null
           mamad_notes?: string | null
@@ -68,6 +70,7 @@ export type Database = {
           host_name?: string
           id?: string
           is_active?: boolean
+          is_demo?: boolean
           latitude?: number | null
           longitude?: number | null
           mamad_notes?: string | null
