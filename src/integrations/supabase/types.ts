@@ -119,6 +119,7 @@ export type Database = {
     }
     Functions: {
       get_whatsapp_url: { Args: { listing_id: string }; Returns: string }
+      user_owns_listing_photo: { Args: { file_name: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
