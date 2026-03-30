@@ -39,7 +39,7 @@ export default function Index() {
         .eq('is_active', true)
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return data as Tables<'listings'>[];
+      return (data as unknown as Tables<'listings'>[]) ?? [];
     },
   });
 
