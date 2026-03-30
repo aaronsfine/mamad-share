@@ -2,38 +2,34 @@
 
 ## Problem
 
-When a host types an address that doesn't match their selected city/neighborhood (e.g., selects "Jerusalem, Nachlaot" but types a Tel Aviv street), the ArcGIS geocoder will either:
-1. Return coordinates for the actual typed address (wrong city) -- the map will show a location far from the selected neighborhood
-2. Fall through to city-level fallback -- inaccurate but at least in the right area
+Photos load slowly because:
+1. **Sequential storage API calls** — `Index.tsx` loops through every listing one-by-one calling `supabase.storage.list()`, creating a waterfall of N API requests
+2. **No lazy loading** — all images load eagerly even if off-screen
+3. **No image optimization** — full-size originals served directly
 
-There is no validation or warning to catch this mismatch.
+## Recommendation: Lazy loading + fix the waterfall (no hosting change needed)
+
+Moving hosting to Cloudflare won't help — the bottleneck is the sequential API calls and eager image loading, not the CDN. Supabase storage already serves from a CDN. The fix is code-level.
 
 ## Plan
 
-### 1. Add post-geocode sanity check in Dashboard.tsx
+### 1. Parallelize photo fetching
+Replace the sequential `for` loop in `Index.tsx` with `Promise.all` so all listing photo URLs are fetched concurrently instead of one-by-one.
 
-After ArcGIS returns coordinates, compare them against the expected city center (from `getCityCoords`). If the returned coordinates are more than ~15km from the city center, treat it as a mismatch.
+**File**: `src/pages/Index.tsx` (lines 48-59)
 
-**On mismatch:**
-- Show a warning toast: "The address you entered doesn't appear to be in {city}. Please double-check your address."
-- Fall back to neighborhood+city geocoding (skip the street-level result) so the map stays in the correct general area
-- Still allow the save to proceed -- don't block it
+### 2. Add native lazy loading to images
+Add `loading="lazy"` to the `<img>` tag in `ListingCard.tsx` so browsers only fetch images when cards scroll into view.
 
-### 2. Add address field hint text
+**File**: `src/components/ListingCard.tsx` (line 46 and line 202)
 
-Below the address input in the listing form, add helper text:
-"Enter your street address in {city}, {neighborhood}. This is used for the approximate map only and is never shown publicly."
+### 3. Add Supabase image transform for thumbnails
+Use Supabase storage's built-in image transformation to request smaller thumbnails for the card grid (e.g. 400px wide), keeping full-size only for the lightbox.
 
-This nudges the host to enter a local address and reassures them about privacy.
+**File**: `src/pages/Index.tsx` — generate two URL variants (thumb + full) per photo
+**File**: `src/components/ListingCard.tsx` — use thumb URL for card, full URL for lightbox
 
-### Technical details
+---
 
-- Use `haversineDistance()` (already exists in `src/lib/distance.ts`) to compute distance between geocoded result and city center
-- Threshold: ~15km (covers large cities like Jerusalem end-to-end)
-- If geocoded point fails the check, skip it and try the next query in the fallback chain (neighborhood+city, then city-only)
-- No database or schema changes needed
-
-### Files to modify
-- `src/pages/Dashboard.tsx` -- add distance check after geocode, add address hint text
-- `src/lib/distance.ts` -- may need to export the haversine function if not already exported
+These three changes should dramatically reduce initial load time without any infrastructure changes.
 
