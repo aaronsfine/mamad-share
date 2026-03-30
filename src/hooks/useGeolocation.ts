@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface GeolocationState {
   latitude: number | null;
@@ -8,7 +8,7 @@ interface GeolocationState {
   requested: boolean;
 }
 
-export function useGeolocation() {
+export function useGeolocation(autoRequest = false) {
   const [state, setState] = useState<GeolocationState>({
     latitude: null,
     longitude: null,
@@ -18,7 +18,7 @@ export function useGeolocation() {
   });
 
   const requestLocation = useCallback(() => {
-    if (state.latitude != null) return; // already have it
+    if (state.latitude != null) return;
 
     if (!navigator.geolocation) {
       setState(prev => ({ ...prev, error: 'Geolocation not supported', requested: true }));
@@ -43,6 +43,12 @@ export function useGeolocation() {
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
     );
   }, [state.latitude]);
+
+  useEffect(() => {
+    if (autoRequest && !state.requested) {
+      requestLocation();
+    }
+  }, [autoRequest, state.requested, requestLocation]);
 
   return { ...state, requestLocation };
 }

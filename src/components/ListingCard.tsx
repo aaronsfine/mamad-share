@@ -59,6 +59,11 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
               </div>
             </div>
           )}
+          {distanceKm != null && (
+            <span className="absolute top-2 start-2 bg-black/60 backdrop-blur-sm text-white text-[11px] font-semibold px-2 py-0.5 rounded-md shadow-lg">
+              {formatDistance(distanceKm)}
+            </span>
+          )}
         </div>
 
         <CardContent className="p-5 md:p-6 flex flex-col gap-3 flex-1">
@@ -73,11 +78,6 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
               <User className="h-3.5 w-3.5" />
               <span>{t('card.hostedBy')} {listing.host_name}</span>
             </div>
-            {distanceKm != null && (
-              <Badge variant="secondary" className="text-xs font-medium mt-0.5">
-                {formatDistance(distanceKm)}
-              </Badge>
-            )}
           </div>
 
           {listing.price_type === 'free' ? (
