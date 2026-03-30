@@ -115,7 +115,75 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      listings_public: {
+        Row: {
+          address: string | null
+          bedrooms: number | null
+          city: string | null
+          created_at: string | null
+          host_id: string | null
+          host_name: string | null
+          id: string | null
+          is_active: boolean | null
+          is_demo: boolean | null
+          latitude: number | null
+          longitude: number | null
+          mamad_notes: string | null
+          neighborhood: string | null
+          pets_allowed: boolean | null
+          price_per_night: number | null
+          price_type: string | null
+          sleeping_notes: string | null
+          smoking_allowed: boolean | null
+          total_beds: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          bedrooms?: number | null
+          city?: string | null
+          created_at?: string | null
+          host_id?: string | null
+          host_name?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_demo?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          mamad_notes?: string | null
+          neighborhood?: string | null
+          pets_allowed?: boolean | null
+          price_per_night?: number | null
+          price_type?: string | null
+          sleeping_notes?: string | null
+          smoking_allowed?: boolean | null
+          total_beds?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          bedrooms?: number | null
+          city?: string | null
+          created_at?: string | null
+          host_id?: string | null
+          host_name?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_demo?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          mamad_notes?: string | null
+          neighborhood?: string | null
+          pets_allowed?: boolean | null
+          price_per_night?: number | null
+          price_type?: string | null
+          sleeping_notes?: string | null
+          smoking_allowed?: boolean | null
+          total_beds?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_whatsapp_url: { Args: { listing_id: string }; Returns: string }
