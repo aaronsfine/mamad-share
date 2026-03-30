@@ -34,7 +34,7 @@ export default function Index() {
     queryKey: ['listings'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('listings')
+        .from('listings_public' as any)
         .select('id, host_id, host_name, city, neighborhood, address, bedrooms, total_beds, pets_allowed, smoking_allowed, price_type, price_per_night, sleeping_notes, mamad_notes, latitude, longitude, is_active, created_at, updated_at')
         .eq('is_active', true)
         .order('created_at', { ascending: false });
