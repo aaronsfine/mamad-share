@@ -13,17 +13,22 @@ import type { Tables } from '@/integrations/supabase/types';
 interface ListingCardProps {
   listing: Tables<'listings'>;
   distanceKm?: number | null;
+  thumbUrls?: string[];
+  fullUrls?: string[];
+  /** @deprecated use thumbUrls/fullUrls instead */
   photoUrls?: string[];
 }
 
-export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCardProps) {
+export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrls = [] }: ListingCardProps) {
+  const thumbs = thumbUrls ?? photoUrls;
+  const fulls = fullUrls ?? photoUrls;
   const { t, lang } = useLanguage();
   const cityName = getCityDisplayName(listing.city, lang);
   const neighborhoodName = getNeighborhoodDisplayName(listing.neighborhood, listing.city, lang);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const hasPhotos = photoUrls.length > 0;
+  const hasPhotos = thumbs.length > 0;
   const hasNotes = !!(listing.sleeping_notes || listing.mamad_notes);
 
   const handleWhatsAppClick = useCallback(async (e: React.MouseEvent) => {
@@ -43,11 +48,11 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
         >
           {hasPhotos ? (
             <>
-              <img src={photoUrls[0]} alt={`${cityName}, ${neighborhoodName}`} className="w-full h-full object-cover" />
-              {photoUrls.length > 1 && (
+              <img src={thumbs[0]} alt={`${cityName}, ${neighborhoodName}`} loading="lazy" className="w-full h-full object-cover" />
+              {thumbs.length > 1 && (
                 <Badge className="absolute bottom-2 end-2 bg-black/60 text-white border-0 text-xs">
                   <Image className="h-3 w-3 me-1" />
-                  {photoUrls.length} {t('card.photos')}
+                  {thumbs.length} {t('card.photos')}
                 </Badge>
               )}
             </>
@@ -199,17 +204,17 @@ export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCard
         <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
           <DialogContent className="max-w-3xl p-2 bg-black/95 border-0">
             <div className="relative flex items-center justify-center min-h-[300px]">
-              <img src={photoUrls[lightboxIndex]} alt={`Photo ${lightboxIndex + 1}`} className="max-h-[80vh] max-w-full object-contain rounded" />
-              {photoUrls.length > 1 && (
+              <img src={fulls[lightboxIndex]} alt={`Photo ${lightboxIndex + 1}`} className="max-h-[80vh] max-w-full object-contain rounded" />
+              {fulls.length > 1 && (
                 <>
-                  <button onClick={() => setLightboxIndex((lightboxIndex - 1 + photoUrls.length) % photoUrls.length)} className="absolute start-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition shadow-lg">
+                  <button onClick={() => setLightboxIndex((lightboxIndex - 1 + fulls.length) % fulls.length)} className="absolute start-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition shadow-lg">
                     <ChevronLeft className="h-5 w-5 text-white" />
                   </button>
-                  <button onClick={() => setLightboxIndex((lightboxIndex + 1) % photoUrls.length)} className="absolute end-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition shadow-lg">
+                  <button onClick={() => setLightboxIndex((lightboxIndex + 1) % fulls.length)} className="absolute end-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition shadow-lg">
                     <ChevronRight className="h-5 w-5 text-white" />
                   </button>
                   <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/70 text-xs">
-                    {lightboxIndex + 1} / {photoUrls.length}
+                    {lightboxIndex + 1} / {fulls.length}
                   </span>
                 </>
               )}

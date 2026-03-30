@@ -46,15 +46,30 @@ export default function Index() {
   const { data: listingPhotos = {} } = useQuery({
     queryKey: ['listing-photos', listings.map(l => l.id)],
     queryFn: async () => {
-      const photoMap: Record<string, string[]> = {};
-      for (const listing of listings) {
-        const { data: files } = await supabase.storage
-          .from('listing-photos')
-          .list(listing.id, { limit: 10 });
-        if (files && files.length > 0) {
-          photoMap[listing.id] = files.map(f =>
-            supabase.storage.from('listing-photos').getPublicUrl(`${listing.id}/${f.name}`).data.publicUrl
-          );
+      const results = await Promise.all(
+        listings.map(async (listing) => {
+          const { data: files } = await supabase.storage
+            .from('listing-photos')
+            .list(listing.id, { limit: 10 });
+          if (files && files.length > 0) {
+            const thumbs = files.map(f => {
+              const path = `${listing.id}/${f.name}`;
+              return {
+                thumb: supabase.storage.from('listing-photos').getPublicUrl(path, {
+                  transform: { width: 400, quality: 75 },
+                }).data.publicUrl,
+                full: supabase.storage.from('listing-photos').getPublicUrl(path).data.publicUrl,
+              };
+            });
+            return { id: listing.id, thumbs: thumbs.map(t => t.thumb), fulls: thumbs.map(t => t.full) };
+          }
+          return { id: listing.id, thumbs: [] as string[], fulls: [] as string[] };
+        })
+      );
+      const photoMap: Record<string, { thumbs: string[]; fulls: string[] }> = {};
+      for (const r of results) {
+        if (r.thumbs.length > 0) {
+          photoMap[r.id] = { thumbs: r.thumbs, fulls: r.fulls };
         }
       }
       return photoMap;
@@ -244,7 +259,7 @@ export default function Index() {
             </div>
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {sortedListings.map(({ listing, distanceKm }) => (
-                <ListingCard key={listing.id} listing={listing} distanceKm={distanceKm} photoUrls={listingPhotos[listing.id]} />
+                <ListingCard key={listing.id} listing={listing} distanceKm={distanceKm} thumbUrls={listingPhotos[listing.id]?.thumbs} fullUrls={listingPhotos[listing.id]?.fulls} />
               ))}
             </div>
           </div>
