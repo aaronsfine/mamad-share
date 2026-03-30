@@ -259,7 +259,7 @@ export default function Index() {
             </div>
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {sortedListings.map(({ listing, distanceKm }) => (
-                <ListingCard key={listing.id} listing={listing} distanceKm={distanceKm} photoUrls={listingPhotos[listing.id]} />
+                <ListingCard key={listing.id} listing={listing} distanceKm={distanceKm} thumbUrls={listingPhotos[listing.id]?.thumbs} fullUrls={listingPhotos[listing.id]?.fulls} />
               ))}
             </div>
           </div>
