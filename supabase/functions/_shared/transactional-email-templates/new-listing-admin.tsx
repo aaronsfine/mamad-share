@@ -66,6 +66,7 @@ export const template = {
   component: NewListingAdminEmail,
   subject: (data: Record<string, any>) =>
     `🏠 New real listing: ${data.city || 'Unknown'}, ${data.neighborhood || 'Unknown'}`,
+  to: 'aaronsfine@gmail.com',
   displayName: 'New listing admin notification',
   previewData: {
     hostName: 'Sarah K.',

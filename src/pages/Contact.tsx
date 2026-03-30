@@ -37,8 +37,8 @@ export default function Contact() {
             <div>
               <h3 className="font-semibold text-foreground mb-1">{t('contact.email')}</h3>
               <p className="text-sm text-muted-foreground mb-3">{t('contact.emailDesc')}</p>
-              <a href="mailto:aaronsfine@gmail.com" className="text-sm font-medium text-primary hover:underline">
-                aaronsfine@gmail.com
+              <a href="mailto:contact@mamad-directory.org" className="text-sm font-medium text-primary hover:underline">
+                contact@mamad-directory.org
               </a>
             </div>
           </div>

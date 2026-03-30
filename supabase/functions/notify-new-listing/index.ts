@@ -37,51 +37,29 @@ Deno.serve(async (req) => {
       .eq("is_demo", true)
       .eq("is_active", true);
 
-    // Get the newest non-demo listing for context
-    const { data: newest } = await supabase
-      .from("listings")
-      .select("host_name, city, neighborhood, created_at, host_id")
-      .eq("is_demo", false)
-      .eq("is_active", true)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single();
+    const hostName = triggerData.host_name || "Unknown";
+    const city = triggerData.city || "Unknown";
+    const neighborhood = triggerData.neighborhood || "Unknown";
 
-    const hostName = triggerData.host_name || newest?.host_name || "Unknown";
-    const city = triggerData.city || newest?.city || "Unknown";
-    const neighborhood = triggerData.neighborhood || newest?.neighborhood || "Unknown";
-
-    // Get the admin email — find the first user who created a listing (project owner)
-    // For simplicity, get the host's email from auth.users
-    let adminEmail: string | null = null;
-    if (newest?.host_id) {
-      const { data: userData } = await supabase.auth.admin.getUserById(newest.host_id);
-      adminEmail = userData?.user?.email || null;
-    }
-
-    // If we have an admin email, send the notification
-    if (adminEmail) {
-      try {
-        await supabase.functions.invoke("send-transactional-email", {
-          body: {
-            templateName: "new-listing-admin",
-            recipientEmail: adminEmail,
-            idempotencyKey: `new-listing-${newest?.created_at || Date.now()}`,
-            templateData: {
-              hostName,
-              city,
-              neighborhood,
-              totalReal: totalReal || 0,
-              totalDemo: totalDemo || 0,
-            },
+    // Send notification — template has a fixed `to` address so recipientEmail is ignored
+    try {
+      await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "new-listing-admin",
+          recipientEmail: "noop@placeholder.local",
+          idempotencyKey: `new-listing-${Date.now()}`,
+          templateData: {
+            hostName,
+            city,
+            neighborhood,
+            totalReal: totalReal || 0,
+            totalDemo: totalDemo || 0,
           },
-        });
-        console.log(`📧 Notification sent to ${adminEmail}`);
-      } catch (emailErr) {
-        console.error("Failed to send email notification:", emailErr);
-      }
-    } else {
-      console.log("No admin email found — skipping email notification");
+        },
+      });
+      console.log("📧 Notification enqueued");
+    } catch (emailErr) {
+      console.error("Failed to send email notification:", emailErr);
     }
 
     console.log(`📊 Status: ${totalReal} real, ${totalDemo} demo listings`);
