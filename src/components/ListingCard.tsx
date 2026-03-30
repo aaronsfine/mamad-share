@@ -19,10 +19,17 @@ interface ListingCardProps {
   photoUrls?: string[];
 }
 
+function formatHostName(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length <= 1) return name;
+  return `${parts[0]} ${parts[parts.length - 1][0]}.`;
+}
+
 export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrls = [] }: ListingCardProps) {
   const thumbs = thumbUrls ?? photoUrls;
   const fulls = fullUrls ?? photoUrls;
   const { t, lang } = useLanguage();
+  const displayName = formatHostName(listing.host_name);
   const cityName = getCityDisplayName(listing.city, lang);
   const neighborhoodName = getNeighborhoodDisplayName(listing.neighborhood, listing.city, lang);
   const [lightboxOpen, setLightboxOpen] = useState(false);
