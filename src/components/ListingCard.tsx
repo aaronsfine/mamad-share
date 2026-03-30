@@ -28,7 +28,7 @@ export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrl
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const hasPhotos = photoUrls.length > 0;
+  const hasPhotos = thumbs.length > 0;
   const hasNotes = !!(listing.sleeping_notes || listing.mamad_notes);
 
   const handleWhatsAppClick = useCallback(async (e: React.MouseEvent) => {
