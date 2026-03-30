@@ -167,7 +167,7 @@ export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrl
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              {t('card.hostedBy')} {listing.host_name}
+              {t('card.hostedBy')} {displayName}
             </p>
             <div className="border-t border-border" />
             <p className="text-sm text-muted-foreground">
