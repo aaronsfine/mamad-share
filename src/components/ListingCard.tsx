@@ -204,17 +204,17 @@ export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrl
         <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
           <DialogContent className="max-w-3xl p-2 bg-black/95 border-0">
             <div className="relative flex items-center justify-center min-h-[300px]">
-              <img src={photoUrls[lightboxIndex]} alt={`Photo ${lightboxIndex + 1}`} className="max-h-[80vh] max-w-full object-contain rounded" />
-              {photoUrls.length > 1 && (
+              <img src={fulls[lightboxIndex]} alt={`Photo ${lightboxIndex + 1}`} className="max-h-[80vh] max-w-full object-contain rounded" />
+              {fulls.length > 1 && (
                 <>
-                  <button onClick={() => setLightboxIndex((lightboxIndex - 1 + photoUrls.length) % photoUrls.length)} className="absolute start-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition shadow-lg">
+                  <button onClick={() => setLightboxIndex((lightboxIndex - 1 + fulls.length) % fulls.length)} className="absolute start-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition shadow-lg">
                     <ChevronLeft className="h-5 w-5 text-white" />
                   </button>
-                  <button onClick={() => setLightboxIndex((lightboxIndex + 1) % photoUrls.length)} className="absolute end-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition shadow-lg">
+                  <button onClick={() => setLightboxIndex((lightboxIndex + 1) % fulls.length)} className="absolute end-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition shadow-lg">
                     <ChevronRight className="h-5 w-5 text-white" />
                   </button>
                   <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/70 text-xs">
-                    {lightboxIndex + 1} / {photoUrls.length}
+                    {lightboxIndex + 1} / {fulls.length}
                   </span>
                 </>
               )}
