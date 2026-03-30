@@ -88,7 +88,7 @@ export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrl
             </div>
             <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
               <User className="h-3.5 w-3.5" />
-              <span>{t('card.hostedBy')} {listing.host_name}</span>
+              <span>{t('card.hostedBy')} {displayName}</span>
             </div>
           </div>
 
