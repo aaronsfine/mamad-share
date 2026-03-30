@@ -24,11 +24,11 @@ export default function Index() {
   const [smokingFilter, setSmokingFilter] = useState<'all' | 'yes' | 'no'>('all');
   const [priceFilter, setPriceFilter] = useState<'all' | 'free'>('all');
   const [maxPrice, setMaxPrice] = useState(200);
-  const [sortBy, setSortBy] = useState<SortOption>('price_low');
+  const [sortBy, setSortBy] = useState<SortOption>('nearest');
   const [minBeds, setMinBeds] = useState(0);
   const [minBedrooms, setMinBedrooms] = useState(0);
   
-  const geo = useGeolocation();
+  const geo = useGeolocation(true);
 
   const { data: listings = [], isLoading } = useQuery({
     queryKey: ['listings'],
