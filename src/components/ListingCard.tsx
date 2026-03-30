@@ -48,11 +48,11 @@ export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrl
         >
           {hasPhotos ? (
             <>
-              <img src={photoUrls[0]} alt={`${cityName}, ${neighborhoodName}`} className="w-full h-full object-cover" />
-              {photoUrls.length > 1 && (
+              <img src={thumbs[0]} alt={`${cityName}, ${neighborhoodName}`} loading="lazy" className="w-full h-full object-cover" />
+              {thumbs.length > 1 && (
                 <Badge className="absolute bottom-2 end-2 bg-black/60 text-white border-0 text-xs">
                   <Image className="h-3 w-3 me-1" />
-                  {photoUrls.length} {t('card.photos')}
+                  {thumbs.length} {t('card.photos')}
                 </Badge>
               )}
             </>
