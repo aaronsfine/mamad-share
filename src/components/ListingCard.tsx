@@ -13,10 +13,15 @@ import type { Tables } from '@/integrations/supabase/types';
 interface ListingCardProps {
   listing: Tables<'listings'>;
   distanceKm?: number | null;
+  thumbUrls?: string[];
+  fullUrls?: string[];
+  /** @deprecated use thumbUrls/fullUrls instead */
   photoUrls?: string[];
 }
 
-export function ListingCard({ listing, distanceKm, photoUrls = [] }: ListingCardProps) {
+export function ListingCard({ listing, distanceKm, thumbUrls, fullUrls, photoUrls = [] }: ListingCardProps) {
+  const thumbs = thumbUrls ?? photoUrls;
+  const fulls = fullUrls ?? photoUrls;
   const { t, lang } = useLanguage();
   const cityName = getCityDisplayName(listing.city, lang);
   const neighborhoodName = getNeighborhoodDisplayName(listing.neighborhood, listing.city, lang);
